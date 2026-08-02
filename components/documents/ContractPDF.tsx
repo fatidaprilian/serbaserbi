@@ -2,10 +2,7 @@ import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer';
 import type { ContractData } from '@/types/contract';
 
-// Register fonts if needed, currently using defaults
-Font.register({
-  family: 'Times-Roman',
-});
+
 
 const styles = StyleSheet.create({
   page: {

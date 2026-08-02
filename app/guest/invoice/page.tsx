@@ -24,7 +24,7 @@ export default function GuestInvoicePage() {
     clientAddress: "",
     items: [],
     taxRate: 0,
-    notes: "Terima kasih atas kerja samanya.",
+    notes: "",
   });
 
   const handleAddItem = () => {

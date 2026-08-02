@@ -164,13 +164,7 @@ export const InvoicePDF = ({ data }: { data: InvoiceData }) => {
           </View>
         </View>
         
-        {calculateTotal() > 5000000 && data.currency === 'IDR' && (
-          <View style={{ marginTop: 40, padding: 10, backgroundColor: '#fef2f2', border: '1px solid #f87171' }}>
-            <Text style={{ color: '#ef4444', fontSize: 10 }}>
-              {t.warning}
-            </Text>
-          </View>
-        )}
+
 
         {data.notes && (
           <View style={{ marginTop: 40 }}>

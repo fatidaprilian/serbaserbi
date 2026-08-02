@@ -41,5 +41,4 @@ Create documents instantly with client-side PDF generation (`@react-pdf/renderer
 - **Login Mode / Multi-Tenant**: Save and manage client profiles, document history, and default settings via NextAuth.
 - **Dashboard Analytics**: Track Draft, Sent, Paid, and Overdue documents.
 
----
-*Developed with Antigravity IDE & Agentic Senior Core.*
+
