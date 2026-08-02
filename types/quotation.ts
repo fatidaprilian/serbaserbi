@@ -11,6 +11,7 @@ export interface QuotationData {
   validUntil: string;
   currency: "IDR" | "USD" | string;
   language: "id" | "en";
+  logo?: string;
   clientName: string;
   clientAddress: string;
   fromName: string;

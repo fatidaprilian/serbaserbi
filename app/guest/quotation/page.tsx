@@ -4,17 +4,18 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import { QuotationData, QuotationItem } from "../../../types/quotation";
 import Link from "next/link";
+import LogoUpload from "@/components/LogoUpload";
 
-// Dynamic import for PDF Viewer to avoid SSR issues
-const PDFViewerWrapper = dynamic(
+const QuotationPDFWrapper = dynamic(
   () => import("../../../components/documents/QuotationPDFWrapper"),
-  { ssr: false, loading: () => <div className="p-8 text-center text-emerald-500 bg-emerald-50/50 rounded-xl animate-pulse">Memuat Pratinjau PDF Penawaran...</div> }
+  { ssr: false, loading: () => <div className="p-8 text-center text-emerald-500 bg-emerald-50/50 rounded-xl animate-pulse">Memuat Pratinjau...</div> }
 );
 
 export default function GuestQuotationPage() {
   const [quotationData, setQuotationData] = useState<QuotationData>({
     currency: "IDR",
     language: "id",
+    logo: undefined,
     quotationNumber: "QT-2026-001",
     date: new Date().toISOString().split("T")[0],
     validUntil: "",
@@ -54,25 +55,26 @@ export default function GuestQuotationPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col p-6 sm:p-12 relative overflow-x-hidden">
-      
-      {/* Background gradients for Quotation (Emerald/Greenish) */}
-      <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-emerald-400/10 rounded-full blur-[100px] pointer-events-none" />
+    <div className="min-h-screen bg-[#fafafa] text-[#09090b] font-sans selection:bg-black selection:text-white">
+      {/* Premium subtle gradient blob */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-zinc-200/50 to-transparent blur-3xl -z-10 rounded-full pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto w-full flex flex-col gap-8 z-10">
-        <header className="flex items-center justify-between border-b border-slate-200 pb-6">
-          <div>
-            <h1 className="text-3xl font-bold text-slate-900">Buat Surat Penawaran</h1>
-            <p className="text-slate-500 mt-1">Estimasi biaya proyek dan layanan (Quotation).</p>
+      <div className="max-w-[1400px] mx-auto w-full p-4 sm:p-8 flex flex-col gap-8 z-10">
+        <header className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Link href="/" className="w-10 h-10 flex items-center justify-center bg-white border border-zinc-200 rounded-full hover:bg-zinc-50 hover:border-zinc-300 transition-all shadow-sm">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            </Link>
+            <div>
+              <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">Buat Surat Penawaran</h1>
+              <p className="text-sm text-zinc-500 mt-1">Estimasi biaya elegan untuk calon klien Anda.</p>
+            </div>
           </div>
-          <Link href="/" className="px-4 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 hover:text-slate-900 transition-colors shadow-sm">
-            Kembali
-          </Link>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 items-start">
           {/* FORM SECTION */}
-          <section className="bg-white/70 backdrop-blur-md border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-sm flex flex-col gap-6">
+          <section className="bg-white border border-zinc-200/60 rounded-3xl p-6 sm:p-10 shadow-premium flex flex-col gap-8 h-[calc(100vh-10rem)] overflow-y-auto">
             
             {/* Meta Info */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -109,27 +111,31 @@ export default function GuestQuotationPage() {
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="text-sm font-semibold text-slate-700">Tanggal Pembuatan</label>
-                <input 
-                  type="date" 
-                  className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
-                  value={quotationData.date}
-                  onChange={(e) => setQuotationData({ ...quotationData, date: e.target.value })}
-                />
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <label className="text-sm font-semibold text-slate-700">Berlaku Hingga</label>
-                <input 
-                  type="date" 
-                  className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
-                  value={quotationData.validUntil}
-                  onChange={(e) => setQuotationData({ ...quotationData, validUntil: e.target.value })}
-                />
+                <label className="text-sm font-medium text-zinc-700">Tanggal & Berlaku Sampai</label>
+                <div className="grid grid-cols-2 gap-2">
+                  <input 
+                    type="date" 
+                    className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl text-sm text-zinc-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black transition-all"
+                    value={quotationData.date}
+                    onChange={(e) => setQuotationData({ ...quotationData, date: e.target.value })}
+                  />
+                  <input 
+                    type="date" 
+                    className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl text-sm text-zinc-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black transition-all"
+                    value={quotationData.validUntil}
+                    onChange={(e) => setQuotationData({ ...quotationData, validUntil: e.target.value })}
+                  />
+                </div>
               </div>
             </div>
 
-            <hr className="border-slate-100" />
+            <LogoUpload 
+              logo={quotationData.logo}
+              onLogoChange={(logo) => setQuotationData({ ...quotationData, logo })}
+              onLogoRemove={() => setQuotationData({ ...quotationData, logo: undefined })}
+            />
+
+            <hr className="border-zinc-100" />
 
             {/* Sender & Client Info */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -247,13 +253,14 @@ export default function GuestQuotationPage() {
               )}
             </div>
 
-            <hr className="border-slate-100" />
-            
+            <hr className="border-zinc-100" />
+
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-semibold text-slate-700">Syarat & Ketentuan Tambahan (Catatan)</label>
+              <label className="text-sm font-medium text-zinc-700">Syarat & Ketentuan Tambahan (Catatan)</label>
               <textarea 
-                rows={3}
-                className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all resize-y"
+                placeholder="Tuliskan catatan tambahan (misalnya metode pembayaran, jangka waktu pengerjaan, dll)..."
+                rows={4}
+                className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl text-sm text-zinc-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black transition-all resize-y"
                 value={quotationData.notes}
                 onChange={(e) => setQuotationData({ ...quotationData, notes: e.target.value })}
               />
@@ -262,8 +269,8 @@ export default function GuestQuotationPage() {
           </section>
 
           {/* PREVIEW SECTION */}
-          <section className="bg-slate-200/50 rounded-2xl p-2 h-[800px] border border-slate-300 shadow-inner sticky top-6">
-            <PDFViewerWrapper data={quotationData} />
+          <section className="bg-zinc-100/50 rounded-3xl p-2 h-[calc(100vh-10rem)] border border-zinc-200/60 shadow-inner sticky top-8 overflow-hidden">
+            <QuotationPDFWrapper data={quotationData} />
           </section>
         </div>
       </div>

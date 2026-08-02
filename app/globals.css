@@ -1,20 +1,22 @@
 @import "tailwindcss";
 
 @theme {
-  --color-kumo-canvas: #f8fafc;
-  --color-kumo-default: #0f172a;
-  --color-kumo-primary: #3b82f6;
-  --color-kumo-hairline: #e2e8f0;
-  --color-kumo-tint: rgba(59, 130, 246, 0.05);
-  --color-kumo-subtle: #64748b;
-  --color-kumo-control: #ffffff;
-  --color-background: #f8fafc;
-  --color-foreground: #0f172a;
+  --color-kumo-canvas: #fafafa;
+  --color-kumo-default: #09090b;
+  --color-kumo-primary: #000000;
+  --color-kumo-hairline: #e4e4e7;
+  --color-kumo-tint: rgba(0, 0, 0, 0.03);
+  --color-kumo-subtle: #71717a;
+  --color-background: #fafafa;
+  --color-foreground: #09090b;
+  
+  --shadow-premium: 0 8px 30px rgba(0, 0, 0, 0.04);
+  --shadow-premium-hover: 0 12px 40px rgba(0, 0, 0, 0.08);
 }
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  --background: #fafafa;
+  --foreground: #09090b;
 }
 
 @media (prefers-color-scheme: dark) {

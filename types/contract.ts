@@ -17,6 +17,7 @@ export interface ContractData {
   date: string;
   currency: "IDR" | "USD" | string;
   language: "id" | "en";
+  logo?: string;
   projectTitle: string;
   projectValue: number;
   startDate: string;

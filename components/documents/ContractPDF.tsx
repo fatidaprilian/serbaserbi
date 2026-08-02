@@ -1,20 +1,26 @@
 import React from 'react';
-import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import type { ContractData } from '@/types/contract';
-
-
 
 const styles = StyleSheet.create({
   page: {
-    padding: 50,
+    paddingTop: 60,
+    paddingBottom: 60,
+    paddingHorizontal: 60,
     fontFamily: 'Times-Roman', // Formal font for contracts
     fontSize: 11,
     color: '#000',
-    lineHeight: 1.5,
+    lineHeight: 1.6,
   },
   header: {
     alignItems: 'center',
-    marginBottom: 30,
+    marginBottom: 40,
+  },
+  logo: {
+    maxHeight: 70,
+    maxWidth: 200,
+    objectFit: 'contain',
+    marginBottom: 20,
   },
   title: {
     fontSize: 16,
@@ -128,6 +134,9 @@ export const ContractPDF = ({ data }: { data: ContractData }) => {
     <Document>
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
+          {data.logo && (
+            <Image src={data.logo} style={styles.logo} />
+          )}
           <Text style={styles.title}>{t.title}</Text>
           <Text style={styles.subtitle}>{t.number} {data.contractNumber || 'SPK-000'}</Text>
         </View>
