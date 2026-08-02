@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Freelance Invoicer & Contract Generator
+
+A web application designed specifically for Indonesian freelancers to manage their legal and financial documents (Invoices, Quotations, and Contracts) seamlessly. The app supports dual currency (IDR & USD) and generates professional, print-ready PDF documents directly in the browser.
+
+## Features
+
+### Guest Mode (No Login Required)
+Create documents instantly with client-side PDF generation (`@react-pdf/renderer`), ensuring your data never leaves your browser.
+- **Invoice Generator**: Create professional invoices with automatic total calculations. Includes warning for Indonesian Stamp Duty (Bea Meterai) for transactions above Rp5.000.000.
+- **Quotation Generator**: Send formal cost estimates with validity periods to prospective clients.
+- **Contract Generator**: Draft professional service agreements (SPK) with standard or custom clauses and signature blocks.
+- **Bilingual Support**: All generated PDF documents can be switched between **Indonesian** and **English** languages on the fly!
+
+### Premium UI/UX
+- Built with **Next.js 15+** and **Tailwind CSS v4**.
+- Uses elegant glassmorphism and modern design principles.
 
 ## Getting Started
 
-First, run the development server:
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+2. Run the development server:
+   ```bash
+   npm run dev
+   ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3. Open [http://localhost:3000](http://localhost:3000) with your browser to see the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Tech Stack
+- Next.js (App Router)
+- React 19
+- Tailwind CSS v4
+- @react-pdf/renderer
+- Drizzle ORM (Database Schema ready for Multi-tenant)
+- Vercel Postgres
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Upcoming Features (Roadmap)
+- **Login Mode / Multi-Tenant**: Save and manage client profiles, document history, and default settings via NextAuth.
+- **Dashboard Analytics**: Track Draft, Sent, Paid, and Overdue documents.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+*Developed with Antigravity IDE & Agentic Senior Core.*
