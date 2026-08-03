@@ -5,6 +5,9 @@ import dynamic from "next/dynamic";
 import { InvoiceData, InvoiceItem } from "../../../types/invoice";
 import GuestPageHeader from "@/components/GuestPageHeader";
 import LogoUpload from "@/components/LogoUpload";
+import DocumentPartyForm from "@/components/forms/DocumentPartyForm";
+import DocumentItemsForm from "@/components/forms/DocumentItemsForm";
+import DocumentMetaForm from "@/components/forms/DocumentMetaForm";
 
 // Dynamic import for PDF Viewer to avoid SSR issues
 const PDFViewerWrapper = dynamic(
@@ -70,60 +73,38 @@ export default function GuestInvoicePage() {
           {/* FORM SECTION */}
           <section className="bg-white border border-zinc-200/60 rounded-3xl p-6 sm:p-10 shadow-premium flex flex-col gap-8 h-[calc(100vh-10rem)] overflow-y-auto">
             
-            {/* Meta Info */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="flex flex-col gap-2">
-                <label className="text-sm font-semibold text-slate-700">Mata Uang & Bahasa</label>
-                <div className="grid grid-cols-2 gap-2">
-                  <select 
-                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                    value={invoiceData.currency}
-                    onChange={(e) => setInvoiceData({ ...invoiceData, currency: e.target.value as "IDR" | "USD" })}
-                  >
-                    <option value="IDR">IDR</option>
-                    <option value="USD">USD</option>
-                  </select>
-                  <select 
-                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                    value={invoiceData.language}
-                    onChange={(e) => setInvoiceData({ ...invoiceData, language: e.target.value as "id" | "en" })}
-                  >
-                    <option value="id">Indonesia</option>
-                    <option value="en">English</option>
-                  </select>
-                </div>
-              </div>
+            <DocumentMetaForm
+              currency={invoiceData.currency}
+              language={invoiceData.language}
+              onCurrencyChange={(currency) => setInvoiceData({ ...invoiceData, currency })}
+              onLanguageChange={(language) => setInvoiceData({ ...invoiceData, language })}
+            />
 
-              <div className="flex flex-col gap-2">
-                <label className="text-sm font-semibold text-slate-700">Nomor Invoice</label>
-                <input 
-                  type="text" 
-                  className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-semibold text-slate-700">Nomor Invoice & Tanggal</label>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <input
+                  type="text"
+                  className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   value={invoiceData.invoiceNumber}
                   onChange={(e) => setInvoiceData({ ...invoiceData, invoiceNumber: e.target.value })}
                 />
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <label className="text-sm font-medium text-zinc-700">Tanggal & Jatuh Tempo</label>
-                <div className="grid grid-cols-2 gap-2">
-                  <input 
-                    type="date" 
-                    className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl text-sm text-zinc-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black transition-all"
-                    value={invoiceData.date}
-                    onChange={(e) => setInvoiceData({ ...invoiceData, date: e.target.value })}
-                  />
-                  <input 
-                    type="date" 
-                    className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl text-sm text-zinc-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black transition-all"
-                    value={invoiceData.dueDate}
-                    onChange={(e) => setInvoiceData({ ...invoiceData, dueDate: e.target.value })}
-                  />
-                </div>
+                <input
+                  type="date"
+                  className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value={invoiceData.date}
+                  onChange={(e) => setInvoiceData({ ...invoiceData, date: e.target.value })}
+                />
+                <input
+                  type="date"
+                  className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value={invoiceData.dueDate}
+                  onChange={(e) => setInvoiceData({ ...invoiceData, dueDate: e.target.value })}
+                />
               </div>
             </div>
 
-            <LogoUpload 
+            <LogoUpload
               logo={invoiceData.logo}
               onLogoChange={(logo) => setInvoiceData({ ...invoiceData, logo })}
               onLogoRemove={() => setInvoiceData({ ...invoiceData, logo: undefined })}
@@ -131,121 +112,24 @@ export default function GuestInvoicePage() {
 
             <hr className="border-zinc-100" />
 
-            {/* Sender & Client Info */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div className="flex flex-col gap-4">
-                <h3 className="text-sm font-bold text-slate-800 border-b border-slate-100 pb-2">Informasi Anda (Pengirim)</h3>
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs font-semibold text-slate-700">Nama Lengkap / Perusahaan</label>
-                  <input 
-                    type="text" 
-                    placeholder="Nama Anda..."
-                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                    value={invoiceData.fromName}
-                    onChange={(e) => setInvoiceData({ ...invoiceData, fromName: e.target.value })}
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs font-semibold text-slate-700">Alamat</label>
-                  <textarea 
-                    placeholder="Alamat lengkap..."
-                    rows={2}
-                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-y"
-                    value={invoiceData.fromAddress}
-                    onChange={(e) => setInvoiceData({ ...invoiceData, fromAddress: e.target.value })}
-                  />
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-4">
-                <h3 className="text-sm font-bold text-slate-800 border-b border-slate-100 pb-2">Informasi Klien (Tujuan)</h3>
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs font-semibold text-slate-700">Nama Klien</label>
-                  <input 
-                    type="text" 
-                    placeholder="PT Klien Sejahtera"
-                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                    value={invoiceData.clientName}
-                    onChange={(e) => setInvoiceData({ ...invoiceData, clientName: e.target.value })}
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs font-semibold text-slate-700">Alamat Klien</label>
-                  <textarea 
-                    placeholder="Jl. Sudirman No. 1..."
-                    rows={2}
-                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-y"
-                    value={invoiceData.clientAddress}
-                    onChange={(e) => setInvoiceData({ ...invoiceData, clientAddress: e.target.value })}
-                  />
-                </div>
-              </div>
-            </div>
+            <DocumentPartyForm
+              fromName={invoiceData.fromName}
+              fromAddress={invoiceData.fromAddress}
+              clientName={invoiceData.clientName}
+              clientAddress={invoiceData.clientAddress}
+              onFromChange={(fields) => setInvoiceData({ ...invoiceData, ...fields, fromName: fields.name ?? invoiceData.fromName, fromAddress: fields.address ?? invoiceData.fromAddress })}
+              onClientChange={(fields) => setInvoiceData({ ...invoiceData, clientName: fields.name ?? invoiceData.clientName, clientAddress: fields.address ?? invoiceData.clientAddress })}
+            />
 
             <hr className="border-slate-100" />
 
-            {/* Items */}
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center justify-between">
-                <label className="text-sm font-semibold text-slate-700">Detail Layanan</label>
-                <button 
-                  onClick={handleAddItem}
-                  className="px-3 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors"
-                >
-                  + Tambah Item
-                </button>
-              </div>
-
-              {invoiceData.items.length === 0 ? (
-                <div className="text-center py-6 text-sm text-slate-400 border border-dashed border-slate-200 rounded-xl">
-                  Belum ada item ditambahkan.
-                </div>
-              ) : (
-                <div className="flex flex-col gap-3">
-                  {invoiceData.items.map((item) => (
-                    <div key={item.id} className="grid grid-cols-12 gap-3 items-start p-4 bg-slate-50/50 border border-slate-100 rounded-xl">
-                      <div className="col-span-12 sm:col-span-6 flex flex-col gap-1">
-                        <span className="text-xs text-slate-500">Deskripsi</span>
-                        <input 
-                          type="text" 
-                          placeholder="Jasa Web Dev..."
-                          className="w-full px-3 py-2 bg-white border border-slate-200 rounded-md text-sm focus:outline-none focus:border-blue-500 transition-all"
-                          value={item.description}
-                          onChange={(e) => handleItemChange(item.id, "description", e.target.value)}
-                        />
-                      </div>
-                      <div className="col-span-4 sm:col-span-2 flex flex-col gap-1">
-                        <span className="text-xs text-slate-500">Qty</span>
-                        <input 
-                          type="number" 
-                          className="w-full px-3 py-2 bg-white border border-slate-200 rounded-md text-sm focus:outline-none focus:border-blue-500 transition-all"
-                          value={item.quantity}
-                          onChange={(e) => handleItemChange(item.id, "quantity", Number(e.target.value))}
-                        />
-                      </div>
-                      <div className="col-span-8 sm:col-span-3 flex flex-col gap-1">
-                        <span className="text-xs text-slate-500">Harga ({invoiceData.currency})</span>
-                        <input 
-                          type="number" 
-                          className="w-full px-3 py-2 bg-white border border-slate-200 rounded-md text-sm focus:outline-none focus:border-blue-500 transition-all"
-                          value={item.unitPrice}
-                          onChange={(e) => handleItemChange(item.id, "unitPrice", Number(e.target.value))}
-                        />
-                      </div>
-                      <div className="col-span-12 sm:col-span-1 flex items-end justify-end sm:pt-6">
-                        <button 
-                          onClick={() => handleRemoveItem(item.id)}
-                          className="text-red-400 hover:text-red-600 p-2 transition-colors"
-                          title="Hapus"
-                        >
-                          ✕
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            <DocumentItemsForm
+              items={invoiceData.items}
+              currency={invoiceData.currency}
+              onAddItem={handleAddItem}
+              onItemChange={handleItemChange}
+              onRemoveItem={handleRemoveItem}
+            />
 
             <hr className="border-zinc-100" />
 

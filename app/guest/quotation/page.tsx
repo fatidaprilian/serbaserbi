@@ -5,6 +5,9 @@ import dynamic from "next/dynamic";
 import { QuotationData, QuotationItem } from "../../../types/quotation";
 import GuestPageHeader from "@/components/GuestPageHeader";
 import LogoUpload from "@/components/LogoUpload";
+import DocumentPartyForm from "@/components/forms/DocumentPartyForm";
+import DocumentItemsForm from "@/components/forms/DocumentItemsForm";
+import DocumentMetaForm from "@/components/forms/DocumentMetaForm";
 
 const QuotationPDFWrapper = dynamic(
   () => import("../../../components/documents/QuotationPDFWrapper"),
@@ -69,60 +72,38 @@ export default function GuestQuotationPage() {
           {/* FORM SECTION */}
           <section className="bg-white border border-zinc-200/60 rounded-3xl p-6 sm:p-10 shadow-premium flex flex-col gap-8 h-[calc(100vh-10rem)] overflow-y-auto">
             
-            {/* Meta Info */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="flex flex-col gap-2">
-                <label className="text-sm font-semibold text-slate-700">Mata Uang & Bahasa</label>
-                <div className="grid grid-cols-2 gap-2">
-                  <select 
-                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
-                    value={quotationData.currency}
-                    onChange={(e) => setQuotationData({ ...quotationData, currency: e.target.value as "IDR" | "USD" })}
-                  >
-                    <option value="IDR">IDR</option>
-                    <option value="USD">USD</option>
-                  </select>
-                  <select 
-                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
-                    value={quotationData.language}
-                    onChange={(e) => setQuotationData({ ...quotationData, language: e.target.value as "id" | "en" })}
-                  >
-                    <option value="id">Indonesia</option>
-                    <option value="en">English</option>
-                  </select>
-                </div>
-              </div>
+            <DocumentMetaForm
+              currency={quotationData.currency}
+              language={quotationData.language}
+              onCurrencyChange={(currency) => setQuotationData({ ...quotationData, currency })}
+              onLanguageChange={(language) => setQuotationData({ ...quotationData, language })}
+            />
 
-              <div className="flex flex-col gap-2">
-                <label className="text-sm font-semibold text-slate-700">Nomor Penawaran</label>
-                <input 
-                  type="text" 
-                  className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-semibold text-slate-700">Nomor Penawaran & Tanggal</label>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <input
+                  type="text"
+                  className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   value={quotationData.quotationNumber}
                   onChange={(e) => setQuotationData({ ...quotationData, quotationNumber: e.target.value })}
                 />
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <label className="text-sm font-medium text-zinc-700">Tanggal & Berlaku Sampai</label>
-                <div className="grid grid-cols-2 gap-2">
-                  <input 
-                    type="date" 
-                    className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl text-sm text-zinc-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black transition-all"
-                    value={quotationData.date}
-                    onChange={(e) => setQuotationData({ ...quotationData, date: e.target.value })}
-                  />
-                  <input 
-                    type="date" 
-                    className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl text-sm text-zinc-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black transition-all"
-                    value={quotationData.validUntil}
-                    onChange={(e) => setQuotationData({ ...quotationData, validUntil: e.target.value })}
-                  />
-                </div>
+                <input
+                  type="date"
+                  className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  value={quotationData.date}
+                  onChange={(e) => setQuotationData({ ...quotationData, date: e.target.value })}
+                />
+                <input
+                  type="date"
+                  className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  value={quotationData.validUntil}
+                  onChange={(e) => setQuotationData({ ...quotationData, validUntil: e.target.value })}
+                />
               </div>
             </div>
 
-            <LogoUpload 
+            <LogoUpload
               logo={quotationData.logo}
               onLogoChange={(logo) => setQuotationData({ ...quotationData, logo })}
               onLogoRemove={() => setQuotationData({ ...quotationData, logo: undefined })}
@@ -130,121 +111,24 @@ export default function GuestQuotationPage() {
 
             <hr className="border-zinc-100" />
 
-            {/* Sender & Client Info */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div className="flex flex-col gap-4">
-                <h3 className="text-sm font-bold text-slate-800 border-b border-slate-100 pb-2">Informasi Anda (Pengirim)</h3>
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs font-semibold text-slate-700">Nama Lengkap / Perusahaan</label>
-                  <input 
-                    type="text" 
-                    placeholder="Nama Anda..."
-                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
-                    value={quotationData.fromName}
-                    onChange={(e) => setQuotationData({ ...quotationData, fromName: e.target.value })}
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs font-semibold text-slate-700">Alamat</label>
-                  <textarea 
-                    placeholder="Alamat lengkap..."
-                    rows={2}
-                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all resize-y"
-                    value={quotationData.fromAddress}
-                    onChange={(e) => setQuotationData({ ...quotationData, fromAddress: e.target.value })}
-                  />
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-4">
-                <h3 className="text-sm font-bold text-slate-800 border-b border-slate-100 pb-2">Informasi Klien (Tujuan)</h3>
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs font-semibold text-slate-700">Nama Calon Klien</label>
-                  <input 
-                    type="text" 
-                    placeholder="PT Klien Prospektif"
-                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
-                    value={quotationData.clientName}
-                    onChange={(e) => setQuotationData({ ...quotationData, clientName: e.target.value })}
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs font-semibold text-slate-700">Alamat Calon Klien</label>
-                  <textarea 
-                    placeholder="Gedung XYZ Lt. 5..."
-                    rows={2}
-                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all resize-y"
-                    value={quotationData.clientAddress}
-                    onChange={(e) => setQuotationData({ ...quotationData, clientAddress: e.target.value })}
-                  />
-                </div>
-              </div>
-            </div>
+            <DocumentPartyForm
+              fromName={quotationData.fromName}
+              fromAddress={quotationData.fromAddress}
+              clientName={quotationData.clientName}
+              clientAddress={quotationData.clientAddress}
+              onFromChange={(fields) => setQuotationData({ ...quotationData, ...fields, fromName: fields.name ?? quotationData.fromName, fromAddress: fields.address ?? quotationData.fromAddress })}
+              onClientChange={(fields) => setQuotationData({ ...quotationData, clientName: fields.name ?? quotationData.clientName, clientAddress: fields.address ?? quotationData.clientAddress })}
+            />
 
             <hr className="border-slate-100" />
 
-            {/* Items */}
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center justify-between">
-                <label className="text-sm font-semibold text-slate-700">Rincian Estimasi Biaya</label>
-                <button 
-                  onClick={handleAddItem}
-                  className="px-3 py-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 hover:bg-emerald-100 rounded-md transition-colors"
-                >
-                  + Tambah Rincian
-                </button>
-              </div>
-
-              {quotationData.items.length === 0 ? (
-                <div className="text-center py-6 text-sm text-slate-400 border border-dashed border-slate-200 rounded-xl">
-                  Belum ada estimasi layanan ditambahkan.
-                </div>
-              ) : (
-                <div className="flex flex-col gap-3">
-                  {quotationData.items.map((item) => (
-                    <div key={item.id} className="grid grid-cols-12 gap-3 items-start p-4 bg-slate-50/50 border border-slate-100 rounded-xl hover:border-emerald-100 transition-colors">
-                      <div className="col-span-12 sm:col-span-6 flex flex-col gap-1">
-                        <span className="text-xs text-slate-500">Deskripsi</span>
-                        <input 
-                          type="text" 
-                          placeholder="Pembuatan Fitur X..."
-                          className="w-full px-3 py-2 bg-white border border-slate-200 rounded-md text-sm focus:outline-none focus:border-emerald-500 transition-all"
-                          value={item.description}
-                          onChange={(e) => handleItemChange(item.id, "description", e.target.value)}
-                        />
-                      </div>
-                      <div className="col-span-4 sm:col-span-2 flex flex-col gap-1">
-                        <span className="text-xs text-slate-500">Qty (Hari/Paket)</span>
-                        <input 
-                          type="number" 
-                          className="w-full px-3 py-2 bg-white border border-slate-200 rounded-md text-sm focus:outline-none focus:border-emerald-500 transition-all"
-                          value={item.quantity}
-                          onChange={(e) => handleItemChange(item.id, "quantity", Number(e.target.value))}
-                        />
-                      </div>
-                      <div className="col-span-8 sm:col-span-3 flex flex-col gap-1">
-                        <span className="text-xs text-slate-500">Est. Harga ({quotationData.currency})</span>
-                        <input 
-                          type="number" 
-                          className="w-full px-3 py-2 bg-white border border-slate-200 rounded-md text-sm focus:outline-none focus:border-emerald-500 transition-all"
-                          value={item.unitPrice}
-                          onChange={(e) => handleItemChange(item.id, "unitPrice", Number(e.target.value))}
-                        />
-                      </div>
-                      <div className="col-span-12 sm:col-span-1 flex items-end justify-end sm:pt-6">
-                        <button 
-                          onClick={() => handleRemoveItem(item.id)}
-                          className="text-slate-400 hover:text-red-500 p-2 transition-colors"
-                          title="Hapus"
-                        >
-                          ✕
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            <DocumentItemsForm
+              items={quotationData.items}
+              currency={quotationData.currency}
+              onAddItem={handleAddItem}
+              onItemChange={handleItemChange}
+              onRemoveItem={handleRemoveItem}
+            />
 
             <hr className="border-zinc-100" />
 
