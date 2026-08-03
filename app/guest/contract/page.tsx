@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { ContractData, ContractClause } from "../../../types/contract";
 import GuestPageHeader from "@/components/GuestPageHeader";
 import LogoUpload from "@/components/LogoUpload";
+import ContractPartyForm from "@/components/forms/ContractPartyForm";
 
 // Dynamic import for PDF Viewer to avoid SSR issues
 const ContractPDFWrapper = dynamic(
@@ -172,39 +173,14 @@ export default function GuestContractPage() {
 
             {/* Para Pihak */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {/* Pihak A */}
-              <div className="flex flex-col gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
-                <h3 className="font-semibold text-sm text-indigo-700">{contractData.partyA.role}</h3>
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs text-slate-500">Nama Lengkap / Perusahaan</label>
-                  <input type="text" className="px-3 py-2 rounded-lg border border-slate-200 text-sm" value={contractData.partyA.name} onChange={(e) => setContractData({...contractData, partyA: {...contractData.partyA, name: e.target.value}})} />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs text-slate-500">Alamat</label>
-                  <textarea rows={2} className="px-3 py-2 rounded-lg border border-slate-200 text-sm" value={contractData.partyA.address} onChange={(e) => setContractData({...contractData, partyA: {...contractData.partyA, address: e.target.value}})} />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs text-slate-500">Nama Perwakilan (Ttd)</label>
-                  <input type="text" className="px-3 py-2 rounded-lg border border-slate-200 text-sm" value={contractData.partyA.representativeName} onChange={(e) => setContractData({...contractData, partyA: {...contractData.partyA, representativeName: e.target.value}})} />
-                </div>
-              </div>
-
-              {/* Pihak B */}
-              <div className="flex flex-col gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
-                <h3 className="font-semibold text-sm text-indigo-700">{contractData.partyB.role}</h3>
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs text-slate-500">Nama Lengkap / Perusahaan</label>
-                  <input type="text" className="px-3 py-2 rounded-lg border border-slate-200 text-sm" value={contractData.partyB.name} onChange={(e) => setContractData({...contractData, partyB: {...contractData.partyB, name: e.target.value}})} />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs text-slate-500">Alamat</label>
-                  <textarea rows={2} className="px-3 py-2 rounded-lg border border-slate-200 text-sm" value={contractData.partyB.address} onChange={(e) => setContractData({...contractData, partyB: {...contractData.partyB, address: e.target.value}})} />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs text-slate-500">Nama Perwakilan (Ttd)</label>
-                  <input type="text" className="px-3 py-2 rounded-lg border border-slate-200 text-sm" value={contractData.partyB.representativeName} onChange={(e) => setContractData({...contractData, partyB: {...contractData.partyB, representativeName: e.target.value}})} />
-                </div>
-              </div>
+              <ContractPartyForm
+                party={contractData.partyA}
+                onChange={(fields) => setContractData({ ...contractData, partyA: { ...contractData.partyA, ...fields } })}
+              />
+              <ContractPartyForm
+                party={contractData.partyB}
+                onChange={(fields) => setContractData({ ...contractData, partyB: { ...contractData.partyB, ...fields } })}
+              />
             </div>
 
             {/* Pasal / Klausul */}
