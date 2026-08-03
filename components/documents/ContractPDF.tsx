@@ -1,6 +1,7 @@
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import type { ContractData } from '@/types/contract';
+import { formatCurrency } from '@/lib/utils';
 
 const styles = StyleSheet.create({
   page: {
@@ -121,13 +122,6 @@ const DICT = {
 };
 
 export const ContractPDF = ({ data }: { data: ContractData }) => {
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat(data.language === 'id' ? 'id-ID' : 'en-US', {
-      style: 'currency',
-      currency: data.currency,
-    }).format(amount);
-  };
-
   const t = DICT[data.language || 'id'];
 
   return (

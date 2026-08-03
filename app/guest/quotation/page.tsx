@@ -3,7 +3,7 @@
 import { useState } from "react";
 import dynamic from "next/dynamic";
 import { QuotationData, QuotationItem } from "../../../types/quotation";
-import Link from "next/link";
+import GuestPageHeader from "@/components/GuestPageHeader";
 import LogoUpload from "@/components/LogoUpload";
 
 const QuotationPDFWrapper = dynamic(
@@ -60,17 +60,10 @@ export default function GuestQuotationPage() {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-zinc-200/50 to-transparent blur-3xl -z-10 rounded-full pointer-events-none" />
 
       <div className="max-w-[1400px] mx-auto w-full p-4 sm:p-8 flex flex-col gap-8 z-10">
-        <header className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link href="/" className="w-10 h-10 flex items-center justify-center bg-white border border-zinc-200 rounded-full hover:bg-zinc-50 hover:border-zinc-300 transition-all shadow-sm">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-            </Link>
-            <div>
-              <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">Buat Surat Penawaran</h1>
-              <p className="text-sm text-zinc-500 mt-1">Estimasi biaya elegan untuk calon klien Anda.</p>
-            </div>
-          </div>
-        </header>
+        <GuestPageHeader
+          title="Buat Surat Penawaran"
+          subtitle="Estimasi biaya elegan untuk calon klien Anda."
+        />
 
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 items-start">
           {/* FORM SECTION */}

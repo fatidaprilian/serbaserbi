@@ -1,15 +1,8 @@
 import React from 'react';
-import { Document, Page, Text, View, StyleSheet, Font, Image } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import type { QuotationData } from '@/types/quotation';
-
-// Register fonts
-Font.register({
-  family: 'Open Sans',
-  fonts: [
-    { src: 'https://fonts.gstatic.com/s/opensans/v18/mem8YaGs126MiZpBA-UFVZ0e.ttf' },
-    { src: 'https://fonts.gstatic.com/s/opensans/v18/mem5YaGs126MiZpBA-UN7rgOUuhs.ttf', fontWeight: 700 }
-  ]
-});
+import { formatCurrency } from '@/lib/utils';
+import '@/components/documents/shared';
 
 const styles = StyleSheet.create({
   page: {
@@ -136,13 +129,6 @@ const DICT = {
 export const QuotationPDF = ({ data }: { data: QuotationData }) => {
   const calculateTotal = () => {
     return data.items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0);
-  };
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat(data.language === 'id' ? 'id-ID' : 'en-US', {
-      style: 'currency',
-      currency: data.currency,
-    }).format(amount);
   };
 
   const t = DICT[data.language || 'id'];
