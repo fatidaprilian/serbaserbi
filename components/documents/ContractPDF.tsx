@@ -129,7 +129,6 @@ export const ContractPDF = ({ data }: { data: ContractData }) => {
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
           {data.logo && (
-            /* eslint-disable-next-line jsx-a11y/alt-text */
             <Image src={data.logo} style={styles.logo} />
           )}
           <Text style={styles.title}>{t.title}</Text>

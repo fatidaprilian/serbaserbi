@@ -73,7 +73,30 @@ export const COMMON_PDF_STYLES = {
     marginTop: 20,
     alignItems: 'flex-end',
   },
+  tableHeader: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    paddingVertical: 10,
+    fontWeight: 'bold',
+  },
+  totalRowGrand: {
+    flexDirection: 'row',
+    width: '45%',
+    justifyContent: 'space-between',
+    paddingVertical: 10,
+    borderTopWidth: 1,
+    marginTop: 4,
+  },
+  totalAmount: {
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
 } as const;
+
+export function calculateItemizedTotal<T extends { quantity: number; unitPrice: number }>(items: T[] = []): number {
+  return items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0);
+}
+
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type PDFStyles = Record<string, any>;

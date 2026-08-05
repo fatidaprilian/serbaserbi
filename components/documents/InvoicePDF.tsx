@@ -1,7 +1,7 @@
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import type { InvoiceData } from '@/types/invoice';
-import { COMMON_PDF_STYLES, PDFPartySection, PDFItemTable, PDFTotalsBlock } from '@/components/documents/shared';
+import { COMMON_PDF_STYLES, PDFPartySection, PDFItemTable, PDFTotalsBlock, calculateItemizedTotal } from '@/components/documents/shared';
 
 const styles = StyleSheet.create({
   ...COMMON_PDF_STYLES,
@@ -14,25 +14,16 @@ const styles = StyleSheet.create({
     color: '#09090b',
   },
   tableHeader: {
-    flexDirection: 'row',
-    borderBottomWidth: 1,
+    ...COMMON_PDF_STYLES.tableHeader,
     borderBottomColor: '#e4e4e7',
-    paddingVertical: 10,
-    fontWeight: 'bold',
     color: '#09090b',
   },
   totalRowGrand: {
-    flexDirection: 'row',
-    width: '45%',
-    justifyContent: 'space-between',
-    paddingVertical: 10,
-    borderTopWidth: 1,
+    ...COMMON_PDF_STYLES.totalRowGrand,
     borderTopColor: '#000000',
-    marginTop: 4,
   },
   totalAmount: {
-    fontWeight: 'bold',
-    fontSize: 14,
+    ...COMMON_PDF_STYLES.totalAmount,
     color: '#09090b',
   },
 });
@@ -67,11 +58,8 @@ const DICT = {
 };
 
 export const InvoicePDF = ({ data }: { data: InvoiceData }) => {
-  const calculateTotal = () => {
-    return data.items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0);
-  };
-
   const t = DICT[data.language || 'id'];
+
 
   return (
     <Document>
@@ -81,7 +69,6 @@ export const InvoicePDF = ({ data }: { data: InvoiceData }) => {
         <View style={styles.headerRow}>
           <View>
             {data.logo ? (
-              /* eslint-disable-next-line jsx-a11y/alt-text */
               <Image src={data.logo} style={styles.logo} />
             ) : (
               <Text style={styles.title}>{t.invoice}</Text>
@@ -113,7 +100,7 @@ export const InvoicePDF = ({ data }: { data: InvoiceData }) => {
 
         <PDFTotalsBlock
           label={t.totalAmount}
-          totalAmount={calculateTotal()}
+          totalAmount={calculateItemizedTotal(data.items)}
           styles={styles}
         />
         

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import type { QuotationData } from '@/types/quotation';
-import { COMMON_PDF_STYLES, PDFPartySection, PDFItemTable, PDFTotalsBlock } from '@/components/documents/shared';
+import { COMMON_PDF_STYLES, PDFPartySection, PDFItemTable, PDFTotalsBlock, calculateItemizedTotal } from '@/components/documents/shared';
 
 const styles = StyleSheet.create({
   ...COMMON_PDF_STYLES,
@@ -14,25 +14,16 @@ const styles = StyleSheet.create({
     color: '#059669', // Emerald-600
   },
   tableHeader: {
-    flexDirection: 'row',
-    borderBottomWidth: 1,
+    ...COMMON_PDF_STYLES.tableHeader,
     borderBottomColor: '#059669',
-    paddingVertical: 10,
-    fontWeight: 'bold',
     color: '#059669',
   },
   totalRowGrand: {
-    flexDirection: 'row',
-    width: '45%',
-    justifyContent: 'space-between',
-    paddingVertical: 10,
-    borderTopWidth: 1,
+    ...COMMON_PDF_STYLES.totalRowGrand,
     borderTopColor: '#059669',
-    marginTop: 4,
   },
   totalAmount: {
-    fontWeight: 'bold',
-    fontSize: 14,
+    ...COMMON_PDF_STYLES.totalAmount,
     color: '#059669',
   },
 });
@@ -69,11 +60,8 @@ const DICT = {
 };
 
 export const QuotationPDF = ({ data }: { data: QuotationData }) => {
-  const calculateTotal = () => {
-    return data.items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0);
-  };
-
   const t = DICT[data.language || 'id'];
+
 
   return (
     <Document>
@@ -83,7 +71,6 @@ export const QuotationPDF = ({ data }: { data: QuotationData }) => {
         <View style={styles.headerRow}>
           <View>
             {data.logo ? (
-              /* eslint-disable-next-line jsx-a11y/alt-text */
               <Image src={data.logo} style={styles.logo} />
             ) : (
               <Text style={styles.title}>{t.title}</Text>
@@ -115,7 +102,7 @@ export const QuotationPDF = ({ data }: { data: QuotationData }) => {
 
         <PDFTotalsBlock
           label={t.totalAmount}
-          totalAmount={calculateTotal()}
+          totalAmount={calculateItemizedTotal(data.items)}
           styles={styles}
         />
         
