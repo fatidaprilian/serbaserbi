@@ -1,7 +1,6 @@
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import type { InvoiceData } from '@/types/invoice';
-import { formatCurrency } from '@/lib/utils';
 import { COMMON_PDF_STYLES, PDFPartySection, PDFItemTable, PDFTotalsBlock } from '@/components/documents/shared';
 
 const styles = StyleSheet.create({
@@ -82,6 +81,7 @@ export const InvoicePDF = ({ data }: { data: InvoiceData }) => {
         <View style={styles.headerRow}>
           <View>
             {data.logo ? (
+              /* eslint-disable-next-line jsx-a11y/alt-text */
               <Image src={data.logo} style={styles.logo} />
             ) : (
               <Text style={styles.title}>{t.invoice}</Text>

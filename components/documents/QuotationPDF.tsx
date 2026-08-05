@@ -1,7 +1,6 @@
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import type { QuotationData } from '@/types/quotation';
-import { formatCurrency } from '@/lib/utils';
 import { COMMON_PDF_STYLES, PDFPartySection, PDFItemTable, PDFTotalsBlock } from '@/components/documents/shared';
 
 const styles = StyleSheet.create({
@@ -84,6 +83,7 @@ export const QuotationPDF = ({ data }: { data: QuotationData }) => {
         <View style={styles.headerRow}>
           <View>
             {data.logo ? (
+              /* eslint-disable-next-line jsx-a11y/alt-text */
               <Image src={data.logo} style={styles.logo} />
             ) : (
               <Text style={styles.title}>{t.title}</Text>

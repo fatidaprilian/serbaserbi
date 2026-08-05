@@ -75,6 +75,9 @@ export const COMMON_PDF_STYLES = {
   },
 } as const;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type PDFStyles = Record<string, any>;
+
 export interface PDFPartySectionProps {
   fromLabel: string;
   fromName: string;
@@ -82,7 +85,7 @@ export interface PDFPartySectionProps {
   toLabel: string;
   clientName: string;
   clientAddress: string;
-  styles: any;
+  styles: PDFStyles;
 }
 
 export const PDFPartySection = ({
@@ -111,7 +114,7 @@ export const PDFPartySection = ({
 export interface PDFItemTableProps {
   items: Array<{ description: string; quantity: number; unitPrice: number }>;
   labels: { desc: string; qty: string; price: string; total: string };
-  styles: any;
+  styles: PDFStyles;
 }
 
 export const PDFItemTable = ({ items, labels, styles }: PDFItemTableProps) => (
@@ -137,7 +140,7 @@ export const PDFItemTable = ({ items, labels, styles }: PDFItemTableProps) => (
 export interface PDFTotalsBlockProps {
   label: string;
   totalAmount: number;
-  styles: any;
+  styles: PDFStyles;
 }
 
 export const PDFTotalsBlock = ({ label, totalAmount, styles }: PDFTotalsBlockProps) => (
