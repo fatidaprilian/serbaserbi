@@ -8,6 +8,7 @@ import LogoUpload from "@/components/LogoUpload";
 import DocumentPartyForm from "@/components/forms/DocumentPartyForm";
 import DocumentItemsForm from "@/components/forms/DocumentItemsForm";
 import DocumentMetaForm from "@/components/forms/DocumentMetaForm";
+import { useDocumentItems } from "@/lib/hooks/useDocumentItems";
 
 // Dynamic import for PDF Viewer to avoid SSR issues
 const PDFViewerWrapper = dynamic(
@@ -16,7 +17,9 @@ const PDFViewerWrapper = dynamic(
 );
 
 export default function GuestInvoicePage() {
-  const [invoiceData, setInvoiceData] = useState<InvoiceData>({
+  const { items, addItem, updateItem, removeItem } = useDocumentItems<InvoiceItem>([]);
+
+  const [invoiceData, setInvoiceData] = useState<Omit<InvoiceData, "items">>({
     currency: "IDR",
     language: "id",
     logo: undefined,
@@ -27,36 +30,12 @@ export default function GuestInvoicePage() {
     fromAddress: "",
     clientName: "",
     clientAddress: "",
-    items: [],
     taxRate: 0,
     notes: "",
   });
 
-  const handleAddItem = () => {
-    setInvoiceData({
-      ...invoiceData,
-      items: [
-        ...invoiceData.items,
-        { id: Date.now().toString(), description: "", quantity: 1, unitPrice: 0 },
-      ],
-    });
-  };
+  const fullInvoiceData: InvoiceData = { ...invoiceData, items };
 
-  const handleItemChange = (id: string, field: keyof InvoiceItem, value: string | number) => {
-    setInvoiceData({
-      ...invoiceData,
-      items: invoiceData.items.map((item) =>
-        item.id === id ? { ...item, [field]: value } : item
-      ),
-    });
-  };
-
-  const handleRemoveItem = (id: string) => {
-    setInvoiceData({
-      ...invoiceData,
-      items: invoiceData.items.filter((item) => item.id !== id),
-    });
-  };
 
   return (
     <div className="min-h-screen bg-[#fafafa] text-[#09090b] font-sans selection:bg-black selection:text-white">
@@ -124,11 +103,11 @@ export default function GuestInvoicePage() {
             <hr className="border-slate-100" />
 
             <DocumentItemsForm
-              items={invoiceData.items}
+              items={items}
               currency={invoiceData.currency}
-              onAddItem={handleAddItem}
-              onItemChange={handleItemChange}
-              onRemoveItem={handleRemoveItem}
+              onAddItem={() => { addItem(); }}
+              onItemChange={(id, field, value) => { updateItem(id, field as keyof InvoiceItem, value); }}
+              onRemoveItem={(id) => { removeItem(id); }}
             />
 
             <hr className="border-zinc-100" />
@@ -148,7 +127,7 @@ export default function GuestInvoicePage() {
 
           {/* PREVIEW SECTION */}
           <section className="bg-zinc-100/50 rounded-3xl p-2 h-[calc(100vh-10rem)] border border-zinc-200/60 shadow-inner sticky top-8 overflow-hidden">
-            <PDFViewerWrapper data={invoiceData} />
+            <PDFViewerWrapper data={fullInvoiceData} />
           </section>
         </div>
       </div>

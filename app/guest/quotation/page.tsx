@@ -8,6 +8,7 @@ import LogoUpload from "@/components/LogoUpload";
 import DocumentPartyForm from "@/components/forms/DocumentPartyForm";
 import DocumentItemsForm from "@/components/forms/DocumentItemsForm";
 import DocumentMetaForm from "@/components/forms/DocumentMetaForm";
+import { useDocumentItems } from "@/lib/hooks/useDocumentItems";
 
 const QuotationPDFWrapper = dynamic(
   () => import("../../../components/documents/QuotationPDFWrapper"),
@@ -15,7 +16,9 @@ const QuotationPDFWrapper = dynamic(
 );
 
 export default function GuestQuotationPage() {
-  const [quotationData, setQuotationData] = useState<QuotationData>({
+  const { items, addItem, updateItem, removeItem } = useDocumentItems<QuotationItem>([]);
+
+  const [quotationData, setQuotationData] = useState<Omit<QuotationData, "items">>({
     currency: "IDR",
     language: "id",
     logo: undefined,
@@ -26,36 +29,11 @@ export default function GuestQuotationPage() {
     fromAddress: "",
     clientName: "",
     clientAddress: "",
-    items: [],
     taxRate: 0,
     notes: "Harga dapat berubah jika terdapat penambahan ruang lingkup pekerjaan di luar yang telah disepakati di atas.",
   });
 
-  const handleAddItem = () => {
-    setQuotationData({
-      ...quotationData,
-      items: [
-        ...quotationData.items,
-        { id: Date.now().toString(), description: "", quantity: 1, unitPrice: 0 },
-      ],
-    });
-  };
-
-  const handleItemChange = (id: string, field: keyof QuotationItem, value: string | number) => {
-    setQuotationData({
-      ...quotationData,
-      items: quotationData.items.map((item) =>
-        item.id === id ? { ...item, [field]: value } : item
-      ),
-    });
-  };
-
-  const handleRemoveItem = (id: string) => {
-    setQuotationData({
-      ...quotationData,
-      items: quotationData.items.filter((item) => item.id !== id),
-    });
-  };
+  const fullQuotationData: QuotationData = { ...quotationData, items };
 
   return (
     <div className="min-h-screen bg-[#fafafa] text-[#09090b] font-sans selection:bg-black selection:text-white">
@@ -123,11 +101,11 @@ export default function GuestQuotationPage() {
             <hr className="border-slate-100" />
 
             <DocumentItemsForm
-              items={quotationData.items}
+              items={items}
               currency={quotationData.currency}
-              onAddItem={handleAddItem}
-              onItemChange={handleItemChange}
-              onRemoveItem={handleRemoveItem}
+              onAddItem={() => { addItem(); }}
+              onItemChange={(id, field, value) => { updateItem(id, field as keyof QuotationItem, value); }}
+              onRemoveItem={(id) => { removeItem(id); }}
             />
 
             <hr className="border-zinc-100" />
@@ -147,10 +125,11 @@ export default function GuestQuotationPage() {
 
           {/* PREVIEW SECTION */}
           <section className="bg-zinc-100/50 rounded-3xl p-2 h-[calc(100vh-10rem)] border border-zinc-200/60 shadow-inner sticky top-8 overflow-hidden">
-            <QuotationPDFWrapper data={quotationData} />
+            <QuotationPDFWrapper data={fullQuotationData} />
           </section>
         </div>
       </div>
     </div>
   );
 }
+
