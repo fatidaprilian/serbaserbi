@@ -1,8 +1,19 @@
 import Link from "next/link";
+import { UserNav } from "@/components/UserNav";
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-[#fafafa] text-[#09090b] font-sans selection:bg-black selection:text-white">
+      {/* Top Navbar */}
+      <nav className="w-full border-b border-zinc-200/80 bg-white/70 backdrop-blur-md sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+          <Link href="/" className="font-black text-xl tracking-tight text-zinc-900">
+            SerbaSerbi
+          </Link>
+          <UserNav />
+        </div>
+      </nav>
+
       {/* Premium subtle gradient blob */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-zinc-200/50 to-transparent blur-3xl -z-10 rounded-full" />
 
