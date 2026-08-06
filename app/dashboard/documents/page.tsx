@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 
 interface DocItem {
@@ -22,7 +22,30 @@ export default function DocumentHistoryPage() {
   const [search, setSearch] = useState('');
   const [activeTab, setActiveTab] = useState<'all' | 'invoice' | 'quotation' | 'contract'>('all');
 
-  const fetchDocuments = async () => {
+  useEffect(() => {
+    let isMounted = true;
+    const loadDocuments = async () => {
+      try {
+        const res = await fetch('/api/documents');
+        if (res.ok && isMounted) {
+          const data = await res.json();
+          setDocuments(data.documents || []);
+        }
+      } catch (err) {
+        console.error('Failed to fetch documents:', err);
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+    void loadDocuments();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const fetchDocuments = useCallback(async () => {
     try {
       const res = await fetch('/api/documents');
       if (res.ok) {
@@ -34,10 +57,6 @@ export default function DocumentHistoryPage() {
     } finally {
       setLoading(false);
     }
-  };
-
-  useEffect(() => {
-    fetchDocuments();
   }, []);
 
   const handleStatusChange = async (docType: string, id: string, newStatus: string) => {
@@ -168,15 +187,17 @@ export default function DocumentHistoryPage() {
       {/* Filters & Search */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900/80 p-4 rounded-2xl border border-slate-800">
         <div className="flex items-center gap-1.5 overflow-x-auto">
-          {[
-            { id: 'all', label: 'Semua' },
-            { id: 'invoice', label: 'Invoice' },
-            { id: 'quotation', label: 'Penawaran' },
-            { id: 'contract', label: 'Kontrak' },
-          ].map((tab) => (
+          {(
+            [
+              { id: 'all', label: 'Semua' },
+              { id: 'invoice', label: 'Invoice' },
+              { id: 'quotation', label: 'Penawaran' },
+              { id: 'contract', label: 'Kontrak' },
+            ] as const
+          ).map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
+              onClick={() => setActiveTab(tab.id)}
               className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                 activeTab === tab.id
                   ? 'bg-slate-800 text-cyan-400 border border-slate-700'

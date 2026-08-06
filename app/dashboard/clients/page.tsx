@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, FormEvent } from 'react';
+import { useState, useEffect, useCallback, FormEvent } from 'react';
 
 interface Client {
   id: string;
@@ -30,7 +30,30 @@ export default function ClientsPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
-  const fetchClients = async () => {
+  useEffect(() => {
+    let isMounted = true;
+    const loadClients = async () => {
+      try {
+        const res = await fetch('/api/clients');
+        if (res.ok && isMounted) {
+          const data = await res.json();
+          setClients(data.clients || []);
+        }
+      } catch (err) {
+        console.error('Failed to fetch clients:', err);
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+    void loadClients();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const fetchClients = useCallback(async () => {
     try {
       const res = await fetch('/api/clients');
       if (res.ok) {
@@ -42,10 +65,6 @@ export default function ClientsPage() {
     } finally {
       setLoading(false);
     }
-  };
-
-  useEffect(() => {
-    fetchClients();
   }, []);
 
   const openAddModal = () => {
@@ -187,7 +206,7 @@ export default function ClientsPage() {
                   <h3 className="font-bold text-slate-100 text-base">{client.name}</h3>
                   {client.isForeignHint && (
                     <span className="px-2 py-0.5 text-[10px] uppercase tracking-wider font-bold rounded bg-amber-500/10 border border-amber-500/30 text-amber-300">
-                      Asing / Int'l
+                      {"Asing / Int'l"}
                     </span>
                   )}
                 </div>
