@@ -73,7 +73,7 @@ export default function LoginPage() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={(e) => { void handleSubmit(e); }} className="space-y-5">
             <div>
               <label className="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-2">
                 Alamat Email Terdaftar
@@ -82,7 +82,7 @@ export default function LoginPage() {
                 type="email"
                 required
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => { setEmail(e.target.value); }}
                 placeholder="contoh: budi@freelance.id"
                 className="w-full px-4 py-3 rounded-2xl bg-zinc-50/80 border border-zinc-200 text-zinc-900 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-zinc-900 transition-all text-sm"
               />
@@ -96,7 +96,7 @@ export default function LoginPage() {
                 type="password"
                 required
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => { setPassword(e.target.value); }}
                 placeholder="Masukkan kata sandi akun"
                 className="w-full px-4 py-3 rounded-2xl bg-zinc-50/80 border border-zinc-200 text-zinc-900 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-zinc-900 transition-all text-sm"
               />

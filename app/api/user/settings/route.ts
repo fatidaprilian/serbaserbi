@@ -1,32 +1,34 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@/auth';
 import { db } from '@/db';
 import { users } from '@/db/schema';
 import { eq } from 'drizzle-orm';
+import { requireAuth } from '@/lib/auth-utils';
+
+const USER_SETTINGS_SELECT_FIELDS = {
+  id: users.id,
+  email: users.email,
+  name: users.name,
+  businessName: users.businessName,
+  npwp: users.npwp,
+  phone: users.phone,
+  address: users.address,
+  logoUrl: users.logoUrl,
+  defaultCurrency: users.defaultCurrency,
+  defaultNotes: users.defaultNotes,
+};
 
 export async function GET() {
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { userId, errorResponse } = await requireAuth();
+    if (errorResponse) return errorResponse;
 
     const [user] = await db
       .select({
-        id: users.id,
-        email: users.email,
-        name: users.name,
-        businessName: users.businessName,
-        npwp: users.npwp,
-        phone: users.phone,
-        address: users.address,
-        logoUrl: users.logoUrl,
-        defaultCurrency: users.defaultCurrency,
-        defaultNotes: users.defaultNotes,
+        ...USER_SETTINGS_SELECT_FIELDS,
         createdAt: users.createdAt,
       })
       .from(users)
-      .where(eq(users.id, session.user.id))
+      .where(eq(users.id, userId))
       .limit(1);
 
     if (!user) {
@@ -42,10 +44,8 @@ export async function GET() {
 
 export async function PATCH(request: Request) {
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { userId, errorResponse } = await requireAuth();
+    if (errorResponse) return errorResponse;
 
     const body = await request.json();
     const { name, businessName, npwp, phone, address, logoUrl, defaultCurrency, defaultNotes } = body;
@@ -66,19 +66,8 @@ export async function PATCH(request: Request) {
         defaultCurrency: defaultCurrency || 'IDR',
         defaultNotes: defaultNotes !== undefined ? defaultNotes.trim() || null : undefined,
       })
-      .where(eq(users.id, session.user.id))
-      .returning({
-        id: users.id,
-        email: users.email,
-        name: users.name,
-        businessName: users.businessName,
-        npwp: users.npwp,
-        phone: users.phone,
-        address: users.address,
-        logoUrl: users.logoUrl,
-        defaultCurrency: users.defaultCurrency,
-        defaultNotes: users.defaultNotes,
-      });
+      .where(eq(users.id, userId))
+      .returning(USER_SETTINGS_SELECT_FIELDS);
 
     return NextResponse.json({ success: true, user: updatedUser });
   } catch (error) {

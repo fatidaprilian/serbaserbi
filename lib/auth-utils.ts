@@ -1,4 +1,6 @@
 import { scryptSync, randomBytes, timingSafeEqual } from 'node:crypto';
+import { NextResponse } from 'next/server';
+import { auth } from '@/auth';
 
 // minimal: native scrypt password hashing using stdlib crypto
 export function hashPassword(password: string): string {
@@ -13,4 +15,20 @@ export function verifyPassword(password: string, hash: string): boolean {
   const keyBuffer = Buffer.from(key, 'hex');
   const derivedKey = scryptSync(password, salt, 64);
   return timingSafeEqual(keyBuffer, derivedKey);
+}
+
+export async function requireAuth() {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return {
+      session: null,
+      userId: null,
+      errorResponse: NextResponse.json({ error: 'Unauthorized' }, { status: 401 }),
+    };
+  }
+  return {
+    session,
+    userId: session.user.id,
+    errorResponse: null,
+  };
 }

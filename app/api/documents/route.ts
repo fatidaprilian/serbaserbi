@@ -1,19 +1,29 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@/auth';
 import { db } from '@/db';
 import { invoices, invoiceItems, quotations, quotationItems, contracts, clients } from '@/db/schema';
 import { eq, desc } from 'drizzle-orm';
+import { requireAuth } from '@/lib/auth-utils';
+
+interface LineItemInput {
+  description: string;
+  quantity: number;
+  rate: number;
+  subtotal: number;
+}
+
+const mapLineItems = (items: LineItemInput[]) =>
+  items.map((item) => ({
+    description: item.description,
+    quantity: String(item.quantity),
+    rate: String(item.rate),
+    subtotal: String(item.subtotal),
+  }));
 
 export async function GET() {
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { userId, errorResponse } = await requireAuth();
+    if (errorResponse) return errorResponse;
 
-    const userId = session.user.id;
-
-    // Fetch invoices with client info
     const userInvoices = await db
       .select({
         id: invoices.id,
@@ -31,7 +41,6 @@ export async function GET() {
       .where(eq(invoices.userId, userId))
       .orderBy(desc(invoices.createdAt));
 
-    // Fetch quotations
     const userQuotations = await db
       .select({
         id: quotations.id,
@@ -49,7 +58,6 @@ export async function GET() {
       .where(eq(quotations.userId, userId))
       .orderBy(desc(quotations.createdAt));
 
-    // Fetch contracts
     const userContracts = await db
       .select({
         id: contracts.id,
@@ -90,12 +98,9 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { userId, errorResponse } = await requireAuth();
+    if (errorResponse) return errorResponse;
 
-    const userId = session.user.id;
     const body = await request.json();
     const { docType, clientId, documentNumber, issueDate, dueDate, validUntil, currency, notes, items, value, contractType, meteraiRequired } = body;
 
@@ -121,13 +126,7 @@ export async function POST(request: Request) {
 
       if (items && Array.isArray(items) && items.length > 0) {
         await db.insert(invoiceItems).values(
-          items.map((item: { description: string; quantity: number; rate: number; subtotal: number }) => ({
-            invoiceId: newInvoice.id,
-            description: item.description,
-            quantity: String(item.quantity),
-            rate: String(item.rate),
-            subtotal: String(item.subtotal),
-          }))
+          mapLineItems(items).map((item) => ({ ...item, invoiceId: newInvoice.id }))
         );
       }
 
@@ -149,13 +148,7 @@ export async function POST(request: Request) {
 
       if (items && Array.isArray(items) && items.length > 0) {
         await db.insert(quotationItems).values(
-          items.map((item: { description: string; quantity: number; rate: number; subtotal: number }) => ({
-            quotationId: newQuotation.id,
-            description: item.description,
-            quantity: String(item.quantity),
-            rate: String(item.rate),
-            subtotal: String(item.subtotal),
-          }))
+          mapLineItems(items).map((item) => ({ ...item, quotationId: newQuotation.id }))
         );
       }
 

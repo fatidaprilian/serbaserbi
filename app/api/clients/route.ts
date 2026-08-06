@@ -1,20 +1,18 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@/auth';
 import { db } from '@/db';
 import { clients } from '@/db/schema';
 import { eq, desc } from 'drizzle-orm';
+import { requireAuth } from '@/lib/auth-utils';
 
 export async function GET() {
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { userId, errorResponse } = await requireAuth();
+    if (errorResponse) return errorResponse;
 
     const clientList = await db
       .select()
       .from(clients)
-      .where(eq(clients.userId, session.user.id))
+      .where(eq(clients.userId, userId))
       .orderBy(desc(clients.createdAt));
 
     return NextResponse.json({ clients: clientList });
@@ -26,10 +24,8 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { userId, errorResponse } = await requireAuth();
+    if (errorResponse) return errorResponse;
 
     const body = await request.json();
     const { name, email, phone, address, country, isForeignHint } = body;
@@ -41,7 +37,7 @@ export async function POST(request: Request) {
     const [newClient] = await db
       .insert(clients)
       .values({
-        userId: session.user.id,
+        userId,
         name: name.trim(),
         email: email?.trim() || null,
         phone: phone?.trim() || null,

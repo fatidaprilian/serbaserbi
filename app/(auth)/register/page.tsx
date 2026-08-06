@@ -83,7 +83,7 @@ export default function RegisterPage() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={(e) => { void handleSubmit(e); }} className="space-y-4">
             <div>
               <label className="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-1.5">
                 Nama Lengkap / Nama Freelancer *
@@ -92,7 +92,7 @@ export default function RegisterPage() {
                 type="text"
                 required
                 value={formData.name}
-                onChange={(e) => handleChange('name', e.target.value)}
+                onChange={(e) => { handleChange('name', e.target.value); }}
                 placeholder="contoh: Budi Santoso"
                 className="w-full px-4 py-2.5 rounded-2xl bg-zinc-50/80 border border-zinc-200 text-zinc-900 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-zinc-900 transition-all text-sm"
               />
@@ -106,7 +106,7 @@ export default function RegisterPage() {
                 type="email"
                 required
                 value={formData.email}
-                onChange={(e) => handleChange('email', e.target.value)}
+                onChange={(e) => { handleChange('email', e.target.value); }}
                 placeholder="budi@freelance.id"
                 className="w-full px-4 py-2.5 rounded-2xl bg-zinc-50/80 border border-zinc-200 text-zinc-900 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-zinc-900 transition-all text-sm"
               />
@@ -121,7 +121,7 @@ export default function RegisterPage() {
                 required
                 minLength={6}
                 value={formData.password}
-                onChange={(e) => handleChange('password', e.target.value)}
+                onChange={(e) => { handleChange('password', e.target.value); }}
                 placeholder="Buat kata sandi aman"
                 className="w-full px-4 py-2.5 rounded-2xl bg-zinc-50/80 border border-zinc-200 text-zinc-900 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-zinc-900 transition-all text-sm"
               />
@@ -135,7 +135,7 @@ export default function RegisterPage() {
                 <input
                   type="text"
                   value={formData.businessName}
-                  onChange={(e) => handleChange('businessName', e.target.value)}
+                  onChange={(e) => { handleChange('businessName', e.target.value); }}
                   placeholder="contoh: Studio Pixel"
                   className="w-full px-4 py-2.5 rounded-2xl bg-zinc-50/80 border border-zinc-200 text-zinc-900 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-zinc-900 transition-all text-sm"
                 />
@@ -148,7 +148,7 @@ export default function RegisterPage() {
                 <input
                   type="text"
                   value={formData.npwp}
-                  onChange={(e) => handleChange('npwp', e.target.value)}
+                  onChange={(e) => { handleChange('npwp', e.target.value); }}
                   placeholder="12.345.678.9-012.000"
                   className="w-full px-4 py-2.5 rounded-2xl bg-zinc-50/80 border border-zinc-200 text-zinc-900 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-zinc-900 transition-all text-sm"
                 />
@@ -161,7 +161,7 @@ export default function RegisterPage() {
               </label>
               <select
                 value={formData.defaultCurrency}
-                onChange={(e) => handleChange('defaultCurrency', e.target.value)}
+                onChange={(e) => { handleChange('defaultCurrency', e.target.value); }}
                 className="w-full px-4 py-2.5 rounded-2xl bg-zinc-50/80 border border-zinc-200 text-zinc-900 focus:outline-none focus:bg-white focus:ring-2 focus:ring-zinc-900 transition-all text-sm"
               >
                 <option value="IDR">IDR (Rupiah Indonesia)</option>

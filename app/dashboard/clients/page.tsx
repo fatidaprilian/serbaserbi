@@ -101,7 +101,7 @@ export default function ClientsPage() {
     setError('');
 
     try {
-      const url = editingClient ? `/api/clients/${editingClient.id}` : '/api/clients';
+      const url = editingClient ? `/api/clients/${encodeURIComponent(editingClient.id)}` : '/api/clients';
       const method = editingClient ? 'PATCH' : 'POST';
 
       const res = await fetch(url, {
@@ -114,7 +114,7 @@ export default function ClientsPage() {
 
       if (res.ok) {
         setIsModalOpen(false);
-        fetchClients();
+        void fetchClients();
       } else {
         setError(data.error || 'Gagal menyimpan data klien.');
       }
@@ -129,9 +129,9 @@ export default function ClientsPage() {
     if (!confirm(`Apakah Anda yakin ingin menghapus data klien "${name}"?`)) return;
 
     try {
-      const res = await fetch(`/api/clients/${id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/clients/${encodeURIComponent(id)}`, { method: 'DELETE' });
       if (res.ok) {
-        fetchClients();
+        void fetchClients();
       } else {
         const data = await res.json();
         alert(data.error || 'Gagal menghapus klien.');
@@ -159,7 +159,7 @@ export default function ClientsPage() {
         </div>
 
         <button
-          onClick={openAddModal}
+          onClick={() => { openAddModal(); }}
           className="px-4 py-2.5 rounded-xl font-semibold text-sm bg-cyan-600 hover:bg-cyan-500 text-white shadow-md shadow-cyan-600/20 transition-all flex items-center justify-center gap-2 cursor-pointer self-start sm:self-auto"
         >
           <span>+</span> Tambah Klien Baru
@@ -171,7 +171,7 @@ export default function ClientsPage() {
         <input
           type="text"
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => { setSearch(e.target.value); }}
           placeholder="Cari berdasarkan nama, email, atau negara..."
           className="w-full px-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
         />
@@ -187,7 +187,7 @@ export default function ClientsPage() {
           </p>
           {!search && (
             <button
-              onClick={openAddModal}
+              onClick={() => { openAddModal(); }}
               className="mt-4 text-xs font-semibold text-cyan-400 hover:underline"
             >
               + Tambah Klien Pertama Anda
@@ -235,13 +235,13 @@ export default function ClientsPage() {
 
               <div className="mt-5 pt-3 border-t border-slate-800/80 flex items-center justify-end gap-2">
                 <button
-                  onClick={() => openEditModal(client)}
+                  onClick={() => { openEditModal(client); }}
                   className="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition-all cursor-pointer"
                 >
                   Edit
                 </button>
                 <button
-                  onClick={() => handleDelete(client.id, client.name)}
+                  onClick={() => { void handleDelete(client.id, client.name); }}
                   className="px-3 py-1.5 rounded-lg text-xs font-medium text-rose-400 hover:bg-rose-500/10 transition-all cursor-pointer"
                 >
                   Hapus
@@ -261,7 +261,7 @@ export default function ClientsPage() {
                 {editingClient ? 'Edit Data Klien' : 'Tambah Klien Baru'}
               </h2>
               <button
-                onClick={() => setIsModalOpen(false)}
+                onClick={() => { setIsModalOpen(false); }}
                 className="text-slate-400 hover:text-white font-bold"
               >
                 ✕
@@ -274,7 +274,7 @@ export default function ClientsPage() {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={(e) => { void handleSubmit(e); }} className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
                   Nama Klien / Perusahaan *
@@ -283,7 +283,7 @@ export default function ClientsPage() {
                   type="text"
                   required
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onChange={(e) => { setFormData({ ...formData, name: e.target.value }); }}
                   placeholder="e.g. PT Maju Bersama"
                   className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
                 />
@@ -296,7 +296,7 @@ export default function ClientsPage() {
                 <input
                   type="email"
                   value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  onChange={(e) => { setFormData({ ...formData, email: e.target.value }); }}
                   placeholder="finance@majubersama.com"
                   className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
                 />
@@ -309,7 +309,7 @@ export default function ClientsPage() {
                 <input
                   type="text"
                   value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  onChange={(e) => { setFormData({ ...formData, phone: e.target.value }); }}
                   placeholder="+62 811 2233 4455"
                   className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
                 />
@@ -322,7 +322,7 @@ export default function ClientsPage() {
                 <textarea
                   rows={2}
                   value={formData.address}
-                  onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                  onChange={(e) => { setFormData({ ...formData, address: e.target.value }); }}
                   placeholder="Alamat kantor klien..."
                   className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50 resize-y"
                 />
@@ -336,7 +336,7 @@ export default function ClientsPage() {
                   <input
                     type="text"
                     value={formData.country}
-                    onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+                    onChange={(e) => { setFormData({ ...formData, country: e.target.value }); }}
                     placeholder="Indonesia"
                     className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
                   />
@@ -347,7 +347,7 @@ export default function ClientsPage() {
                     <input
                       type="checkbox"
                       checked={formData.isForeignHint}
-                      onChange={(e) => setFormData({ ...formData, isForeignHint: e.target.checked })}
+                      onChange={(e) => { setFormData({ ...formData, isForeignHint: e.target.checked }); }}
                       className="rounded border-slate-800 text-cyan-500 focus:ring-cyan-500"
                     />
                     Klien Luar Negeri
@@ -358,7 +358,7 @@ export default function ClientsPage() {
               <div className="flex justify-end gap-3 pt-3">
                 <button
                   type="button"
-                  onClick={() => setIsModalOpen(false)}
+                  onClick={() => { setIsModalOpen(false); }}
                   className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800"
                 >
                   Batal

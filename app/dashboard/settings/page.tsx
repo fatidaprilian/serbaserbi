@@ -18,10 +18,11 @@ export default function SettingsPage() {
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   useEffect(() => {
-    async function fetchSettings() {
+    let isMounted = true;
+    async function loadSettings() {
       try {
         const res = await fetch('/api/user/settings');
-        if (res.ok) {
+        if (res.ok && isMounted) {
           const data = await res.json();
           if (data.user) {
             setFormData({
@@ -39,10 +40,15 @@ export default function SettingsPage() {
       } catch (err) {
         console.error('Failed to load settings:', err);
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     }
-    fetchSettings();
+    void loadSettings();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const handleChange = (field: string, value: string) => {
@@ -104,7 +110,7 @@ export default function SettingsPage() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6 shadow-xl">
+      <form onSubmit={(e) => { void handleSubmit(e); }} className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6 shadow-xl">
         <div className="border-b border-slate-800 pb-4 mb-4">
           <h2 className="text-lg font-semibold text-slate-200">Identitas Freelancer / Studio</h2>
         </div>
@@ -118,7 +124,7 @@ export default function SettingsPage() {
               type="text"
               required
               value={formData.name}
-              onChange={(e) => handleChange('name', e.target.value)}
+              onChange={(e) => { handleChange('name', e.target.value); }}
               className="w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
             />
           </div>
@@ -130,7 +136,7 @@ export default function SettingsPage() {
             <input
               type="text"
               value={formData.businessName}
-              onChange={(e) => handleChange('businessName', e.target.value)}
+              onChange={(e) => { handleChange('businessName', e.target.value); }}
               placeholder="e.g. Studio Pixel Indonesia"
               className="w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
             />
@@ -145,7 +151,7 @@ export default function SettingsPage() {
             <input
               type="text"
               value={formData.npwp}
-              onChange={(e) => handleChange('npwp', e.target.value)}
+              onChange={(e) => { handleChange('npwp', e.target.value); }}
               placeholder="12.345.678.9-012.000"
               className="w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
             />
@@ -158,7 +164,7 @@ export default function SettingsPage() {
             <input
               type="text"
               value={formData.phone}
-              onChange={(e) => handleChange('phone', e.target.value)}
+              onChange={(e) => { handleChange('phone', e.target.value); }}
               placeholder="+62 812 3456 7890"
               className="w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
             />
@@ -172,7 +178,7 @@ export default function SettingsPage() {
           <textarea
             rows={3}
             value={formData.address}
-            onChange={(e) => handleChange('address', e.target.value)}
+            onChange={(e) => { handleChange('address', e.target.value); }}
             placeholder="Jl. Sudirman No. 123, Jakarta Selatan"
             className="w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50 resize-y"
           />
@@ -188,7 +194,7 @@ export default function SettingsPage() {
               </label>
               <select
                 value={formData.defaultCurrency}
-                onChange={(e) => handleChange('defaultCurrency', e.target.value)}
+                onChange={(e) => { handleChange('defaultCurrency', e.target.value); }}
                 className="w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
               >
                 <option value="IDR">IDR (Rupiah)</option>
@@ -203,7 +209,7 @@ export default function SettingsPage() {
               <input
                 type="text"
                 value={formData.logoUrl}
-                onChange={(e) => handleChange('logoUrl', e.target.value)}
+                onChange={(e) => { handleChange('logoUrl', e.target.value); }}
                 placeholder="https://example.com/logo.png"
                 className="w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
               />
@@ -217,7 +223,7 @@ export default function SettingsPage() {
             <textarea
               rows={4}
               value={formData.defaultNotes}
-              onChange={(e) => handleChange('defaultNotes', e.target.value)}
+              onChange={(e) => { handleChange('defaultNotes', e.target.value); }}
               placeholder="Pembayaran dikirim ke Rekening BCA 1234567890 a.n Budi Santoso. Terima kasih atas kerja samanya."
               className="w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50 resize-y"
             />

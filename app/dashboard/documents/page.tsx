@@ -61,14 +61,14 @@ export default function DocumentHistoryPage() {
 
   const handleStatusChange = async (docType: string, id: string, newStatus: string) => {
     try {
-      const res = await fetch(`/api/documents/${docType}/${id}`, {
+      const res = await fetch(`/api/documents/${encodeURIComponent(docType)}/${encodeURIComponent(id)}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus }),
       });
 
       if (res.ok) {
-        fetchDocuments();
+        void fetchDocuments();
       } else {
         alert('Gagal memperbarui status dokumen.');
       }
@@ -81,9 +81,9 @@ export default function DocumentHistoryPage() {
     if (!confirm(`Apakah Anda yakin ingin menghapus dokumen "${docNum}"?`)) return;
 
     try {
-      const res = await fetch(`/api/documents/${docType}/${id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/documents/${encodeURIComponent(docType)}/${encodeURIComponent(id)}`, { method: 'DELETE' });
       if (res.ok) {
-        fetchDocuments();
+        void fetchDocuments();
       } else {
         alert('Gagal menghapus dokumen.');
       }
@@ -116,7 +116,9 @@ export default function DocumentHistoryPage() {
       both_signed: { label: 'TTD Lengkap', color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' },
     };
 
-    const info = statusMap[status] || { label: status, color: 'bg-slate-800 text-slate-400 border-slate-700' };
+    const info = Object.prototype.hasOwnProperty.call(statusMap, status)
+      ? statusMap[status]
+      : { label: status, color: 'bg-slate-800 text-slate-400 border-slate-700' };
 
     return (
       <span className={`px-2.5 py-1 text-xs font-semibold rounded-lg border ${info.color}`}>
@@ -197,7 +199,7 @@ export default function DocumentHistoryPage() {
           ).map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => { setActiveTab(tab.id); }}
               className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                 activeTab === tab.id
                   ? 'bg-slate-800 text-cyan-400 border border-slate-700'
@@ -212,7 +214,7 @@ export default function DocumentHistoryPage() {
         <input
           type="text"
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => { setSearch(e.target.value); }}
           placeholder="Cari nomor dokumen atau klien..."
           className="w-full sm:w-72 px-4 py-2 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 text-xs focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
         />
@@ -268,7 +270,7 @@ export default function DocumentHistoryPage() {
                         {/* Status Switcher Dropdown */}
                         <select
                           value={doc.status}
-                          onChange={(e) => handleStatusChange(doc.docType, doc.id, e.target.value)}
+                          onChange={(e) => { void handleStatusChange(doc.docType, doc.id, e.target.value); }}
                           className="bg-slate-950 border border-slate-800 text-slate-300 rounded px-2 py-1 text-[11px] focus:outline-none focus:ring-1 focus:ring-cyan-500"
                         >
                           {doc.docType === 'invoice' && (
@@ -300,7 +302,7 @@ export default function DocumentHistoryPage() {
                         </select>
 
                         <button
-                          onClick={() => handleDelete(doc.docType, doc.id, doc.documentNumber)}
+                          onClick={() => { void handleDelete(doc.docType, doc.id, doc.documentNumber); }}
                           className="px-2 py-1 rounded text-[11px] font-medium text-rose-400 hover:bg-rose-500/10 transition-colors"
                           title="Hapus Dokumen"
                         >

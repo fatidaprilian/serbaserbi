@@ -5,14 +5,34 @@ import { usePathname } from 'next/navigation';
 import { UserNav } from '@/components/UserNav';
 import { ReactNode } from 'react';
 
+const NAV_ITEMS = [
+  { label: 'Dokumen & Riwayat', href: '/dashboard/documents' },
+  { label: 'Klien Saya', href: '/dashboard/clients' },
+  { label: 'Pengaturan Usaha', href: '/dashboard/settings' },
+];
+
+function NavLink({ href, label, isMobile, pathname }: { href: string; label: string; isMobile?: boolean; pathname: string }) {
+  const isActive = pathname.startsWith(href);
+  const baseClasses = isMobile
+    ? 'px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all'
+    : 'px-3.5 py-2 rounded-xl text-xs font-semibold transition-all';
+  const activeClasses = isActive
+    ? isMobile
+      ? 'bg-slate-800 text-cyan-400 border border-slate-700'
+      : 'bg-slate-800 text-cyan-400 border border-slate-700/80 shadow-sm'
+    : isMobile
+      ? 'text-slate-400 hover:text-slate-200'
+      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900';
+
+  return (
+    <Link href={href} className={`${baseClasses} ${activeClasses}`}>
+      {label}
+    </Link>
+  );
+}
+
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-
-  const navItems = [
-    { label: 'Dokumen & Riwayat', href: '/dashboard/documents' },
-    { label: 'Klien Saya', href: '/dashboard/clients' },
-    { label: 'Pengaturan Usaha', href: '/dashboard/settings' },
-  ];
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
@@ -28,22 +48,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             </Link>
 
             <nav className="hidden md:flex items-center gap-1">
-              {navItems.map((item) => {
-                const isActive = pathname.startsWith(item.href);
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all ${
-                      isActive
-                        ? 'bg-slate-800 text-cyan-400 border border-slate-700/80 shadow-sm'
-                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
-                    }`}
-                  >
-                    {item.label}
-                  </Link>
-                );
-              })}
+              {NAV_ITEMS.map((item) => (
+                <NavLink key={item.href} href={item.href} label={item.label} pathname={pathname} />
+              ))}
             </nav>
           </div>
 
@@ -60,22 +67,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
         {/* Mobile Navigation Sub-bar */}
         <div className="md:hidden flex border-t border-slate-800/80 px-4 py-2 gap-2 overflow-x-auto">
-          {navItems.map((item) => {
-            const isActive = pathname.startsWith(item.href);
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
-                  isActive
-                    ? 'bg-slate-800 text-cyan-400 border border-slate-700'
-                    : 'text-slate-400 hover:text-slate-200'
-                }`}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
+          {NAV_ITEMS.map((item) => (
+            <NavLink key={item.href} href={item.href} label={item.label} isMobile pathname={pathname} />
+          ))}
         </div>
       </header>
 

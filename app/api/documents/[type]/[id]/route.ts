@@ -1,18 +1,16 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@/auth';
 import { db } from '@/db';
 import { invoices, invoiceItems, quotations, quotationItems, contracts } from '@/db/schema';
 import { eq, and } from 'drizzle-orm';
+import { requireAuth } from '@/lib/auth-utils';
 
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ type: string; id: string }> }
 ) {
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { userId, errorResponse } = await requireAuth();
+    if (errorResponse) return errorResponse;
 
     const { type, id } = await params;
     const body = await request.json();
@@ -21,8 +19,6 @@ export async function PATCH(
     if (!status) {
       return NextResponse.json({ error: 'Status wajib diisi.' }, { status: 400 });
     }
-
-    const userId = session.user.id;
 
     if (type === 'invoice') {
       const [updated] = await db
@@ -62,13 +58,10 @@ export async function DELETE(
   { params }: { params: Promise<{ type: string; id: string }> }
 ) {
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { userId, errorResponse } = await requireAuth();
+    if (errorResponse) return errorResponse;
 
     const { type, id } = await params;
-    const userId = session.user.id;
 
     if (type === 'invoice') {
       await db.delete(invoiceItems).where(eq(invoiceItems.invoiceId, id));

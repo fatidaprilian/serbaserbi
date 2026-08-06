@@ -1,18 +1,16 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@/auth';
 import { db } from '@/db';
 import { clients } from '@/db/schema';
 import { eq, and } from 'drizzle-orm';
+import { requireAuth } from '@/lib/auth-utils';
 
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { userId, errorResponse } = await requireAuth();
+    if (errorResponse) return errorResponse;
 
     const { id } = await params;
     const body = await request.json();
@@ -28,7 +26,7 @@ export async function PATCH(
         country: country !== undefined ? country.trim() || 'Indonesia' : undefined,
         isForeignHint: isForeignHint !== undefined ? Boolean(isForeignHint) : undefined,
       })
-      .where(and(eq(clients.id, id), eq(clients.userId, session.user.id)))
+      .where(and(eq(clients.id, id), eq(clients.userId, userId)))
       .returning();
 
     if (!updatedClient) {
@@ -47,16 +45,14 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { userId, errorResponse } = await requireAuth();
+    if (errorResponse) return errorResponse;
 
     const { id } = await params;
 
     const [deletedClient] = await db
       .delete(clients)
-      .where(and(eq(clients.id, id), eq(clients.userId, session.user.id)))
+      .where(and(eq(clients.id, id), eq(clients.userId, userId)))
       .returning();
 
     if (!deletedClient) {
