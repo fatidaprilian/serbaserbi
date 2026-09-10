@@ -21,6 +21,8 @@ export const users = pgTable('users', {
   logoUrl: text('logo_url'),
   defaultCurrency: varchar('default_currency', { length: 3 }).default('IDR').notNull(),
   defaultNotes: text('default_notes'),
+  openrouterApiKeyEncrypted: text('openrouter_api_key_encrypted'),
+  preferredAiModel: varchar('preferred_ai_model', { length: 150 }).default('meta-llama/llama-3.3-70b-instruct:free'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 

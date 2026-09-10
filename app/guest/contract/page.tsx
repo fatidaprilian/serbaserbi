@@ -7,6 +7,7 @@ import GuestDocumentLayout from "@/components/GuestDocumentLayout";
 import LogoUpload from "@/components/LogoUpload";
 import ContractPartyForm from "@/components/forms/ContractPartyForm";
 import DocumentSaveToolbar from "@/components/DocumentSaveToolbar";
+import { ShieldCheck, WarningCircle, ArrowSquareOut } from "@phosphor-icons/react";
 
 // Dynamic import for PDF Viewer to avoid SSR issues
 const ContractPDFWrapper = dynamic(
@@ -15,6 +16,9 @@ const ContractPDFWrapper = dynamic(
 );
 
 export default function GuestContractPage() {
+  const [loadingClauses, setLoadingClauses] = useState(false);
+  const [clausesError, setClausesError] = useState<string | null>(null);
+
   const [contractData, setContractData] = useState<ContractData>({
     contractNumber: "SPK-2026-001",
     date: new Date().toISOString().split("T")[0],
@@ -55,6 +59,46 @@ export default function GuestContractPage() {
       }
     ],
   });
+
+  const handleSuggestClauses = async () => {
+    setLoadingClauses(true);
+    setClausesError(null);
+
+    try {
+      const res = await fetch('/api/ai/suggest-clauses', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          projectTitle: contractData.projectTitle,
+          projectValue: contractData.projectValue,
+          currency: contractData.currency,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok && Array.isArray(data.clauses)) {
+        const newClauses: ContractClause[] = data.clauses.map(
+          (c: { title: string; content: string }, idx: number) => ({
+            id: `${Date.now()}-${idx}`,
+            title: c.title,
+            content: c.content,
+          })
+        );
+
+        setContractData((prev) => ({
+          ...prev,
+          clauses: [...prev.clauses, ...newClauses],
+        }));
+      } else {
+        setClausesError(data.error || 'Gagal menyarankan klausul.');
+      }
+    } catch {
+      setClausesError('Terjadi gangguan jaringan saat menghubungi layanan AI.');
+    } finally {
+      setLoadingClauses(false);
+    }
+  };
 
   const handleAddClause = () => {
     setContractData({
@@ -209,12 +253,43 @@ export default function GuestContractPage() {
 
           {/* Pasal / Klausul */}
           <div className="flex flex-col gap-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 pb-2 gap-2">
               <h2 className="text-lg font-semibold text-slate-800">Pasal-Pasal Kontrak</h2>
-              <button onClick={handleAddClause} className="px-3 py-1.5 text-xs font-medium text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-md transition-colors">
-                + Tambah Pasal
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => { void handleSuggestClauses(); }}
+                  disabled={loadingClauses}
+                  className="px-3 py-1.5 text-xs font-semibold text-cyan-700 bg-cyan-50 hover:bg-cyan-100 border border-cyan-200/80 rounded-md transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-60"
+                  title="Dapatkan rekomendasi klausul protektif otomatis sesuai judul dan nilai proyek"
+                >
+                  <ShieldCheck size={14} />
+                  <span>{loadingClauses ? 'Menganalisis...' : 'Sarankan Klausul'}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleAddClause}
+                  className="px-3 py-1.5 text-xs font-medium text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-md transition-colors cursor-pointer"
+                >
+                  + Tambah Pasal
+                </button>
+              </div>
             </div>
+
+            {clausesError && (
+              <div className="p-3 rounded-xl text-xs font-medium bg-rose-500/10 border border-rose-500/30 text-rose-600 flex items-center justify-between gap-2">
+                <span className="flex items-center gap-1.5">
+                  <WarningCircle size={15} />
+                  {clausesError}
+                </span>
+                {clausesError.includes('Pengaturan') && (
+                  <a href="/dashboard/settings" className="font-semibold text-cyan-600 hover:underline flex items-center gap-0.5">
+                    Buka Pengaturan
+                    <ArrowSquareOut size={12} />
+                  </a>
+                )}
+              </div>
+            )}
 
             <div className="flex flex-col gap-4">
               {contractData.clauses.map((clause, index) => (
