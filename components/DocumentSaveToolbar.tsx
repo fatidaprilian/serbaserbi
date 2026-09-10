@@ -196,14 +196,16 @@ export default function DocumentSaveToolbar({
 
   if (status !== 'authenticated') {
     return (
-      <div className="bg-zinc-100/90 dark:bg-slate-900/90 border border-zinc-200 dark:border-slate-800 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+      <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs shadow-2xs">
         <div className="flex items-center gap-2">
-          <Badge variant="secondary">Mode Tamu</Badge>
-          <span className="text-zinc-600 dark:text-slate-400">
+          <Badge variant="secondary" className="bg-slate-200 text-slate-700 font-semibold border border-slate-300">
+            Mode Tamu
+          </Badge>
+          <span className="text-slate-600 font-medium">
             PDF diproses langsung di browser Anda. Masuk untuk menyimpan riwayat dan data klien.
           </span>
         </div>
-        <Link href="/login" className="font-semibold text-zinc-900 dark:text-cyan-400 hover:underline flex items-center gap-1">
+        <Link href="/login" className="font-semibold text-cyan-700 hover:text-cyan-800 hover:underline flex items-center gap-1 shrink-0">
           Masuk ke Akun
           <ArrowSquareOut size={14} />
         </Link>

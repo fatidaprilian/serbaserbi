@@ -29,7 +29,7 @@ export default function LogoUpload({ logo, onLogoChange, onLogoRemove }: LogoUpl
 
   return (
     <div className="flex flex-col gap-2">
-      <label className="text-sm font-medium text-zinc-700">Logo Bisnis (Opsional)</label>
+      <label className="text-sm font-semibold text-slate-900">Logo Bisnis (Opsional)</label>
       <div className="flex items-center gap-4">
         {logo ? (
           <div className="relative">

@@ -47,10 +47,10 @@ export default function DocumentMetaForm({
 
   return (
     <div className="flex flex-col gap-2">
-      <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Mata Uang & Bahasa</label>
+      <label className="text-sm font-semibold text-slate-900">Mata Uang & Bahasa</label>
       <div className="grid grid-cols-2 gap-2">
         <select
-          className="w-full px-3 py-2 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-sm text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all cursor-pointer"
+          className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all cursor-pointer shadow-xs font-medium"
           value={currency}
           onChange={(e) => {
             onCurrencyChange(e.target.value as "IDR" | "USD");
@@ -60,7 +60,7 @@ export default function DocumentMetaForm({
           <option value="USD">USD (US Dollar)</option>
         </select>
         <select
-          className="w-full px-3 py-2 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-sm text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all cursor-pointer"
+          className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all cursor-pointer shadow-xs font-medium"
           value={language}
           onChange={(e) => {
             onLanguageChange(e.target.value as "id" | "en");
@@ -72,18 +72,18 @@ export default function DocumentMetaForm({
       </div>
 
       {currency === 'USD' && exchangeInfo && (
-        <div className="bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 rounded-xl p-3 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-sm animate-in fade-in">
+        <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-xs animate-in fade-in">
           <div className="flex items-center gap-2">
-            <Badge variant="secondary" className="bg-cyan-500/10 text-cyan-500 border border-cyan-500/20 flex items-center gap-1">
-              <CurrencyDollar size={12} />
+            <Badge variant="secondary" className="bg-cyan-500/15 text-cyan-800 border border-cyan-500/30 flex items-center gap-1 font-semibold">
+              <CurrencyDollar size={13} weight="bold" />
               Kurs Ter-cache (12 Jam)
             </Badge>
-            <span className="font-mono font-bold text-slate-800 dark:text-slate-200">
+            <span className="font-mono font-bold text-slate-900">
               1 USD = Rp {exchangeInfo.rate.toLocaleString('id-ID')}
             </span>
           </div>
-          <div className="flex items-center gap-1 text-[11px] text-slate-500">
-            <Clock size={12} />
+          <div className="flex items-center gap-1 text-[11px] text-slate-600 font-medium">
+            <Clock size={13} />
             <span>Pukul {exchangeInfo.cachedAt} • {exchangeInfo.source}</span>
           </div>
         </div>

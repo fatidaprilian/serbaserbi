@@ -88,23 +88,23 @@ export default function GuestInvoicePage() {
           />
 
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-semibold text-slate-700">Nomor Invoice & Tanggal</label>
+            <label className="text-sm font-semibold text-slate-900">Nomor Invoice & Tanggal</label>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
               <input
                 type="text"
-                className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 font-medium"
                 value={invoiceData.invoiceNumber}
                 onChange={(e) => { setInvoiceData({ ...invoiceData, invoiceNumber: e.target.value }); }}
               />
               <input
                 type="date"
-                className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 font-medium"
                 value={invoiceData.date}
                 onChange={(e) => { setInvoiceData({ ...invoiceData, date: e.target.value }); }}
               />
               <input
                 type="date"
-                className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 font-medium"
                 value={invoiceData.dueDate}
                 onChange={(e) => { setInvoiceData({ ...invoiceData, dueDate: e.target.value }); }}
               />

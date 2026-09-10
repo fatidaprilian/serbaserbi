@@ -176,19 +176,19 @@ export default function GuestContractPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex flex-col gap-2">
-                <label className="text-sm font-medium text-slate-700">Nomor Kontrak</label>
+                <label className="text-sm font-semibold text-slate-900">Nomor Kontrak</label>
                 <input 
                   type="text" 
-                  className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                  className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all font-medium"
                   value={contractData.contractNumber}
                   onChange={(e) => { setContractData({ ...contractData, contractNumber: e.target.value }); }}
                 />
               </div>
               <div className="flex flex-col gap-2">
-                <label className="text-sm font-medium text-slate-700">Tanggal Penandatanganan</label>
+                <label className="text-sm font-semibold text-slate-900">Tanggal Penandatanganan</label>
                 <input 
                   type="date" 
-                  className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                  className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all font-medium"
                   value={contractData.date}
                   onChange={(e) => { setContractData({ ...contractData, date: e.target.value }); }}
                 />
@@ -196,17 +196,17 @@ export default function GuestContractPage() {
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium text-zinc-700">Tanggal Mulai & Selesai</label>
+              <label className="text-sm font-semibold text-slate-900">Tanggal Mulai & Selesai</label>
               <div className="grid grid-cols-2 gap-2">
                 <input 
                   type="date" 
-                  className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl text-sm text-zinc-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black transition-all"
+                  className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all font-medium"
                   value={contractData.startDate}
                   onChange={(e) => { setContractData({ ...contractData, startDate: e.target.value }); }}
                 />
                 <input 
                   type="date" 
-                  className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl text-sm text-zinc-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black transition-all"
+                  className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all font-medium"
                   value={contractData.endDate}
                   onChange={(e) => { setContractData({ ...contractData, endDate: e.target.value }); }}
                 />
@@ -215,20 +215,20 @@ export default function GuestContractPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
               <div className="flex flex-col gap-2">
-                <label className="text-sm font-medium text-slate-700">Mata Uang</label>
+                <label className="text-sm font-semibold text-slate-900">Mata Uang</label>
                 <select 
-                  className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                  className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all font-medium cursor-pointer"
                   value={contractData.currency}
                   onChange={(e) => { setContractData({ ...contractData, currency: e.target.value as "IDR" | "USD" }); }}
                 >
-                  <option value="IDR">IDR</option>
-                  <option value="USD">USD</option>
+                  <option value="IDR">IDR (Rupiah)</option>
+                  <option value="USD">USD (US Dollar)</option>
                 </select>
               </div>
               <div className="flex flex-col gap-2">
-                <label className="text-sm font-medium text-slate-700">Bahasa Dokumen</label>
+                <label className="text-sm font-semibold text-slate-900">Bahasa Dokumen</label>
                 <select 
-                  className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                  className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all font-medium cursor-pointer"
                   value={contractData.language}
                   onChange={(e) => { setContractData({ ...contractData, language: e.target.value as "id" | "en" }); }}
                 >
@@ -254,13 +254,13 @@ export default function GuestContractPage() {
           {/* Pasal / Klausul */}
           <div className="flex flex-col gap-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 pb-2 gap-2">
-              <h2 className="text-lg font-semibold text-slate-800">Pasal-Pasal Kontrak</h2>
+              <h2 className="text-lg font-bold text-slate-900">Pasal-Pasal Kontrak</h2>
               <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={() => { void handleSuggestClauses(); }}
                   disabled={loadingClauses}
-                  className="px-3 py-1.5 text-xs font-semibold text-cyan-700 bg-cyan-50 hover:bg-cyan-100 border border-cyan-200/80 rounded-md transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-60"
+                  className="px-3 py-1.5 text-xs font-semibold text-cyan-800 bg-cyan-50 hover:bg-cyan-100 border border-cyan-300 rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-60 shadow-2xs"
                   title="Dapatkan rekomendasi klausul protektif otomatis sesuai judul dan nilai proyek"
                 >
                   <ShieldCheck size={14} />
@@ -269,7 +269,7 @@ export default function GuestContractPage() {
                 <button
                   type="button"
                   onClick={handleAddClause}
-                  className="px-3 py-1.5 text-xs font-medium text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-md transition-colors cursor-pointer"
+                  className="px-3 py-1.5 text-xs font-semibold text-indigo-800 bg-indigo-50 hover:bg-indigo-100 border border-indigo-300 rounded-lg transition-colors cursor-pointer shadow-2xs"
                 >
                   + Tambah Pasal
                 </button>

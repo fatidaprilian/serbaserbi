@@ -84,23 +84,23 @@ export default function GuestQuotationPage() {
           />
 
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-semibold text-slate-700">Nomor Penawaran & Tanggal</label>
+            <label className="text-sm font-semibold text-slate-900">Nomor Penawaran & Tanggal</label>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
               <input
                 type="text"
-                className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 font-medium"
                 value={quotationData.quotationNumber}
                 onChange={(e) => { setQuotationData({ ...quotationData, quotationNumber: e.target.value }); }}
               />
               <input
                 type="date"
-                className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 font-medium"
                 value={quotationData.date}
                 onChange={(e) => { setQuotationData({ ...quotationData, date: e.target.value }); }}
               />
               <input
                 type="date"
-                className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 font-medium"
                 value={quotationData.validUntil}
                 onChange={(e) => { setQuotationData({ ...quotationData, validUntil: e.target.value }); }}
               />
