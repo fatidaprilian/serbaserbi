@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { Button, Badge, LayerCard } from '@cloudflare/kumo';
+import { Button, LayerCard } from '@cloudflare/kumo';
 import {
   Receipt,
   FileText,
@@ -149,29 +149,28 @@ export default function DashboardOverviewPage() {
   return (
     <div className="space-y-8 max-w-6xl mx-auto pb-12">
       {/* Header Banner */}
-      <div className="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl -z-0 pointer-events-none" />
-
+      <div className="bg-white border border-zinc-200/80 rounded-3xl p-6 sm:p-8 shadow-xs relative overflow-hidden">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-2xl">
             <div className="inline-flex items-center gap-2">
-              <Badge variant="primary" className="bg-cyan-500/10 text-cyan-300 border border-cyan-500/30">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-zinc-100 border border-zinc-200/80 text-zinc-700 text-xs font-semibold">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 {t('dashboard.title')}
-              </Badge>
+              </span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black text-slate-100 tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900 tracking-tight">
               {locale === 'id' ? `Selamat datang kembali, ${userName}` : `Welcome back, ${userName}`}
             </h1>
-            <p className="text-xs sm:text-sm text-slate-400">
+            <p className="text-xs sm:text-sm text-zinc-500">
               {t('dashboard.subtitle')}
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
             <Button
               variant="secondary"
               onClick={refreshAnalytics}
-              className="text-xs px-3 py-2 rounded-xl border border-slate-700 hover:bg-slate-800 text-slate-300 flex items-center gap-1.5 cursor-pointer"
+              className="text-xs px-3.5 py-2 rounded-xl border border-zinc-200 hover:bg-zinc-100 text-zinc-700 font-medium flex items-center gap-1.5 cursor-pointer shadow-2xs transition-all active:scale-[0.98]"
             >
               <ArrowsClockwise size={13} className={loading ? 'animate-spin' : ''} />
               {locale === 'id' ? 'Segarkan' : 'Refresh'}
@@ -179,7 +178,7 @@ export default function DashboardOverviewPage() {
             <Link href="/guest/invoice">
               <Button
                 variant="primary"
-                className="bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-semibold text-xs px-4 py-2 rounded-xl shadow-lg shadow-cyan-500/20 flex items-center gap-1.5 cursor-pointer"
+                className="bg-zinc-900 hover:bg-black text-white font-semibold text-xs px-4 py-2 rounded-xl shadow-xs flex items-center gap-1.5 cursor-pointer transition-all active:scale-[0.98]"
               >
                 <Plus size={14} weight="bold" />
                 {t('nav.createInvoice')}
@@ -193,112 +192,112 @@ export default function DashboardOverviewPage() {
       {loading && !analytics ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((i) => (
-            <LayerCard key={i} className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 animate-pulse h-36" />
+            <LayerCard key={i} className="p-6 rounded-2xl bg-white border border-zinc-200/80 animate-pulse h-36" />
           ))}
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* KPI 1: Pendapatan Lunas */}
-          <LayerCard className="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-lg relative overflow-hidden flex flex-col justify-between">
+          <LayerCard className="p-5 rounded-2xl bg-white border border-zinc-200/80 shadow-xs relative overflow-hidden flex flex-col justify-between">
             <div className="flex items-start justify-between">
               <div className="space-y-1">
-                <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+                <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">
                   {t('dashboard.totalRevenue')}
                 </span>
-                <div className="text-xl font-black text-emerald-400">
+                <div className="text-xl font-bold text-zinc-900">
                   {formatIDR(analytics?.metrics.totalRevenueIDR || 0)}
                 </div>
                 {(analytics?.metrics.totalRevenueUSD || 0) > 0 && (
-                  <div className="text-xs font-semibold text-emerald-300/80">
+                  <div className="text-xs font-semibold text-emerald-600">
                     + {formatUSD(analytics?.metrics.totalRevenueUSD || 0)}
                   </div>
                 )}
               </div>
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200/80 flex items-center justify-center text-emerald-700 shrink-0">
                 <Wallet size={20} weight="duotone" />
               </div>
             </div>
-            <div className="pt-3 border-t border-slate-800/80 mt-3 flex items-center text-[11px] text-slate-400 gap-1.5">
-              <CheckCircle size={14} className="text-emerald-400" />
+            <div className="pt-3 border-t border-zinc-100 mt-3 flex items-center text-[11px] text-zinc-500 gap-1.5">
+              <CheckCircle size={14} className="text-emerald-600" />
               <span>{statusCounts.paid} {locale === 'id' ? 'tagihan telah dibayar lunas' : 'invoices settled'}</span>
             </div>
           </LayerCard>
 
           {/* KPI 2: Piutang Berjalan */}
-          <LayerCard className="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-lg relative overflow-hidden flex flex-col justify-between">
+          <LayerCard className="p-5 rounded-2xl bg-white border border-zinc-200/80 shadow-xs relative overflow-hidden flex flex-col justify-between">
             <div className="flex items-start justify-between">
               <div className="space-y-1">
-                <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+                <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">
                   {t('dashboard.outstandingReceivables')}
                 </span>
-                <div className="text-xl font-black text-amber-400">
+                <div className="text-xl font-bold text-zinc-900">
                   {formatIDR(analytics?.metrics.outstandingIDR || 0)}
                 </div>
                 {(analytics?.metrics.outstandingUSD || 0) > 0 && (
-                  <div className="text-xs font-semibold text-amber-300/80">
+                  <div className="text-xs font-semibold text-amber-600">
                     + {formatUSD(analytics?.metrics.outstandingUSD || 0)}
                   </div>
                 )}
               </div>
-              <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200/80 flex items-center justify-center text-amber-700 shrink-0">
                 <Clock size={20} weight="duotone" />
               </div>
             </div>
-            <div className="pt-3 border-t border-slate-800/80 mt-3 flex items-center text-[11px] text-slate-400 gap-1.5">
-              <span className="inline-block w-2 h-2 rounded-full bg-amber-400" />
+            <div className="pt-3 border-t border-zinc-100 mt-3 flex items-center text-[11px] text-zinc-500 gap-1.5">
+              <span className="inline-block w-2 h-2 rounded-full bg-amber-500" />
               <span>{statusCounts.sent + statusCounts.partial_paid} {locale === 'id' ? 'tagihan menunggu pelunasan' : 'invoices awaiting settlement'}</span>
             </div>
           </LayerCard>
 
           {/* KPI 3: Tagihan Jatuh Tempo */}
-          <LayerCard className="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-lg relative overflow-hidden flex flex-col justify-between">
+          <LayerCard className="p-5 rounded-2xl bg-white border border-zinc-200/80 shadow-xs relative overflow-hidden flex flex-col justify-between">
             <div className="flex items-start justify-between">
               <div className="space-y-1">
-                <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+                <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">
                   {t('dashboard.overdueInvoices')}
                 </span>
-                <div className="text-xl font-black text-rose-400">
+                <div className="text-xl font-bold text-rose-600">
                   {analytics?.metrics.overdueCount || 0} {locale === 'id' ? 'Dokumen' : 'Invoices'}
                 </div>
-                <div className="text-xs font-semibold text-rose-300/80">
+                <div className="text-xs font-semibold text-rose-600">
                   {formatIDR(analytics?.metrics.overdueAmountIDR || 0)}
                   {(analytics?.metrics.overdueAmountUSD || 0) > 0 && ` + ${formatUSD(analytics?.metrics.overdueAmountUSD || 0)}`}
                 </div>
               </div>
-              <div className="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400 shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-rose-50 border border-rose-200/80 flex items-center justify-center text-rose-700 shrink-0">
                 <WarningCircle size={20} weight="duotone" />
               </div>
             </div>
-            <div className="pt-3 border-t border-slate-800/80 mt-3 flex items-center justify-between text-[11px]">
-              <span className="text-rose-400 font-medium">{t('dashboard.requireFollowUp')}</span>
-              <Link href="/dashboard/documents" className="text-cyan-400 hover:underline flex items-center gap-0.5">
+            <div className="pt-3 border-t border-zinc-100 mt-3 flex items-center justify-between text-[11px]">
+              <span className="text-rose-700 font-medium">{t('dashboard.requireFollowUp')}</span>
+              <Link href="/dashboard/documents" className="text-zinc-900 font-semibold hover:underline flex items-center gap-0.5">
                 {t('common.view')} <ArrowRight size={11} />
               </Link>
             </div>
           </LayerCard>
 
           {/* KPI 4: Portofolio Legal */}
-          <LayerCard className="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-lg relative overflow-hidden flex flex-col justify-between">
+          <LayerCard className="p-5 rounded-2xl bg-white border border-zinc-200/80 shadow-xs relative overflow-hidden flex flex-col justify-between">
             <div className="flex items-start justify-between">
               <div className="space-y-1">
-                <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+                <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">
                   {t('dashboard.totalDocuments')}
                 </span>
-                <div className="text-xl font-black text-cyan-400">
+                <div className="text-xl font-bold text-zinc-900">
                   {(analytics?.metrics.totalInvoices || 0) +
                     (analytics?.metrics.totalQuotations || 0) +
                     (analytics?.metrics.totalContracts || 0)}{' '}
                   {locale === 'id' ? 'Dokumen' : 'Documents'}
                 </div>
-                <div className="text-xs text-slate-400">
+                <div className="text-xs text-zinc-500">
                   {analytics?.metrics.totalClients || 0} {locale === 'id' ? 'Klien Terdaftar' : 'Clients Registered'}
                 </div>
               </div>
-              <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-zinc-100 border border-zinc-200/80 flex items-center justify-center text-zinc-800 shrink-0">
                 <Bank size={20} weight="duotone" />
               </div>
             </div>
-            <div className="pt-3 border-t border-slate-800/80 mt-3 flex items-center justify-between text-[11px] text-slate-400">
+            <div className="pt-3 border-t border-zinc-100 mt-3 flex items-center justify-between text-[11px] text-zinc-500">
               <span>{analytics?.metrics.totalQuotations || 0} {t('documents.tabQuotations')}</span>
               <span>•</span>
               <span>{analytics?.metrics.totalContracts || 0} {t('documents.tabContracts')}</span>
@@ -310,20 +309,20 @@ export default function DashboardOverviewPage() {
       {/* Main Content Grid: Trends & Status Breakdown */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: 6-Month Revenue Trend */}
-        <LayerCard className="lg:col-span-2 p-6 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-xl space-y-6">
+        <LayerCard className="lg:col-span-2 p-6 rounded-2xl bg-white border border-zinc-200/80 shadow-xs space-y-6">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-bold text-slate-100 flex items-center gap-2">
-                <TrendUp size={16} className="text-cyan-400" />
+              <h3 className="text-sm font-bold text-zinc-900 flex items-center gap-2">
+                <TrendUp size={16} className="text-zinc-800" />
                 {t('dashboard.revenueTrend')}
               </h3>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-xs text-zinc-500 mt-0.5">
                 {t('dashboard.monthlyCollection')}
               </p>
             </div>
-            <Badge variant="primary" className="text-[10px] bg-slate-800 text-slate-300 border-slate-700">
+            <span className="text-[11px] font-medium px-2.5 py-1 rounded-md bg-zinc-100 text-zinc-700 border border-zinc-200/80">
               {locale === 'id' ? 'Realisasi Pembayaran' : 'Cash Realized'}
-            </Badge>
+            </span>
           </div>
 
           {/* Visual Bar Chart */}
@@ -333,17 +332,17 @@ export default function DashboardOverviewPage() {
               return (
                 <div key={item.yearMonth} className="space-y-1.5">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-semibold text-slate-300 w-16">{item.label}</span>
+                    <span className="font-semibold text-zinc-700 w-16">{item.label}</span>
                     <div className="text-right font-medium">
-                      <span className="text-slate-200">{formatIDR(item.amountIDR)}</span>
+                      <span className="text-zinc-900 font-semibold">{formatIDR(item.amountIDR)}</span>
                       {item.amountUSD > 0 && (
-                        <span className="text-emerald-400 text-[11px] ml-2">({formatUSD(item.amountUSD)})</span>
+                        <span className="text-emerald-700 text-[11px] ml-2">({formatUSD(item.amountUSD)})</span>
                       )}
                     </div>
                   </div>
-                  <div className="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden flex">
+                  <div className="w-full bg-zinc-100 rounded-full h-2.5 overflow-hidden flex">
                     <div
-                      className="bg-gradient-to-r from-cyan-500 to-indigo-500 h-full rounded-full transition-all duration-500"
+                      className="bg-zinc-900 h-full rounded-full transition-all duration-500"
                       style={{ width: `${percentage}%` }}
                     />
                   </div>
@@ -352,19 +351,19 @@ export default function DashboardOverviewPage() {
             })}
           </div>
 
-          <div className="text-[11px] text-slate-500 text-right pt-2">
+          <div className="text-[11px] text-zinc-400 text-right pt-2">
             * {locale === 'id' ? 'Grafik diskalakan berdasarkan penerimaan mata uang Rupiah (IDR).' : 'Chart normalized against Indonesian Rupiah (IDR) collections.'}
           </div>
         </LayerCard>
 
         {/* Right Column: Status Distribution */}
-        <LayerCard className="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-xl space-y-6 flex flex-col justify-between">
+        <LayerCard className="p-6 rounded-2xl bg-white border border-zinc-200/80 shadow-xs space-y-6 flex flex-col justify-between">
           <div>
-            <h3 className="text-sm font-bold text-slate-100 flex items-center gap-2">
-              <Receipt size={16} className="text-indigo-400" />
+            <h3 className="text-sm font-bold text-zinc-900 flex items-center gap-2">
+              <Receipt size={16} className="text-zinc-800" />
               {locale === 'id' ? 'Distribusi Status Tagihan' : 'Invoice Status Distribution'}
             </h3>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-zinc-500 mt-0.5">
               {t('dashboard.storedInAccount')} ({totalInvoices} {t('documents.tabInvoices')})
             </p>
 
@@ -372,88 +371,88 @@ export default function DashboardOverviewPage() {
               {/* Paid */}
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-slate-300 flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                  <span className="text-zinc-600 flex items-center gap-1.5 font-medium">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500" />
                     {t('documents.statusPaid')}
                   </span>
-                  <span className="font-bold text-slate-200">
+                  <span className="font-bold text-zinc-900">
                     {statusCounts.paid} ({getPercentage(statusCounts.paid)}%)
                   </span>
                 </div>
-                <div className="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
-                  <div className="bg-emerald-400 h-full rounded-full" style={{ width: `${getPercentage(statusCounts.paid)}%` }} />
+                <div className="w-full bg-zinc-100 rounded-full h-1.5 overflow-hidden">
+                  <div className="bg-emerald-500 h-full rounded-full" style={{ width: `${getPercentage(statusCounts.paid)}%` }} />
                 </div>
               </div>
 
               {/* Partial Paid */}
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-slate-300 flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-indigo-400" />
+                  <span className="text-zinc-600 flex items-center gap-1.5 font-medium">
+                    <span className="w-2 h-2 rounded-full bg-indigo-500" />
                     {t('documents.statusPartial')}
                   </span>
-                  <span className="font-bold text-slate-200">
+                  <span className="font-bold text-zinc-900">
                     {statusCounts.partial_paid} ({getPercentage(statusCounts.partial_paid)}%)
                   </span>
                 </div>
-                <div className="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
-                  <div className="bg-indigo-400 h-full rounded-full" style={{ width: `${getPercentage(statusCounts.partial_paid)}%` }} />
+                <div className="w-full bg-zinc-100 rounded-full h-1.5 overflow-hidden">
+                  <div className="bg-indigo-500 h-full rounded-full" style={{ width: `${getPercentage(statusCounts.partial_paid)}%` }} />
                 </div>
               </div>
 
               {/* Sent */}
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-slate-300 flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-cyan-400" />
+                  <span className="text-zinc-600 flex items-center gap-1.5 font-medium">
+                    <span className="w-2 h-2 rounded-full bg-zinc-800" />
                     {t('documents.statusSent')}
                   </span>
-                  <span className="font-bold text-slate-200">
+                  <span className="font-bold text-zinc-900">
                     {statusCounts.sent} ({getPercentage(statusCounts.sent)}%)
                   </span>
                 </div>
-                <div className="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
-                  <div className="bg-cyan-400 h-full rounded-full" style={{ width: `${getPercentage(statusCounts.sent)}%` }} />
+                <div className="w-full bg-zinc-100 rounded-full h-1.5 overflow-hidden">
+                  <div className="bg-zinc-800 h-full rounded-full" style={{ width: `${getPercentage(statusCounts.sent)}%` }} />
                 </div>
               </div>
 
               {/* Overdue */}
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-slate-300 flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-rose-400" />
+                  <span className="text-zinc-600 flex items-center gap-1.5 font-medium">
+                    <span className="w-2 h-2 rounded-full bg-rose-500" />
                     {t('documents.statusOverdue')}
                   </span>
-                  <span className="font-bold text-rose-300">
+                  <span className="font-bold text-rose-600">
                     {statusCounts.overdue} ({getPercentage(statusCounts.overdue)}%)
                   </span>
                 </div>
-                <div className="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
-                  <div className="bg-rose-400 h-full rounded-full" style={{ width: `${getPercentage(statusCounts.overdue)}%` }} />
+                <div className="w-full bg-zinc-100 rounded-full h-1.5 overflow-hidden">
+                  <div className="bg-rose-500 h-full rounded-full" style={{ width: `${getPercentage(statusCounts.overdue)}%` }} />
                 </div>
               </div>
 
               {/* Draft */}
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-slate-300 flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-slate-500" />
+                  <span className="text-zinc-600 flex items-center gap-1.5 font-medium">
+                    <span className="w-2 h-2 rounded-full bg-zinc-400" />
                     {t('documents.statusDraft')}
                   </span>
-                  <span className="font-bold text-slate-400">
+                  <span className="font-bold text-zinc-600">
                     {statusCounts.draft} ({getPercentage(statusCounts.draft)}%)
                   </span>
                 </div>
-                <div className="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
-                  <div className="bg-slate-500 h-full rounded-full" style={{ width: `${getPercentage(statusCounts.draft)}%` }} />
+                <div className="w-full bg-zinc-100 rounded-full h-1.5 overflow-hidden">
+                  <div className="bg-zinc-400 h-full rounded-full" style={{ width: `${getPercentage(statusCounts.draft)}%` }} />
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="pt-4 border-t border-slate-800">
+          <div className="pt-4 border-t border-zinc-100">
             <Link href="/dashboard/documents">
-              <Button variant="secondary" className="w-full text-xs py-2 rounded-xl border-slate-700 text-slate-300 hover:text-white flex items-center justify-center gap-1.5 cursor-pointer">
+              <Button variant="secondary" className="w-full text-xs py-2 rounded-xl border-zinc-200 text-zinc-700 hover:bg-zinc-50 flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs font-semibold">
                 {locale === 'id' ? 'Kelola Semua Tagihan' : 'Manage All Documents'}
                 <ArrowRight size={13} />
               </Button>
@@ -464,25 +463,25 @@ export default function DashboardOverviewPage() {
 
       {/* Urgent Overdue Tracker */}
       {analytics && analytics.actionNeededInvoices.length > 0 && (
-        <LayerCard className="p-6 rounded-2xl bg-rose-950/20 border border-rose-900/40 shadow-xl space-y-4">
+        <LayerCard className="p-6 rounded-2xl bg-rose-50/50 border border-rose-200/80 shadow-xs space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-rose-100 text-rose-700 flex items-center justify-center">
                 <WarningCircle size={18} weight="bold" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-rose-200">
+                <h3 className="text-sm font-bold text-rose-950">
                   {locale === 'id' ? 'Tindakan Diperlukan: Tagihan Telah Melewati Jatuh Tempo' : 'Action Required: Invoices Passed Due Date'}
                 </h3>
-                <p className="text-xs text-rose-300/70">
+                <p className="text-xs text-rose-700/80">
                   {locale === 'id' ? `Terdapat ${analytics.actionNeededInvoices.length} invoice yang memerlukan tindak lanjut penagihan.` : `${analytics.actionNeededInvoices.length} invoices require payment follow-up.`}
                 </p>
               </div>
             </div>
             <Link href="/dashboard/documents">
-              <Badge variant="primary" className="bg-rose-500/20 text-rose-300 border-rose-500/30 text-xs cursor-pointer">
+              <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-rose-100 text-rose-800 text-xs font-semibold cursor-pointer hover:bg-rose-200/70 transition-colors">
                 {t('common.all')} ({analytics.metrics.overdueCount})
-              </Badge>
+              </span>
             </Link>
           </div>
 
@@ -490,28 +489,28 @@ export default function DashboardOverviewPage() {
             {analytics.actionNeededInvoices.map((inv) => (
               <div
                 key={inv.id}
-                className="p-3.5 rounded-xl bg-slate-900/80 border border-rose-900/30 flex flex-col justify-between space-y-3"
+                className="p-3.5 rounded-xl bg-white border border-rose-200/70 shadow-2xs flex flex-col justify-between space-y-3"
               >
                 <div className="flex items-start justify-between">
                   <div>
-                    <span className="text-xs font-mono font-bold text-slate-200">{inv.invoiceNumber}</span>
-                    <p className="text-xs text-slate-400 truncate max-w-[160px]">{inv.clientName}</p>
+                    <span className="text-xs font-mono font-bold text-zinc-900">{inv.invoiceNumber}</span>
+                    <p className="text-xs text-zinc-500 truncate max-w-[160px]">{inv.clientName}</p>
                   </div>
-                  <Badge variant="primary" className="bg-rose-500/10 text-rose-400 border border-rose-500/20 text-[10px]">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-rose-50 text-rose-700 border border-rose-200/80">
                     {inv.dueDate}
-                  </Badge>
+                  </span>
                 </div>
-                <div className="flex items-center justify-between pt-1 border-t border-slate-800">
+                <div className="flex items-center justify-between pt-1 border-t border-zinc-100">
                   <div>
-                    <span className="text-[10px] text-slate-400 block">{t('paymentModal.remainingDue')}</span>
-                    <span className="text-xs font-bold text-rose-400">
+                    <span className="text-[10px] text-zinc-500 block">{t('paymentModal.remainingDue')}</span>
+                    <span className="text-xs font-bold text-rose-600">
                       {inv.currency === 'IDR' ? formatIDR(inv.remainingBalance) : formatUSD(inv.remainingBalance)}
                     </span>
                   </div>
                   <Link href="/dashboard/documents">
                     <Button
                       variant="secondary"
-                      className="text-[11px] px-2.5 py-1 rounded-lg border-rose-800/40 text-rose-300 hover:bg-rose-950/40 flex items-center gap-1 cursor-pointer"
+                      className="text-[11px] px-2.5 py-1 rounded-lg border-zinc-200 text-zinc-700 hover:bg-zinc-50 flex items-center gap-1 cursor-pointer font-medium"
                     >
                       {t('documents.btnPayDp')}
                       <ArrowRight size={11} />
@@ -527,43 +526,43 @@ export default function DashboardOverviewPage() {
       {/* Quick Access Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Link href="/guest/quotation" className="block group">
-          <LayerCard className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-slate-700 transition flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center shrink-0">
-              <FileText size={20} />
+          <LayerCard className="p-5 rounded-2xl bg-white border border-zinc-200/80 hover:border-zinc-300 shadow-xs hover:shadow-md transition-all flex items-center gap-3.5">
+            <div className="w-11 h-11 rounded-xl bg-indigo-50 border border-indigo-100 text-indigo-700 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+              <FileText size={22} weight="duotone" />
             </div>
             <div className="min-w-0">
-              <h4 className="text-xs font-bold text-slate-200 group-hover:text-cyan-400 transition-colors">
+              <h4 className="text-xs font-bold text-zinc-900 group-hover:text-indigo-700 transition-colors">
                 {t('dashboard.newQuotation')}
               </h4>
-              <p className="text-[11px] text-slate-400 truncate">{t('home.cardQuotationDesc')}</p>
+              <p className="text-[11px] text-zinc-500 truncate">{t('home.cardQuotationDesc')}</p>
             </div>
           </LayerCard>
         </Link>
 
         <Link href="/guest/contract" className="block group">
-          <LayerCard className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-slate-700 transition flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center shrink-0">
-              <Handshake size={20} />
+          <LayerCard className="p-5 rounded-2xl bg-white border border-zinc-200/80 hover:border-zinc-300 shadow-xs hover:shadow-md transition-all flex items-center gap-3.5">
+            <div className="w-11 h-11 rounded-xl bg-purple-50 border border-purple-100 text-purple-700 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+              <Handshake size={22} weight="duotone" />
             </div>
             <div className="min-w-0">
-              <h4 className="text-xs font-bold text-slate-200 group-hover:text-cyan-400 transition-colors">
+              <h4 className="text-xs font-bold text-zinc-900 group-hover:text-purple-700 transition-colors">
                 {t('dashboard.newContract')}
               </h4>
-              <p className="text-[11px] text-slate-400 truncate">{t('home.cardContractDesc')}</p>
+              <p className="text-[11px] text-zinc-500 truncate">{t('home.cardContractDesc')}</p>
             </div>
           </LayerCard>
         </Link>
 
         <Link href="/dashboard/clients" className="block group">
-          <LayerCard className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-slate-700 transition flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center shrink-0">
-              <Users size={20} />
+          <LayerCard className="p-5 rounded-2xl bg-white border border-zinc-200/80 hover:border-zinc-300 shadow-xs hover:shadow-md transition-all flex items-center gap-3.5">
+            <div className="w-11 h-11 rounded-xl bg-cyan-50 border border-cyan-100 text-cyan-700 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+              <Users size={22} weight="duotone" />
             </div>
             <div className="min-w-0">
-              <h4 className="text-xs font-bold text-slate-200 group-hover:text-cyan-400 transition-colors">
+              <h4 className="text-xs font-bold text-zinc-900 group-hover:text-cyan-700 transition-colors">
                 {t('clients.title')}
               </h4>
-              <p className="text-[11px] text-slate-400 truncate">{t('clients.subtitle')}</p>
+              <p className="text-[11px] text-zinc-500 truncate">{t('clients.subtitle')}</p>
             </div>
           </LayerCard>
         </Link>

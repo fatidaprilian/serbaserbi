@@ -109,23 +109,23 @@ export default function DocumentHistoryPage() {
 
   const getStatusBadge = (docType: string, status: string) => {
     const statusMap: Record<string, { label: string; color: string }> = {
-      draft: { label: t('documents.statusDraft'), color: 'bg-slate-700/50 text-slate-300 border-slate-600' },
-      sent: { label: t('documents.statusSent'), color: 'bg-sky-500/10 text-sky-400 border-sky-500/30' },
-      paid: { label: t('documents.statusPaid'), color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' },
-      partial_paid: { label: t('documents.statusPartial'), color: 'bg-amber-500/10 text-amber-400 border-amber-500/30' },
-      overdue: { label: t('documents.statusOverdue'), color: 'bg-rose-500/10 text-rose-400 border-rose-500/30' },
-      cancelled: { label: t('documents.statusDeclined'), color: 'bg-slate-800 text-slate-500 border-slate-700' },
-      accepted: { label: t('documents.statusAccepted'), color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' },
-      rejected: { label: t('documents.statusDeclined'), color: 'bg-rose-500/10 text-rose-400 border-rose-500/30' },
-      expired: { label: t('documents.statusOverdue'), color: 'bg-amber-500/10 text-amber-400 border-amber-500/30' },
-      unsigned: { label: locale === 'id' ? 'Belum TTD' : 'Unsigned', color: 'bg-amber-500/10 text-amber-400 border-amber-500/30' },
-      freelancer_signed: { label: locale === 'id' ? 'TTD Freelancer' : 'Freelancer Signed', color: 'bg-sky-500/10 text-sky-400 border-sky-500/30' },
-      both_signed: { label: t('documents.statusSigned'), color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' },
+      draft: { label: t('documents.statusDraft'), color: 'bg-zinc-100 text-zinc-700 border-zinc-200/80' },
+      sent: { label: t('documents.statusSent'), color: 'bg-sky-50 text-sky-800 border-sky-200/80' },
+      paid: { label: t('documents.statusPaid'), color: 'bg-emerald-50 text-emerald-800 border-emerald-200/80' },
+      partial_paid: { label: t('documents.statusPartial'), color: 'bg-amber-50 text-amber-800 border-amber-200/80' },
+      overdue: { label: t('documents.statusOverdue'), color: 'bg-rose-50 text-rose-800 border-rose-200/80' },
+      cancelled: { label: t('documents.statusDeclined'), color: 'bg-zinc-100 text-zinc-500 border-zinc-200/80' },
+      accepted: { label: t('documents.statusAccepted'), color: 'bg-emerald-50 text-emerald-800 border-emerald-200/80' },
+      rejected: { label: t('documents.statusDeclined'), color: 'bg-rose-50 text-rose-800 border-rose-200/80' },
+      expired: { label: t('documents.statusOverdue'), color: 'bg-amber-50 text-amber-800 border-amber-200/80' },
+      unsigned: { label: locale === 'id' ? 'Belum TTD' : 'Unsigned', color: 'bg-amber-50 text-amber-800 border-amber-200/80' },
+      freelancer_signed: { label: locale === 'id' ? 'TTD Freelancer' : 'Freelancer Signed', color: 'bg-sky-50 text-sky-800 border-sky-200/80' },
+      both_signed: { label: t('documents.statusSigned'), color: 'bg-emerald-50 text-emerald-800 border-emerald-200/80' },
     };
 
     const info = Object.prototype.hasOwnProperty.call(statusMap, status)
       ? statusMap[status]
-      : { label: status, color: 'bg-slate-800 text-slate-400 border-slate-700' };
+      : { label: status, color: 'bg-zinc-100 text-zinc-600 border-zinc-200/80' };
 
     return (
       <span className={`px-2.5 py-1 text-xs font-semibold rounded-lg border ${info.color}`}>
@@ -137,11 +137,11 @@ export default function DocumentHistoryPage() {
   const getDocTypeBadge = (docType: string) => {
     switch (docType) {
       case 'invoice':
-        return <span className="px-2 py-0.5 text-[10px] uppercase font-bold rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">Invoice</span>;
+        return <span className="px-2 py-0.5 text-[10px] uppercase font-bold rounded bg-cyan-50 text-cyan-800 border border-cyan-200/80">Invoice</span>;
       case 'quotation':
-        return <span className="px-2 py-0.5 text-[10px] uppercase font-bold rounded bg-purple-500/10 text-purple-400 border border-purple-500/30">{t('documents.tabQuotations')}</span>;
+        return <span className="px-2 py-0.5 text-[10px] uppercase font-bold rounded bg-purple-50 text-purple-800 border border-purple-200/80">{t('documents.tabQuotations')}</span>;
       case 'contract':
-        return <span className="px-2 py-0.5 text-[10px] uppercase font-bold rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">{t('documents.tabContracts')}</span>;
+        return <span className="px-2 py-0.5 text-[10px] uppercase font-bold rounded bg-emerald-50 text-emerald-800 border border-emerald-200/80">{t('documents.tabContracts')}</span>;
       default:
         return null;
     }
@@ -174,27 +174,27 @@ export default function DocumentHistoryPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-100">{t('documents.title')}</h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <h1 className="text-2xl font-bold text-zinc-900 tracking-tight">{t('documents.title')}</h1>
+          <p className="text-sm text-zinc-500 mt-1">
             {t('documents.subtitle')}
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           <button
             type="button"
             onClick={() => { void handleCheckOverdueNow(); }}
             disabled={checkingOverdue}
-            className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-60 shadow-sm"
+            className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-white hover:bg-zinc-100 text-zinc-700 border border-zinc-200/90 transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-60 shadow-2xs active:scale-[0.98]"
             title={t('dashboard.triggerCron')}
           >
-            <ClockCountdown size={14} />
+            <ClockCountdown size={14} className={checkingOverdue ? 'animate-spin text-zinc-500' : 'text-zinc-600'} />
             <span>{checkingOverdue ? t('dashboard.cronChecking') : t('dashboard.triggerCron')}</span>
           </button>
 
           <Link
             href="/guest/invoice"
-            className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white shadow-md transition-all"
+            className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-zinc-900 hover:bg-black text-white shadow-xs transition-all active:scale-[0.98]"
           >
             + {t('common.create')}
           </Link>
@@ -203,14 +203,14 @@ export default function DocumentHistoryPage() {
 
       {/* Cron Feedback Banner */}
       {cronFeedback && (
-        <div className="p-4 bg-cyan-500/10 border border-cyan-500/30 rounded-2xl text-xs font-medium text-cyan-300 flex items-center justify-between gap-2 shadow-sm">
+        <div className="p-4 bg-emerald-50 border border-emerald-200/80 rounded-2xl text-xs font-medium text-emerald-800 flex items-center justify-between gap-2 shadow-2xs">
           <div className="flex items-center gap-2">
-            <CheckCircle size={16} />
+            <CheckCircle size={16} className="text-emerald-600" />
             <span>{cronFeedback}</span>
           </div>
           <button
             onClick={() => { setCronFeedback(null); }}
-            className="text-slate-400 hover:text-slate-200 text-base leading-none p-1 cursor-pointer"
+            className="text-emerald-700 hover:text-emerald-950 text-base leading-none p-1 cursor-pointer"
           >
             &times;
           </button>
@@ -219,32 +219,32 @@ export default function DocumentHistoryPage() {
 
       {/* Metrics Summary */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4">
-          <span className="text-xs text-slate-400 font-medium">{t('dashboard.totalDocuments')}</span>
-          <p className="text-2xl font-black text-slate-100 mt-1">{documents.length}</p>
+        <div className="bg-white border border-zinc-200/80 rounded-2xl p-4 shadow-xs">
+          <span className="text-xs text-zinc-500 font-medium">{t('dashboard.totalDocuments')}</span>
+          <p className="text-2xl font-bold text-zinc-900 mt-1">{documents.length}</p>
         </div>
-        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4">
-          <span className="text-xs text-slate-400 font-medium">{t('documents.tabInvoices')}</span>
-          <p className="text-2xl font-black text-cyan-400 mt-1">
+        <div className="bg-white border border-zinc-200/80 rounded-2xl p-4 shadow-xs">
+          <span className="text-xs text-zinc-500 font-medium">{t('documents.tabInvoices')}</span>
+          <p className="text-2xl font-bold text-cyan-700 mt-1">
             {documents.filter((d) => d.docType === 'invoice').length}
           </p>
         </div>
-        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4">
-          <span className="text-xs text-slate-400 font-medium">{t('documents.tabQuotations')}</span>
-          <p className="text-2xl font-black text-purple-400 mt-1">
+        <div className="bg-white border border-zinc-200/80 rounded-2xl p-4 shadow-xs">
+          <span className="text-xs text-zinc-500 font-medium">{t('documents.tabQuotations')}</span>
+          <p className="text-2xl font-bold text-purple-700 mt-1">
             {documents.filter((d) => d.docType === 'quotation').length}
           </p>
         </div>
-        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4">
-          <span className="text-xs text-slate-400 font-medium">{t('documents.tabContracts')}</span>
-          <p className="text-2xl font-black text-emerald-400 mt-1">
+        <div className="bg-white border border-zinc-200/80 rounded-2xl p-4 shadow-xs">
+          <span className="text-xs text-zinc-500 font-medium">{t('documents.tabContracts')}</span>
+          <p className="text-2xl font-bold text-emerald-700 mt-1">
             {documents.filter((d) => d.docType === 'contract').length}
           </p>
         </div>
       </div>
 
       {/* Filters & Search */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900/80 p-4 rounded-2xl border border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-3.5 sm:p-4 rounded-2xl border border-zinc-200/80 shadow-xs">
         <div className="flex items-center gap-1.5 overflow-x-auto">
           {(
             [
@@ -257,10 +257,10 @@ export default function DocumentHistoryPage() {
             <button
               key={tab.id}
               onClick={() => { setActiveTab(tab.id); }}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-xl text-xs transition-all cursor-pointer ${
                 activeTab === tab.id
-                  ? 'bg-slate-800 text-cyan-400 border border-slate-700'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-zinc-900 text-white font-semibold shadow-xs'
+                  : 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 font-medium'
               }`}
             >
               {tab.label}
@@ -273,33 +273,33 @@ export default function DocumentHistoryPage() {
           value={search}
           onChange={(e) => { setSearch(e.target.value); }}
           placeholder={t('documents.searchPlaceholder')}
-          className="w-full sm:w-72 px-4 py-2 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 text-xs focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+          className="w-full sm:w-72 px-4 py-2 rounded-xl bg-zinc-50/80 border border-zinc-200/90 text-zinc-900 text-xs placeholder:text-zinc-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-zinc-900/10"
         />
       </div>
 
       {/* Documents Table / List */}
       {loading ? (
-        <div className="text-center py-16 text-slate-400 font-medium">{t('common.loading')}</div>
+        <div className="text-center py-16 text-zinc-400 font-medium">{t('common.loading')}</div>
       ) : filteredDocs.length === 0 ? (
-        <div className="text-center py-16 bg-slate-900/40 border border-slate-800 rounded-2xl p-8">
-          <p className="text-slate-400 font-medium">
+        <div className="text-center py-16 bg-white border border-zinc-200/80 rounded-2xl p-8 shadow-xs">
+          <p className="text-zinc-500 font-medium">
             {search ? t('documents.emptyDesc') : t('documents.emptyTitle')}
           </p>
           <div className="mt-4 flex justify-center gap-3">
-            <Link href="/guest/invoice" className="text-xs font-semibold text-cyan-400 hover:underline">
+            <Link href="/guest/invoice" className="text-xs font-semibold text-zinc-900 hover:underline">
               + {t('nav.createInvoice')}
             </Link>
-            <span className="text-slate-600">•</span>
-            <Link href="/guest/contract" className="text-xs font-semibold text-emerald-400 hover:underline">
+            <span className="text-zinc-300">•</span>
+            <Link href="/guest/contract" className="text-xs font-semibold text-zinc-900 hover:underline">
               + {t('nav.createContract')}
             </Link>
           </div>
         </div>
       ) : (
-        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+        <div className="bg-white border border-zinc-200/80 rounded-2xl overflow-hidden shadow-xs">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-950/60 border-b border-slate-800 text-slate-400 uppercase tracking-wider font-semibold">
+              <thead className="bg-zinc-50/90 border-b border-zinc-200 text-zinc-500 uppercase tracking-wider font-semibold text-[11px]">
                 <tr>
                   <th className="px-5 py-3.5">{t('documents.colDocNumber')}</th>
                   <th className="px-5 py-3.5">{t('documents.colClient')}</th>
@@ -309,17 +309,17 @@ export default function DocumentHistoryPage() {
                   <th className="px-5 py-3.5 text-right">{t('documents.colActions')}</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60 text-slate-200">
+              <tbody className="divide-y divide-zinc-100 text-zinc-900">
                 {filteredDocs.map((doc) => (
-                  <tr key={`${doc.docType}-${doc.id}`} className="hover:bg-slate-800/40 transition-colors">
-                    <td className="px-5 py-4 font-semibold text-slate-100 flex items-center gap-2">
+                  <tr key={`${doc.docType}-${doc.id}`} className="hover:bg-zinc-50/60 transition-colors">
+                    <td className="px-5 py-4 font-semibold text-zinc-900 flex items-center gap-2">
                       {getDocTypeBadge(doc.docType)}
                       <span>{doc.documentNumber}</span>
                     </td>
-                    <td className="px-5 py-4">{doc.clientName || '—'}</td>
+                    <td className="px-5 py-4 text-zinc-700">{doc.clientName || '—'}</td>
                     <td className="px-5 py-4">{getStatusBadge(doc.docType, doc.status)}</td>
-                    <td className="px-5 py-4 font-mono">{doc.currency}</td>
-                    <td className="px-5 py-4 text-slate-400 font-mono">
+                    <td className="px-5 py-4 font-mono font-medium">{doc.currency}</td>
+                    <td className="px-5 py-4 text-zinc-500 font-mono">
                       {doc.issueDate ? new Date(doc.issueDate).toLocaleDateString(locale === 'id' ? 'id-ID' : 'en-US') : '—'}
                     </td>
                     <td className="px-5 py-4 text-right">
@@ -328,7 +328,7 @@ export default function DocumentHistoryPage() {
                         <select
                           value={doc.status}
                           onChange={(e) => { void handleStatusChange(doc.docType, doc.id, e.target.value); }}
-                          className="bg-slate-950 border border-slate-800 text-slate-300 rounded px-2 py-1 text-[11px] focus:outline-none focus:ring-1 focus:ring-cyan-500 cursor-pointer"
+                          className="bg-white border border-zinc-200/90 text-zinc-800 rounded-lg px-2 py-1 text-[11px] focus:outline-none focus:ring-1 focus:ring-zinc-400 cursor-pointer shadow-2xs"
                         >
                           {doc.docType === 'invoice' && (
                             <>
@@ -361,6 +361,7 @@ export default function DocumentHistoryPage() {
                         {/* Payment & DP Tracking Button */}
                         {doc.docType === 'invoice' && (
                           <button
+                            type="button"
                             onClick={() => {
                               setPaymentModalInvoice({
                                 id: doc.id,
@@ -368,7 +369,7 @@ export default function DocumentHistoryPage() {
                                 currency: doc.currency,
                               });
                             }}
-                            className="px-2.5 py-1 rounded text-[11px] font-semibold text-cyan-400 hover:text-cyan-300 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 transition-all flex items-center gap-1 cursor-pointer"
+                            className="px-2.5 py-1 rounded-lg text-[11px] font-semibold text-zinc-800 bg-zinc-100 hover:bg-zinc-200/80 border border-zinc-200/90 transition-all flex items-center gap-1 cursor-pointer shadow-2xs"
                             title={t('documents.btnPayDp')}
                           >
                             <CreditCard size={13} weight="duotone" />
@@ -377,8 +378,9 @@ export default function DocumentHistoryPage() {
                         )}
 
                         <button
+                          type="button"
                           onClick={() => { void handleDelete(doc.docType, doc.id, doc.documentNumber); }}
-                          className="px-2 py-1 rounded text-[11px] font-medium text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer"
+                          className="px-2 py-1 rounded-lg text-[11px] font-medium text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
                           title={t('common.delete')}
                         >
                           {t('common.delete')}

@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, FormEvent } from 'react';
-import { Button, Badge } from '@cloudflare/kumo';
 import { Key, Cpu, Trash, CheckCircle, WarningCircle, ArrowSquareOut } from '@phosphor-icons/react';
 import { useTranslation } from '@/lib/i18n';
 
@@ -123,7 +122,7 @@ export default function SettingsPage() {
 
   if (loading) {
     return (
-      <div className="flex justify-center py-20 text-slate-400 font-medium">
+      <div className="flex justify-center py-20 text-zinc-400 font-medium">
         {t('common.loading')}
       </div>
     );
@@ -132,32 +131,33 @@ export default function SettingsPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-100">{t('settings.title')}</h1>
-        <p className="text-sm text-slate-400 mt-1">
+        <h1 className="text-2xl font-bold tracking-tight text-zinc-900">{t('settings.title')}</h1>
+        <p className="text-sm text-zinc-500 mt-1">
           {t('settings.subtitle')}
         </p>
       </div>
 
       {message && (
         <div
-          className={`p-4 rounded-xl text-sm font-medium border ${
+          className={`p-4 rounded-2xl text-sm font-medium border flex items-center gap-2.5 ${
             message.type === 'success'
-              ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
-              : 'bg-rose-500/10 border-rose-500/30 text-rose-300'
+              ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+              : 'bg-rose-50 border-rose-200 text-rose-800'
           }`}
         >
-          {message.text}
+          {message.type === 'success' ? <CheckCircle size={18} className="text-emerald-600 shrink-0" /> : <WarningCircle size={18} className="text-rose-600 shrink-0" />}
+          <span>{message.text}</span>
         </div>
       )}
 
-      <form onSubmit={(e) => { void handleSubmit(e); }} className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6 shadow-xl">
-        <div className="border-b border-slate-800 pb-4 mb-4">
-          <h2 className="text-lg font-semibold text-slate-200">{t('settings.tabProfile')}</h2>
+      <form onSubmit={(e) => { void handleSubmit(e); }} className="bg-white border border-zinc-200/80 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xs">
+        <div className="border-b border-zinc-100 pb-4 mb-4">
+          <h2 className="text-base font-bold text-zinc-900 tracking-tight">{t('settings.tabProfile')}</h2>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+            <label className="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-2">
               {t('settings.profileName')} *
             </label>
             <input
@@ -165,12 +165,12 @@ export default function SettingsPage() {
               required
               value={formData.name}
               onChange={(e) => { handleChange('name', e.target.value); }}
-              className="w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+              className="w-full px-4 py-3 rounded-xl bg-white border border-zinc-200 text-zinc-900 placeholder:text-zinc-400 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-all"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+            <label className="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-2">
               {t('settings.businessName')}
             </label>
             <input
@@ -178,14 +178,14 @@ export default function SettingsPage() {
               value={formData.businessName}
               onChange={(e) => { handleChange('businessName', e.target.value); }}
               placeholder="e.g. Studio Pixel Indonesia"
-              className="w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+              className="w-full px-4 py-3 rounded-xl bg-white border border-zinc-200 text-zinc-900 placeholder:text-zinc-400 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-all"
             />
           </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+            <label className="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-2">
               NPWP / Tax ID
             </label>
             <input
@@ -193,12 +193,12 @@ export default function SettingsPage() {
               value={formData.npwp}
               onChange={(e) => { handleChange('npwp', e.target.value); }}
               placeholder="12.345.678.9-012.000"
-              className="w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+              className="w-full px-4 py-3 rounded-xl bg-white border border-zinc-200 text-zinc-900 placeholder:text-zinc-400 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-all"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+            <label className="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-2">
               {t('settings.businessPhone')}
             </label>
             <input
@@ -206,13 +206,13 @@ export default function SettingsPage() {
               value={formData.phone}
               onChange={(e) => { handleChange('phone', e.target.value); }}
               placeholder="+62 812 3456 7890"
-              className="w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+              className="w-full px-4 py-3 rounded-xl bg-white border border-zinc-200 text-zinc-900 placeholder:text-zinc-400 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-all"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+          <label className="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-2">
             {t('settings.businessAddress')}
           </label>
           <textarea
@@ -220,22 +220,22 @@ export default function SettingsPage() {
             value={formData.address}
             onChange={(e) => { handleChange('address', e.target.value); }}
             placeholder="Jl. Sudirman No. 123, Jakarta Selatan"
-            className="w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50 resize-y"
+            className="w-full px-4 py-3 rounded-xl bg-white border border-zinc-200 text-zinc-900 placeholder:text-zinc-400 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-all resize-y"
           />
         </div>
 
-        <div className="border-t border-slate-800 pt-6">
-          <h2 className="text-lg font-semibold text-slate-200 mb-4">{t('settings.tabBusiness')}</h2>
+        <div className="border-t border-zinc-100 pt-6">
+          <h2 className="text-base font-bold text-zinc-900 tracking-tight mb-4">{t('settings.tabBusiness')}</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-2">
                 {t('common.currency')}
               </label>
               <select
                 value={formData.defaultCurrency}
                 onChange={(e) => { handleChange('defaultCurrency', e.target.value); }}
-                className="w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                className="w-full px-4 py-3 rounded-xl bg-white border border-zinc-200 text-zinc-900 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-all"
               >
                 <option value="IDR">IDR (Rupiah)</option>
                 <option value="USD">USD (US Dollar)</option>
@@ -243,7 +243,7 @@ export default function SettingsPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-2">
                 Logo URL
               </label>
               <input
@@ -251,13 +251,13 @@ export default function SettingsPage() {
                 value={formData.logoUrl}
                 onChange={(e) => { handleChange('logoUrl', e.target.value); }}
                 placeholder="https://example.com/logo.png"
-                className="w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                className="w-full px-4 py-3 rounded-xl bg-white border border-zinc-200 text-zinc-900 placeholder:text-zinc-400 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-all"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+            <label className="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-2">
               {t('settings.bankDetails')}
             </label>
             <textarea
@@ -265,16 +265,16 @@ export default function SettingsPage() {
               value={formData.defaultNotes}
               onChange={(e) => { handleChange('defaultNotes', e.target.value); }}
               placeholder={t('settings.bankDetailsPlaceholder')}
-              className="w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50 resize-y"
+              className="w-full px-4 py-3 rounded-xl bg-white border border-zinc-200 text-zinc-900 placeholder:text-zinc-400 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-all resize-y"
             />
           </div>
         </div>
 
-        <div className="flex justify-end pt-4">
+        <div className="flex justify-end pt-4 border-t border-zinc-100">
           <button
             type="submit"
             disabled={saving}
-            className="px-6 py-3 rounded-xl font-semibold text-sm bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white shadow-lg shadow-cyan-500/25 active:scale-[0.99] transition-all disabled:opacity-60 cursor-pointer"
+            className="px-6 py-2.5 rounded-xl font-medium text-sm bg-zinc-900 hover:bg-black text-white shadow-xs active:scale-[0.99] transition-all disabled:opacity-60 cursor-pointer"
           >
             {saving ? t('clients.btnSaving') : t('common.save')}
           </button>
@@ -282,27 +282,26 @@ export default function SettingsPage() {
       </form>
 
       {/* BYOK OpenRouter AI Integration Card */}
-      <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6 shadow-xl">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+      <div className="bg-white border border-zinc-200/80 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-zinc-100 pb-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
-              <Key size={20} weight="duotone" />
+            <div className="w-10 h-10 rounded-2xl bg-zinc-100 border border-zinc-200/80 flex items-center justify-center text-zinc-800">
+              <Key size={20} weight="bold" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-slate-100 flex items-center gap-2">
+              <h2 className="text-base font-bold text-zinc-900 flex items-center gap-2">
                 <span>{t('settings.aiCardTitle')}</span>
-                <Badge
-                  variant="secondary"
-                  className={
+                <span
+                  className={`inline-flex items-center text-[11px] font-semibold px-2.5 py-0.5 rounded-full border ${
                     aiSettings.hasApiKey
-                      ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
-                      : 'bg-amber-500/10 text-amber-400 border-amber-500/30'
-                  }
+                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                      : 'bg-amber-50 text-amber-700 border-amber-200'
+                  }`}
                 >
                   {aiSettings.hasApiKey ? (locale === 'id' ? 'Terkonfigurasi' : 'Configured') : (locale === 'id' ? 'Belum Terhubung' : 'Not Connected')}
-                </Badge>
+                </span>
               </h2>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-xs text-zinc-500 mt-0.5">
                 {t('settings.aiCardDesc')}
               </p>
             </div>
@@ -312,7 +311,7 @@ export default function SettingsPage() {
             href="https://openrouter.ai/keys"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs font-semibold text-cyan-400 hover:underline flex items-center gap-1"
+            className="text-xs font-semibold text-zinc-700 hover:text-black hover:underline flex items-center gap-1 transition-colors"
           >
             {locale === 'id' ? 'Dapatkan Kunci di OpenRouter' : 'Get API Key at OpenRouter'}
             <ArrowSquareOut size={13} />
@@ -321,37 +320,37 @@ export default function SettingsPage() {
 
         {aiMessage && (
           <div
-            className={`p-4 rounded-xl text-xs font-medium border flex items-center gap-2 ${
+            className={`p-4 rounded-2xl text-xs font-medium border flex items-center gap-2.5 ${
               aiMessage.type === 'success'
-                ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
-                : 'bg-rose-500/10 border-rose-500/30 text-rose-300'
+                ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+                : 'bg-rose-50 border-rose-200 text-rose-800'
             }`}
           >
-            {aiMessage.type === 'success' ? <CheckCircle size={16} /> : <WarningCircle size={16} />}
+            {aiMessage.type === 'success' ? <CheckCircle size={16} className="text-emerald-600 shrink-0" /> : <WarningCircle size={16} className="text-rose-600 shrink-0" />}
             <span>{aiMessage.text}</span>
           </div>
         )}
 
         <div className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-              {t('settings.aiKeyLabel')} {aiSettings.hasApiKey && <span className="text-emerald-400 normal-case">({locale === 'id' ? 'Tersimpan:' : 'Saved:'} {aiSettings.maskedKey})</span>}
+            <label className="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-2">
+              {t('settings.aiKeyLabel')} {aiSettings.hasApiKey && <span className="text-emerald-600 normal-case font-medium">({locale === 'id' ? 'Tersimpan:' : 'Saved:'} {aiSettings.maskedKey})</span>}
             </label>
             <input
               type="password"
               placeholder={aiSettings.hasApiKey ? (locale === 'id' ? 'Masukkan kunci baru jika ingin mengubah...' : 'Enter new key to update...') : t('settings.aiKeyPlaceholder')}
               value={inputApiKey}
               onChange={(e) => { setInputApiKey(e.target.value); }}
-              className="w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+              className="w-full px-4 py-3 rounded-xl bg-white border border-zinc-200 text-zinc-900 placeholder:text-zinc-400 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-all"
             />
-            <p className="text-[11px] text-slate-500 mt-1">
+            <p className="text-[11px] text-zinc-500 mt-1">
               {locale === 'id' ? 'API Key Anda tidak pernah dikirim balik ke frontend dan hanya didekripsi di memori server sesaat saat memanggil AI.' : 'Your API key is never returned to the frontend and only decrypted in transient memory during AI completions.'}
             </p>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2 flex items-center gap-2">
-              <Cpu size={14} className="text-cyan-400" />
+            <label className="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-2 flex items-center gap-2">
+              <Cpu size={14} className="text-zinc-700" />
               <span>{t('settings.aiModelLabel')}</span>
             </label>
             <select
@@ -360,19 +359,19 @@ export default function SettingsPage() {
                 const newModel = e.target.value;
                 setAiSettings((prev) => ({ ...prev, preferredAiModel: newModel }));
               }}
-              className="w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50 cursor-pointer"
+              className="w-full px-4 py-3 rounded-xl bg-white border border-zinc-200 text-zinc-900 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-all cursor-pointer"
             >
               {availableModels.length === 0 ? (
                 <option value={aiSettings.preferredAiModel}>{aiSettings.preferredAiModel}</option>
               ) : (
                 availableModels.map((m) => (
-                  <option key={m.id} value={m.id} className="bg-slate-900 text-slate-100">
+                  <option key={m.id} value={m.id} className="bg-white text-zinc-900">
                     {m.isFree ? `[${t('settings.freeBadge')}] ${m.name}` : m.name}
                   </option>
                 ))
               )}
             </select>
-            <p className="text-[11px] text-slate-500 mt-1">
+            <p className="text-[11px] text-zinc-500 mt-1">
               {locale === 'id' ? 'Daftar model diambil secara dinamis dari OpenRouter, termasuk status model gratis terkini.' : 'Dynamic model catalog fetched live from OpenRouter, highlighting free tier options.'}
             </p>
           </div>
@@ -380,8 +379,8 @@ export default function SettingsPage() {
           <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
             <div>
               {aiSettings.hasApiKey && (
-                <Button
-                  variant="secondary"
+                <button
+                  type="button"
                   onClick={async () => {
                     if (!confirm(locale === 'id' ? 'Hapus API Key OpenRouter Anda dari akun ini?' : 'Delete your OpenRouter API key from this account?')) return;
                     setSavingAi(true);
@@ -401,16 +400,16 @@ export default function SettingsPage() {
                     }
                   }}
                   disabled={savingAi}
-                  className="text-xs px-3 py-2 border border-rose-500/30 text-rose-400 hover:bg-rose-500/10 rounded-xl flex items-center gap-1.5 cursor-pointer"
+                  className="text-xs px-3.5 py-2 border border-rose-200 text-rose-600 hover:bg-rose-50 font-medium rounded-xl flex items-center gap-1.5 transition-colors cursor-pointer disabled:opacity-50"
                 >
                   <Trash size={14} />
                   {t('common.delete')}
-                </Button>
+                </button>
               )}
             </div>
 
-            <Button
-              variant="primary"
+            <button
+              type="button"
               onClick={async () => {
                 if (!inputApiKey && !aiSettings.hasApiKey) {
                   setAiMessage({ type: 'error', text: locale === 'id' ? 'Masukkan API Key OpenRouter Anda terlebih dahulu.' : 'Please enter your OpenRouter API key first.' });
@@ -452,11 +451,11 @@ export default function SettingsPage() {
                 }
               }}
               disabled={savingAi}
-              className="text-xs px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-semibold rounded-xl flex items-center gap-1.5 cursor-pointer shadow-md"
+              className="text-xs px-5 py-2.5 bg-zinc-900 hover:bg-black text-white font-medium rounded-xl flex items-center gap-1.5 cursor-pointer shadow-xs transition-colors disabled:opacity-50"
             >
               <Key size={14} />
               {savingAi ? (locale === 'id' ? 'Memvalidasi & Menyimpan...' : 'Validating & Saving...') : (locale === 'id' ? 'Simpan & Validasi Kunci AI' : 'Save & Validate AI Key')}
-            </Button>
+            </button>
           </div>
         </div>
       </div>

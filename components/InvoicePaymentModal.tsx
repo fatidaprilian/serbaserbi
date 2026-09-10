@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useCallback, FormEvent } from 'react';
-import { Button, Badge } from '@cloudflare/kumo';
 import { CreditCard, Trash, X, CheckCircle, WarningCircle, Plus } from '@phosphor-icons/react';
 import { useTranslation } from '@/lib/i18n';
 
@@ -180,33 +179,32 @@ export default function InvoicePaymentModal({
     : 0;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-900/40 backdrop-blur-xs animate-in fade-in duration-200">
+      <div className="bg-white border border-zinc-200/80 rounded-3xl w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
         {/* Modal Header */}
-        <div className="p-6 border-b border-slate-800 flex items-center justify-between">
+        <div className="p-6 border-b border-zinc-100 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
-              <CreditCard size={20} weight="duotone" />
+            <div className="w-10 h-10 rounded-2xl bg-zinc-100 border border-zinc-200/80 flex items-center justify-center text-zinc-800">
+              <CreditCard size={20} weight="bold" />
             </div>
             <div>
-              <h2 className="text-base sm:text-lg font-bold text-slate-100 flex items-center gap-2">
+              <h2 className="text-base sm:text-lg font-bold text-zinc-900 flex items-center gap-2">
                 <span>{t('paymentModal.title')}: {invoiceNumber}</span>
                 {data && (
-                  <Badge
-                    variant="secondary"
-                    className={
+                  <span
+                    className={`inline-flex items-center text-[11px] font-semibold px-2.5 py-0.5 rounded-full border ${
                       data.status === 'paid'
-                        ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
                         : data.status === 'partial_paid'
-                        ? 'bg-amber-500/10 text-amber-400 border-amber-500/30'
-                        : 'bg-slate-800 text-slate-400'
-                    }
+                        ? 'bg-amber-50 text-amber-700 border-amber-200'
+                        : 'bg-zinc-100 text-zinc-700 border-zinc-200'
+                    }`}
                   >
                     {data.status === 'paid' ? t('documents.statusPaid') : data.status === 'partial_paid' ? t('documents.statusPartial') : data.status}
-                  </Badge>
+                  </span>
                 )}
               </h2>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-xs text-zinc-500 mt-0.5">
                 {locale === 'id' ? 'Kelola termin, uang muka (DP), dan histori pelunasan invoice.' : 'Audit milestones, down payments, and invoice settlements.'}
               </p>
             </div>
@@ -214,7 +212,7 @@ export default function InvoicePaymentModal({
 
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-slate-100 flex items-center justify-center transition-colors cursor-pointer"
+            className="w-8 h-8 rounded-xl hover:bg-zinc-100 text-zinc-400 hover:text-zinc-700 flex items-center justify-center transition-colors cursor-pointer"
           >
             <X size={18} />
           </button>
@@ -223,28 +221,28 @@ export default function InvoicePaymentModal({
         {/* Modal Content (Scrollable) */}
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {loading ? (
-            <div className="py-12 text-center text-xs text-slate-400">{t('common.loading')}</div>
+            <div className="py-12 text-center text-xs text-zinc-400 font-medium">{t('common.loading')}</div>
           ) : data ? (
             <>
               {/* Financial Metrics Cards */}
               <div className="grid grid-cols-3 gap-3">
-                <div className="bg-slate-950/70 border border-slate-800/80 rounded-xl p-3.5">
-                  <span className="text-[11px] text-slate-400 font-medium">{t('paymentModal.totalInvoice')}</span>
-                  <p className="text-sm sm:text-base font-bold text-slate-100 mt-1">
+                <div className="bg-zinc-50/80 border border-zinc-200/80 rounded-2xl p-3.5">
+                  <span className="text-[11px] text-zinc-500 font-medium">{t('paymentModal.totalInvoice')}</span>
+                  <p className="text-sm sm:text-base font-bold text-zinc-900 mt-1">
                     {formatCurrency(data.totalInvoice, activeCurrency)}
                   </p>
                 </div>
 
-                <div className="bg-slate-950/70 border border-slate-800/80 rounded-xl p-3.5">
-                  <span className="text-[11px] text-slate-400 font-medium">{t('paymentModal.totalPaid')}</span>
-                  <p className="text-sm sm:text-base font-bold text-emerald-400 mt-1">
+                <div className="bg-emerald-50/60 border border-emerald-200/60 rounded-2xl p-3.5">
+                  <span className="text-[11px] text-emerald-700 font-medium">{t('paymentModal.totalPaid')}</span>
+                  <p className="text-sm sm:text-base font-bold text-emerald-700 mt-1">
                     {formatCurrency(data.totalPaid, activeCurrency)}
                   </p>
                 </div>
 
-                <div className="bg-slate-950/70 border border-slate-800/80 rounded-xl p-3.5">
-                  <span className="text-[11px] text-slate-400 font-medium">{t('paymentModal.remainingDue')}</span>
-                  <p className="text-sm sm:text-base font-bold text-amber-400 mt-1">
+                <div className="bg-amber-50/60 border border-amber-200/60 rounded-2xl p-3.5">
+                  <span className="text-[11px] text-amber-700 font-medium">{t('paymentModal.remainingDue')}</span>
+                  <p className="text-sm sm:text-base font-bold text-amber-700 mt-1">
                     {formatCurrency(data.balanceRemaining, activeCurrency)}
                   </p>
                 </div>
@@ -253,12 +251,12 @@ export default function InvoicePaymentModal({
               {/* Progress Bar */}
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between text-xs font-semibold">
-                  <span className="text-slate-400">{locale === 'id' ? 'Progres Pelunasan' : 'Settlement Progress'}</span>
-                  <span className="text-cyan-400">{percentPaid}%</span>
+                  <span className="text-zinc-500">{locale === 'id' ? 'Progres Pelunasan' : 'Settlement Progress'}</span>
+                  <span className="text-zinc-900 font-bold">{percentPaid}%</span>
                 </div>
-                <div className="w-full h-2.5 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
+                <div className="w-full h-2.5 bg-zinc-100 rounded-full overflow-hidden border border-zinc-200/80">
                   <div
-                    className="h-full bg-gradient-to-r from-cyan-500 to-emerald-500 transition-all duration-500"
+                    className="h-full bg-emerald-500 transition-all duration-500"
                     style={{ width: `${percentPaid}%` }}
                   />
                 </div>
@@ -266,29 +264,29 @@ export default function InvoicePaymentModal({
 
               {/* Feedback Messages */}
               {errorMessage && (
-                <div className="p-3 rounded-xl text-xs font-medium bg-rose-500/10 border border-rose-500/30 text-rose-300 flex items-center gap-2">
-                  <WarningCircle size={16} />
+                <div className="p-3.5 rounded-2xl text-xs font-medium bg-rose-50 border border-rose-200 text-rose-800 flex items-center gap-2">
+                  <WarningCircle size={16} className="text-rose-600 shrink-0" />
                   <span>{errorMessage}</span>
                 </div>
               )}
 
               {successMessage && (
-                <div className="p-3 rounded-xl text-xs font-medium bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 flex items-center gap-2">
-                  <CheckCircle size={16} />
+                <div className="p-3.5 rounded-2xl text-xs font-medium bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center gap-2">
+                  <CheckCircle size={16} className="text-emerald-600 shrink-0" />
                   <span>{successMessage}</span>
                 </div>
               )}
 
               {/* Record New Payment Form */}
-              <form onSubmit={(e) => { void handleAddPayment(e); }} className="bg-slate-950/50 border border-slate-800 rounded-2xl p-4 space-y-4">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+              <form onSubmit={(e) => { void handleAddPayment(e); }} className="bg-zinc-50/60 border border-zinc-200/80 rounded-2xl p-4 space-y-4">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-700 flex items-center gap-1.5">
                   <Plus size={14} weight="bold" />
                   {t('paymentModal.recordTitle')}
                 </h3>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-400 mb-1">
+                    <label className="block text-[11px] font-semibold text-zinc-600 mb-1">
                       {t('paymentModal.amountLabel', { currency: activeCurrency })} *
                     </label>
                     <input
@@ -299,12 +297,12 @@ export default function InvoicePaymentModal({
                       placeholder={data.currency === 'IDR' ? 'e.g. 2500000' : 'e.g. 150'}
                       value={formData.amount}
                       onChange={(e) => { setFormData({ ...formData, amount: e.target.value }); }}
-                      className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                      className="w-full px-3 py-2 bg-white border border-zinc-200 rounded-xl text-xs text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-400 mb-1">
+                    <label className="block text-[11px] font-semibold text-zinc-600 mb-1">
                       {t('paymentModal.paymentDateLabel')} *
                     </label>
                     <input
@@ -312,20 +310,20 @@ export default function InvoicePaymentModal({
                       required
                       value={formData.paymentDate}
                       onChange={(e) => { setFormData({ ...formData, paymentDate: e.target.value }); }}
-                      className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                      className="w-full px-3 py-2 bg-white border border-zinc-200 rounded-xl text-xs text-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-400 mb-1">
+                    <label className="block text-[11px] font-semibold text-zinc-600 mb-1">
                       {t('paymentModal.methodLabel')}
                     </label>
                     <select
                       value={formData.paymentMethod}
                       onChange={(e) => { setFormData({ ...formData, paymentMethod: e.target.value }); }}
-                      className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-cyan-500 cursor-pointer"
+                      className="w-full px-3 py-2 bg-white border border-zinc-200 rounded-xl text-xs text-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 cursor-pointer"
                     >
                       <option value="bank_transfer">{t('paymentModal.methodBank')}</option>
                       <option value="qris">{t('paymentModal.methodEwallet')}</option>
@@ -335,7 +333,7 @@ export default function InvoicePaymentModal({
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-400 mb-1">
+                    <label className="block text-[11px] font-semibold text-zinc-600 mb-1">
                       {t('paymentModal.notesLabel')}
                     </label>
                     <input
@@ -343,38 +341,37 @@ export default function InvoicePaymentModal({
                       placeholder={t('paymentModal.notesPlaceholder')}
                       value={formData.notes}
                       onChange={(e) => { setFormData({ ...formData, notes: e.target.value }); }}
-                      className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                      className="w-full px-3 py-2 bg-white border border-zinc-200 rounded-xl text-xs text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900"
                     />
                   </div>
                 </div>
 
                 <div className="flex justify-end pt-1">
-                  <Button
-                    variant="primary"
+                  <button
                     type="submit"
                     disabled={saving}
-                    className="text-xs px-4 py-2 bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-medium flex items-center gap-1.5 cursor-pointer rounded-xl"
+                    className="text-xs px-4 py-2 bg-zinc-900 hover:bg-black text-white font-medium flex items-center gap-1.5 cursor-pointer rounded-xl transition-colors shadow-xs disabled:opacity-50"
                   >
                     <CreditCard size={14} />
                     {saving ? t('paymentModal.btnSubmitting') : t('paymentModal.btnSubmit')}
-                  </Button>
+                  </button>
                 </div>
               </form>
 
               {/* Payment History List */}
               <div className="space-y-3">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-700">
                   {t('paymentModal.historyTitle')} ({data.payments.length})
                 </h3>
 
                 {data.payments.length === 0 ? (
-                  <div className="py-6 text-center text-xs text-slate-500 bg-slate-950/40 rounded-xl border border-slate-800/60">
+                  <div className="py-6 text-center text-xs text-zinc-500 bg-zinc-50/60 rounded-2xl border border-zinc-200/80">
                     {t('paymentModal.noPayments')}
                   </div>
                 ) : (
-                  <div className="border border-slate-800 rounded-xl overflow-hidden">
+                  <div className="border border-zinc-200/80 rounded-2xl overflow-hidden">
                     <table className="w-full text-left text-xs">
-                      <thead className="bg-slate-950 text-slate-400 font-semibold border-b border-slate-800">
+                      <thead className="bg-zinc-50/90 text-zinc-500 font-semibold border-b border-zinc-200/80">
                         <tr>
                           <th className="px-3 py-2.5">{t('documents.colDate')}</th>
                           <th className="px-3 py-2.5">{t('documents.colAmount')}</th>
@@ -383,25 +380,25 @@ export default function InvoicePaymentModal({
                           <th className="px-3 py-2.5 text-right">{t('documents.colActions')}</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-800/60 text-slate-200">
+                      <tbody className="divide-y divide-zinc-100 text-zinc-800">
                         {data.payments.map((p) => (
-                          <tr key={p.id} className="hover:bg-slate-800/30 transition-colors">
-                            <td className="px-3 py-2.5 font-mono text-slate-400">
+                          <tr key={p.id} className="hover:bg-zinc-50/60 transition-colors">
+                            <td className="px-3 py-2.5 font-mono text-zinc-500">
                               {new Date(p.paymentDate).toLocaleDateString(locale === 'id' ? 'id-ID' : 'en-US')}
                             </td>
-                            <td className="px-3 py-2.5 font-bold text-emerald-400 font-mono">
+                            <td className="px-3 py-2.5 font-bold text-emerald-600 font-mono">
                               {formatCurrency(Number(p.amount), activeCurrency)}
                             </td>
-                            <td className="px-3 py-2.5 capitalize text-slate-300">
+                            <td className="px-3 py-2.5 capitalize text-zinc-700">
                               {p.paymentMethod.replace('_', ' ')}
                             </td>
-                            <td className="px-3 py-2.5 text-slate-400 max-w-xs truncate">
+                            <td className="px-3 py-2.5 text-zinc-500 max-w-xs truncate">
                               {p.notes || '—'}
                             </td>
                             <td className="px-3 py-2.5 text-right">
                               <button
                                 onClick={() => { void handleDeletePayment(p.id); }}
-                                className="text-rose-400 hover:text-rose-300 p-1 hover:bg-rose-500/10 rounded transition-colors cursor-pointer"
+                                className="text-zinc-400 hover:text-rose-600 p-1 hover:bg-rose-50 rounded transition-colors cursor-pointer"
                                 title={t('common.delete')}
                               >
                                 <Trash size={14} />
@@ -419,14 +416,14 @@ export default function InvoicePaymentModal({
         </div>
 
         {/* Modal Footer */}
-        <div className="p-4 border-t border-slate-800 bg-slate-950/60 flex justify-end">
-          <Button
-            variant="secondary"
+        <div className="p-4 border-t border-zinc-100 bg-zinc-50/40 flex justify-end">
+          <button
+            type="button"
             onClick={onClose}
-            className="text-xs px-4 py-2 border border-slate-700 text-slate-300 hover:bg-slate-800 rounded-xl cursor-pointer"
+            className="text-xs px-4 py-2 border border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-100 rounded-xl cursor-pointer font-medium transition-colors"
           >
             {t('common.close')}
-          </Button>
+          </button>
         </div>
       </div>
     </div>

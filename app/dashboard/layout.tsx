@@ -9,15 +9,15 @@ import { ReactNode } from 'react';
 function NavLink({ href, label, isMobile, pathname }: { href: string; label: string; isMobile?: boolean; pathname: string }) {
   const isActive = href === '/dashboard' ? pathname === '/dashboard' : pathname.startsWith(href);
   const baseClasses = isMobile
-    ? 'px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all'
-    : 'px-3.5 py-2 rounded-xl text-xs font-semibold transition-all';
+    ? 'px-3 py-1.5 rounded-lg text-xs transition-all'
+    : 'px-3.5 py-2 rounded-xl text-xs transition-all';
   const activeClasses = isActive
     ? isMobile
-      ? 'bg-slate-800 text-cyan-400 border border-slate-700'
-      : 'bg-slate-800 text-cyan-400 border border-slate-700/80 shadow-xs'
+      ? 'bg-zinc-100 text-zinc-950 border border-zinc-200/90 font-bold shadow-2xs'
+      : 'bg-zinc-100 text-zinc-950 border border-zinc-200/90 shadow-2xs font-bold'
     : isMobile
-      ? 'text-slate-400 hover:text-slate-200'
-      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900';
+      ? 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100/70 font-medium'
+      : 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100/70 font-medium';
 
   return (
     <Link href={href} className={`${baseClasses} ${activeClasses}`}>
@@ -38,14 +38,17 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
+    <div className="min-h-screen bg-[#fafafa] text-[#09090b] font-sans selection:bg-black selection:text-white flex flex-col relative overflow-x-hidden">
+      {/* Subtle background glow matching homepage */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-zinc-200/50 to-transparent blur-3xl -z-10 rounded-full pointer-events-none" />
+
       {/* Header Bar */}
-      <header className="border-b border-slate-800/80 bg-slate-900/90 backdrop-blur-md sticky top-0 z-30">
+      <header className="border-b border-zinc-200/80 bg-white/80 backdrop-blur-md sticky top-0 z-30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-8">
             <Link
               href="/dashboard"
-              className="text-xl font-black bg-gradient-to-r from-cyan-400 via-sky-400 to-indigo-400 bg-clip-text text-transparent"
+              className="font-black text-xl tracking-tight text-zinc-900"
             >
               {t('common.appName')}
             </Link>
@@ -57,19 +60,19 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             </nav>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <Link
               href="/guest/invoice"
-              className="hidden sm:inline-flex text-xs font-medium text-slate-400 hover:text-cyan-300 transition-colors"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-zinc-700 hover:text-zinc-950 bg-zinc-100/90 hover:bg-zinc-200/90 border border-zinc-200/80 transition-all shadow-2xs cursor-pointer"
             >
               + {t('nav.createInvoice')}
             </Link>
-            <UserNav variant="dark" />
+            <UserNav variant="light" />
           </div>
         </div>
 
         {/* Mobile Navigation Sub-bar */}
-        <div className="md:hidden flex border-t border-slate-800/80 px-4 py-2 gap-2 overflow-x-auto">
+        <div className="md:hidden flex border-t border-zinc-200/80 bg-white/95 px-4 py-2 gap-2 overflow-x-auto">
           {navItems.map((item) => (
             <NavLink key={item.href} href={item.href} label={item.label} isMobile pathname={pathname} />
           ))}
@@ -77,7 +80,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       </header>
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 z-10">
         {children}
       </main>
     </div>
