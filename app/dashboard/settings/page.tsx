@@ -3,8 +3,10 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { Button, Badge } from '@cloudflare/kumo';
 import { Key, Cpu, Trash, CheckCircle, WarningCircle, ArrowSquareOut } from '@phosphor-icons/react';
+import { useTranslation } from '@/lib/i18n';
 
 export default function SettingsPage() {
+  const { t, locale } = useTranslation();
   const [formData, setFormData] = useState({
     name: '',
     businessName: '',
@@ -108,12 +110,12 @@ export default function SettingsPage() {
       const data = await res.json();
 
       if (res.ok) {
-        setMessage({ type: 'success', text: 'Pengaturan profil berhasil disimpan.' });
+        setMessage({ type: 'success', text: t('settings.saveSuccess') });
       } else {
-        setMessage({ type: 'error', text: data.error || 'Gagal menyimpan pengaturan.' });
+        setMessage({ type: 'error', text: data.error || t('settings.saveError') });
       }
     } catch {
-      setMessage({ type: 'error', text: 'Terjadi kesalahan sistem.' });
+      setMessage({ type: 'error', text: t('common.error') });
     } finally {
       setSaving(false);
     }
@@ -122,7 +124,7 @@ export default function SettingsPage() {
   if (loading) {
     return (
       <div className="flex justify-center py-20 text-slate-400 font-medium">
-        Memuat pengaturan profil...
+        {t('common.loading')}
       </div>
     );
   }
@@ -130,9 +132,9 @@ export default function SettingsPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-100">Pengaturan Usaha & Profil</h1>
+        <h1 className="text-2xl font-bold text-slate-100">{t('settings.title')}</h1>
         <p className="text-sm text-slate-400 mt-1">
-          Pengaturan ini akan otomatis mengisi identitas Anda saat membuat Invoice, Quotation, dan Kontrak.
+          {t('settings.subtitle')}
         </p>
       </div>
 
@@ -150,13 +152,13 @@ export default function SettingsPage() {
 
       <form onSubmit={(e) => { void handleSubmit(e); }} className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6 shadow-xl">
         <div className="border-b border-slate-800 pb-4 mb-4">
-          <h2 className="text-lg font-semibold text-slate-200">Identitas Freelancer / Studio</h2>
+          <h2 className="text-lg font-semibold text-slate-200">{t('settings.tabProfile')}</h2>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
             <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-              Nama Lengkap / Freelancer *
+              {t('settings.profileName')} *
             </label>
             <input
               type="text"
@@ -169,7 +171,7 @@ export default function SettingsPage() {
 
           <div>
             <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-              Nama Usaha / Brand
+              {t('settings.businessName')}
             </label>
             <input
               type="text"
@@ -184,7 +186,7 @@ export default function SettingsPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
             <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-              NPWP / Tax Identification Number
+              NPWP / Tax ID
             </label>
             <input
               type="text"
@@ -197,7 +199,7 @@ export default function SettingsPage() {
 
           <div>
             <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-              Nomor Telepon / WhatsApp
+              {t('settings.businessPhone')}
             </label>
             <input
               type="text"
@@ -211,7 +213,7 @@ export default function SettingsPage() {
 
         <div>
           <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-            Alamat Lengkap Usaha
+            {t('settings.businessAddress')}
           </label>
           <textarea
             rows={3}
@@ -223,12 +225,12 @@ export default function SettingsPage() {
         </div>
 
         <div className="border-t border-slate-800 pt-6">
-          <h2 className="text-lg font-semibold text-slate-200 mb-4">Default Dokumen</h2>
+          <h2 className="text-lg font-semibold text-slate-200 mb-4">{t('settings.tabBusiness')}</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
             <div>
               <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                Mata Uang Standar
+                {t('common.currency')}
               </label>
               <select
                 value={formData.defaultCurrency}
@@ -242,7 +244,7 @@ export default function SettingsPage() {
 
             <div>
               <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                URL Logo Usaha / Banner
+                Logo URL
               </label>
               <input
                 type="text"
@@ -256,13 +258,13 @@ export default function SettingsPage() {
 
           <div>
             <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-              Syarat & Catatan Default Invoice
+              {t('settings.bankDetails')}
             </label>
             <textarea
               rows={4}
               value={formData.defaultNotes}
               onChange={(e) => { handleChange('defaultNotes', e.target.value); }}
-              placeholder="Pembayaran dikirim ke Rekening BCA 1234567890 a.n Budi Santoso. Terima kasih atas kerja samanya."
+              placeholder={t('settings.bankDetailsPlaceholder')}
               className="w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50 resize-y"
             />
           </div>
@@ -274,7 +276,7 @@ export default function SettingsPage() {
             disabled={saving}
             className="px-6 py-3 rounded-xl font-semibold text-sm bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white shadow-lg shadow-cyan-500/25 active:scale-[0.99] transition-all disabled:opacity-60 cursor-pointer"
           >
-            {saving ? 'Menyimpan...' : 'Simpan Pengaturan'}
+            {saving ? t('clients.btnSaving') : t('common.save')}
           </button>
         </div>
       </form>
@@ -288,7 +290,7 @@ export default function SettingsPage() {
             </div>
             <div>
               <h2 className="text-lg font-bold text-slate-100 flex items-center gap-2">
-                <span>Integrasi AI Assistant (BYOK - OpenRouter)</span>
+                <span>{t('settings.aiCardTitle')}</span>
                 <Badge
                   variant="secondary"
                   className={
@@ -297,11 +299,11 @@ export default function SettingsPage() {
                       : 'bg-amber-500/10 text-amber-400 border-amber-500/30'
                   }
                 >
-                  {aiSettings.hasApiKey ? 'Terkonfigurasi' : 'Belum Terhubung'}
+                  {aiSettings.hasApiKey ? (locale === 'id' ? 'Terkonfigurasi' : 'Configured') : (locale === 'id' ? 'Belum Terhubung' : 'Not Connected')}
                 </Badge>
               </h2>
               <p className="text-xs text-slate-400 mt-0.5">
-                Bawa API Key OpenRouter Anda sendiri (BYOK). Kunci dienkripsi aman dengan AES-256-GCM.
+                {t('settings.aiCardDesc')}
               </p>
             </div>
           </div>
@@ -312,7 +314,7 @@ export default function SettingsPage() {
             rel="noopener noreferrer"
             className="text-xs font-semibold text-cyan-400 hover:underline flex items-center gap-1"
           >
-            Dapatkan Kunci di OpenRouter
+            {locale === 'id' ? 'Dapatkan Kunci di OpenRouter' : 'Get API Key at OpenRouter'}
             <ArrowSquareOut size={13} />
           </a>
         </div>
@@ -333,24 +335,24 @@ export default function SettingsPage() {
         <div className="space-y-4">
           <div>
             <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-              OpenRouter API Key {aiSettings.hasApiKey && <span className="text-emerald-400 normal-case">(Tersimpan: {aiSettings.maskedKey})</span>}
+              {t('settings.aiKeyLabel')} {aiSettings.hasApiKey && <span className="text-emerald-400 normal-case">({locale === 'id' ? 'Tersimpan:' : 'Saved:'} {aiSettings.maskedKey})</span>}
             </label>
             <input
               type="password"
-              placeholder={aiSettings.hasApiKey ? 'Masukkan kunci baru jika ingin mengubah...' : 'sk-or-v1-...'}
+              placeholder={aiSettings.hasApiKey ? (locale === 'id' ? 'Masukkan kunci baru jika ingin mengubah...' : 'Enter new key to update...') : t('settings.aiKeyPlaceholder')}
               value={inputApiKey}
               onChange={(e) => { setInputApiKey(e.target.value); }}
               className="w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
             />
             <p className="text-[11px] text-slate-500 mt-1">
-              API Key Anda tidak pernah dikirim balik ke frontend dan hanya didekripsi di memori server sesaat saat memanggil AI.
+              {locale === 'id' ? 'API Key Anda tidak pernah dikirim balik ke frontend dan hanya didekripsi di memori server sesaat saat memanggil AI.' : 'Your API key is never returned to the frontend and only decrypted in transient memory during AI completions.'}
             </p>
           </div>
 
           <div>
             <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2 flex items-center gap-2">
               <Cpu size={14} className="text-cyan-400" />
-              <span>Model Pilihan (Daftar Live dari OpenRouter)</span>
+              <span>{t('settings.aiModelLabel')}</span>
             </label>
             <select
               value={aiSettings.preferredAiModel}
@@ -365,13 +367,13 @@ export default function SettingsPage() {
               ) : (
                 availableModels.map((m) => (
                   <option key={m.id} value={m.id} className="bg-slate-900 text-slate-100">
-                    {m.isFree ? `[GRATIS] ${m.name}` : m.name}
+                    {m.isFree ? `[${t('settings.freeBadge')}] ${m.name}` : m.name}
                   </option>
                 ))
               )}
             </select>
             <p className="text-[11px] text-slate-500 mt-1">
-              Daftar model diambil secara dinamis dari OpenRouter, termasuk status model gratis terkini.
+              {locale === 'id' ? 'Daftar model diambil secara dinamis dari OpenRouter, termasuk status model gratis terkini.' : 'Dynamic model catalog fetched live from OpenRouter, highlighting free tier options.'}
             </p>
           </div>
 
@@ -381,19 +383,19 @@ export default function SettingsPage() {
                 <Button
                   variant="secondary"
                   onClick={async () => {
-                    if (!confirm('Hapus API Key OpenRouter Anda dari akun ini?')) return;
+                    if (!confirm(locale === 'id' ? 'Hapus API Key OpenRouter Anda dari akun ini?' : 'Delete your OpenRouter API key from this account?')) return;
                     setSavingAi(true);
                     try {
                       const res = await fetch('/api/user/ai-settings', { method: 'DELETE' });
                       if (res.ok) {
                         setAiSettings((prev) => ({ ...prev, hasApiKey: false, maskedKey: null }));
                         setInputApiKey('');
-                        setAiMessage({ type: 'success', text: 'API Key berhasil dihapus.' });
+                        setAiMessage({ type: 'success', text: locale === 'id' ? 'API Key berhasil dihapus.' : 'API key successfully removed.' });
                       } else {
-                        setAiMessage({ type: 'error', text: 'Gagal menghapus API Key.' });
+                        setAiMessage({ type: 'error', text: locale === 'id' ? 'Gagal menghapus API Key.' : 'Failed to delete API key.' });
                       }
                     } catch {
-                      setAiMessage({ type: 'error', text: 'Terjadi gangguan koneksi.' });
+                      setAiMessage({ type: 'error', text: t('common.error') });
                     } finally {
                       setSavingAi(false);
                     }
@@ -402,7 +404,7 @@ export default function SettingsPage() {
                   className="text-xs px-3 py-2 border border-rose-500/30 text-rose-400 hover:bg-rose-500/10 rounded-xl flex items-center gap-1.5 cursor-pointer"
                 >
                   <Trash size={14} />
-                  Hapus Kunci
+                  {t('common.delete')}
                 </Button>
               )}
             </div>
@@ -411,7 +413,7 @@ export default function SettingsPage() {
               variant="primary"
               onClick={async () => {
                 if (!inputApiKey && !aiSettings.hasApiKey) {
-                  setAiMessage({ type: 'error', text: 'Masukkan API Key OpenRouter Anda terlebih dahulu.' });
+                  setAiMessage({ type: 'error', text: locale === 'id' ? 'Masukkan API Key OpenRouter Anda terlebih dahulu.' : 'Please enter your OpenRouter API key first.' });
                   return;
                 }
                 setSavingAi(true);
@@ -439,12 +441,12 @@ export default function SettingsPage() {
                       preferredAiModel: data.preferredAiModel,
                     });
                     setInputApiKey('');
-                    setAiMessage({ type: 'success', text: 'Konfigurasi AI dan API Key OpenRouter berhasil disimpan dan divalidasi.' });
+                    setAiMessage({ type: 'success', text: locale === 'id' ? 'Konfigurasi AI dan API Key OpenRouter berhasil disimpan dan divalidasi.' : 'AI settings & API key validated and saved successfully.' });
                   } else {
-                    setAiMessage({ type: 'error', text: data.error || 'Gagal menyimpan konfigurasi AI.' });
+                    setAiMessage({ type: 'error', text: data.error || t('settings.saveError') });
                   }
                 } catch {
-                  setAiMessage({ type: 'error', text: 'Terjadi gangguan jaringan saat memvalidasi API Key.' });
+                  setAiMessage({ type: 'error', text: t('common.error') });
                 } finally {
                   setSavingAi(false);
                 }
@@ -453,7 +455,7 @@ export default function SettingsPage() {
               className="text-xs px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-semibold rounded-xl flex items-center gap-1.5 cursor-pointer shadow-md"
             >
               <Key size={14} />
-              {savingAi ? 'Memvalidasi & Menyimpan...' : 'Simpan & Validasi Kunci AI'}
+              {savingAi ? (locale === 'id' ? 'Memvalidasi & Menyimpan...' : 'Validating & Saving...') : (locale === 'id' ? 'Simpan & Validasi Kunci AI' : 'Save & Validate AI Key')}
             </Button>
           </div>
         </div>

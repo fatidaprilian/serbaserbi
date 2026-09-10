@@ -19,6 +19,7 @@ import {
   ArrowsClockwise,
   Bank,
 } from '@phosphor-icons/react';
+import { useTranslation } from '@/lib/i18n';
 
 interface AnalyticsData {
   metrics: {
@@ -61,6 +62,7 @@ interface AnalyticsData {
 
 export default function DashboardOverviewPage() {
   const { data: session } = useSession();
+  const { t, locale } = useTranslation();
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -110,7 +112,7 @@ export default function DashboardOverviewPage() {
   const userName = session?.user?.name || 'Freelancer';
 
   const formatIDR = (amount: number) => {
-    return new Intl.NumberFormat('id-ID', {
+    return new Intl.NumberFormat(locale === 'id' ? 'id-ID' : 'en-US', {
       style: 'currency',
       currency: 'IDR',
       maximumFractionDigits: 0,
@@ -140,7 +142,6 @@ export default function DashboardOverviewPage() {
     return Math.round((count / totalInvoices) * 100);
   };
 
-  // Find max monthly revenue for bar scaling
   const maxMonthlyRevenue = analytics?.monthlyRevenue.reduce((max, m) => {
     return Math.max(max, m.amountIDR);
   }, 0) || 1;
@@ -155,14 +156,14 @@ export default function DashboardOverviewPage() {
           <div className="space-y-2 max-w-2xl">
             <div className="inline-flex items-center gap-2">
               <Badge variant="primary" className="bg-cyan-500/10 text-cyan-300 border border-cyan-500/30">
-                Ringkasan Finansial & Operasional
+                {t('dashboard.title')}
               </Badge>
             </div>
             <h1 className="text-2xl sm:text-3xl font-black text-slate-100 tracking-tight">
-              Selamat datang kembali, {userName}
+              {locale === 'id' ? `Selamat datang kembali, ${userName}` : `Welcome back, ${userName}`}
             </h1>
             <p className="text-xs sm:text-sm text-slate-400">
-              Pantau arus kas, performa penagihan piutang, dan status dokumen legal freelancer Anda secara terpusat.
+              {t('dashboard.subtitle')}
             </p>
           </div>
 
@@ -173,7 +174,7 @@ export default function DashboardOverviewPage() {
               className="text-xs px-3 py-2 rounded-xl border border-slate-700 hover:bg-slate-800 text-slate-300 flex items-center gap-1.5 cursor-pointer"
             >
               <ArrowsClockwise size={13} className={loading ? 'animate-spin' : ''} />
-              Segarkan
+              {locale === 'id' ? 'Segarkan' : 'Refresh'}
             </Button>
             <Link href="/guest/invoice">
               <Button
@@ -181,7 +182,7 @@ export default function DashboardOverviewPage() {
                 className="bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-semibold text-xs px-4 py-2 rounded-xl shadow-lg shadow-cyan-500/20 flex items-center gap-1.5 cursor-pointer"
               >
                 <Plus size={14} weight="bold" />
-                Buat Invoice
+                {t('nav.createInvoice')}
               </Button>
             </Link>
           </div>
@@ -202,7 +203,7 @@ export default function DashboardOverviewPage() {
             <div className="flex items-start justify-between">
               <div className="space-y-1">
                 <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-                  Total Pendapatan Masuk
+                  {t('dashboard.totalRevenue')}
                 </span>
                 <div className="text-xl font-black text-emerald-400">
                   {formatIDR(analytics?.metrics.totalRevenueIDR || 0)}
@@ -219,7 +220,7 @@ export default function DashboardOverviewPage() {
             </div>
             <div className="pt-3 border-t border-slate-800/80 mt-3 flex items-center text-[11px] text-slate-400 gap-1.5">
               <CheckCircle size={14} className="text-emerald-400" />
-              <span>{statusCounts.paid} tagihan telah dibayar lunas</span>
+              <span>{statusCounts.paid} {locale === 'id' ? 'tagihan telah dibayar lunas' : 'invoices settled'}</span>
             </div>
           </LayerCard>
 
@@ -228,7 +229,7 @@ export default function DashboardOverviewPage() {
             <div className="flex items-start justify-between">
               <div className="space-y-1">
                 <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-                  Sisa Piutang Berjalan
+                  {t('dashboard.outstandingReceivables')}
                 </span>
                 <div className="text-xl font-black text-amber-400">
                   {formatIDR(analytics?.metrics.outstandingIDR || 0)}
@@ -245,7 +246,7 @@ export default function DashboardOverviewPage() {
             </div>
             <div className="pt-3 border-t border-slate-800/80 mt-3 flex items-center text-[11px] text-slate-400 gap-1.5">
               <span className="inline-block w-2 h-2 rounded-full bg-amber-400" />
-              <span>{statusCounts.sent + statusCounts.partial_paid} tagihan menunggu pelunasan</span>
+              <span>{statusCounts.sent + statusCounts.partial_paid} {locale === 'id' ? 'tagihan menunggu pelunasan' : 'invoices awaiting settlement'}</span>
             </div>
           </LayerCard>
 
@@ -254,10 +255,10 @@ export default function DashboardOverviewPage() {
             <div className="flex items-start justify-between">
               <div className="space-y-1">
                 <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-                  Tagihan Jatuh Tempo
+                  {t('dashboard.overdueInvoices')}
                 </span>
                 <div className="text-xl font-black text-rose-400">
-                  {analytics?.metrics.overdueCount || 0} Dokumen
+                  {analytics?.metrics.overdueCount || 0} {locale === 'id' ? 'Dokumen' : 'Invoices'}
                 </div>
                 <div className="text-xs font-semibold text-rose-300/80">
                   {formatIDR(analytics?.metrics.overdueAmountIDR || 0)}
@@ -269,9 +270,9 @@ export default function DashboardOverviewPage() {
               </div>
             </div>
             <div className="pt-3 border-t border-slate-800/80 mt-3 flex items-center justify-between text-[11px]">
-              <span className="text-rose-400 font-medium">Perlu tindak lanjut</span>
+              <span className="text-rose-400 font-medium">{t('dashboard.requireFollowUp')}</span>
               <Link href="/dashboard/documents" className="text-cyan-400 hover:underline flex items-center gap-0.5">
-                Cek <ArrowRight size={11} />
+                {t('common.view')} <ArrowRight size={11} />
               </Link>
             </div>
           </LayerCard>
@@ -281,16 +282,16 @@ export default function DashboardOverviewPage() {
             <div className="flex items-start justify-between">
               <div className="space-y-1">
                 <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-                  Portofolio Dokumen
+                  {t('dashboard.totalDocuments')}
                 </span>
                 <div className="text-xl font-black text-cyan-400">
                   {(analytics?.metrics.totalInvoices || 0) +
                     (analytics?.metrics.totalQuotations || 0) +
                     (analytics?.metrics.totalContracts || 0)}{' '}
-                  Dokumen
+                  {locale === 'id' ? 'Dokumen' : 'Documents'}
                 </div>
                 <div className="text-xs text-slate-400">
-                  {analytics?.metrics.totalClients || 0} Klien Terdaftar
+                  {analytics?.metrics.totalClients || 0} {locale === 'id' ? 'Klien Terdaftar' : 'Clients Registered'}
                 </div>
               </div>
               <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 shrink-0">
@@ -298,9 +299,9 @@ export default function DashboardOverviewPage() {
               </div>
             </div>
             <div className="pt-3 border-t border-slate-800/80 mt-3 flex items-center justify-between text-[11px] text-slate-400">
-              <span>{analytics?.metrics.totalQuotations || 0} Penawaran</span>
+              <span>{analytics?.metrics.totalQuotations || 0} {t('documents.tabQuotations')}</span>
               <span>•</span>
-              <span>{analytics?.metrics.totalContracts || 0} Kontrak</span>
+              <span>{analytics?.metrics.totalContracts || 0} {t('documents.tabContracts')}</span>
             </div>
           </LayerCard>
         </div>
@@ -314,18 +315,18 @@ export default function DashboardOverviewPage() {
             <div>
               <h3 className="text-sm font-bold text-slate-100 flex items-center gap-2">
                 <TrendUp size={16} className="text-cyan-400" />
-                Tren Penerimaan Kas (6 Bulan Terakhir)
+                {t('dashboard.revenueTrend')}
               </h3>
               <p className="text-xs text-slate-400 mt-0.5">
-                Total pembayaran invoice dan cicilan DP yang berhasil dicatat per bulan.
+                {t('dashboard.monthlyCollection')}
               </p>
             </div>
             <Badge variant="primary" className="text-[10px] bg-slate-800 text-slate-300 border-slate-700">
-              Realisasi Pembayaran
+              {locale === 'id' ? 'Realisasi Pembayaran' : 'Cash Realized'}
             </Badge>
           </div>
 
-          {/* Simple Visual Bar Chart */}
+          {/* Visual Bar Chart */}
           <div className="space-y-4 pt-2">
             {analytics?.monthlyRevenue.map((item) => {
               const percentage = maxMonthlyRevenue > 0 ? Math.max(4, Math.round((item.amountIDR / maxMonthlyRevenue) * 100)) : 0;
@@ -352,7 +353,7 @@ export default function DashboardOverviewPage() {
           </div>
 
           <div className="text-[11px] text-slate-500 text-right pt-2">
-            * Grafik diskalakan berdasarkan penerimaan mata uang Rupiah (IDR).
+            * {locale === 'id' ? 'Grafik diskalakan berdasarkan penerimaan mata uang Rupiah (IDR).' : 'Chart normalized against Indonesian Rupiah (IDR) collections.'}
           </div>
         </LayerCard>
 
@@ -361,10 +362,10 @@ export default function DashboardOverviewPage() {
           <div>
             <h3 className="text-sm font-bold text-slate-100 flex items-center gap-2">
               <Receipt size={16} className="text-indigo-400" />
-              Distribusi Status Tagihan
+              {locale === 'id' ? 'Distribusi Status Tagihan' : 'Invoice Status Distribution'}
             </h3>
             <p className="text-xs text-slate-400 mt-0.5">
-              Rasio {totalInvoices} invoice yang tersimpan di akun Anda.
+              {t('dashboard.storedInAccount')} ({totalInvoices} {t('documents.tabInvoices')})
             </p>
 
             <div className="space-y-3 pt-5">
@@ -373,7 +374,7 @@ export default function DashboardOverviewPage() {
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-slate-300 flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                    Lunas (Paid)
+                    {t('documents.statusPaid')}
                   </span>
                   <span className="font-bold text-slate-200">
                     {statusCounts.paid} ({getPercentage(statusCounts.paid)}%)
@@ -389,7 +390,7 @@ export default function DashboardOverviewPage() {
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-slate-300 flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-indigo-400" />
-                    Cicilan / DP (Partial)
+                    {t('documents.statusPartial')}
                   </span>
                   <span className="font-bold text-slate-200">
                     {statusCounts.partial_paid} ({getPercentage(statusCounts.partial_paid)}%)
@@ -405,7 +406,7 @@ export default function DashboardOverviewPage() {
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-slate-300 flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-cyan-400" />
-                    Terkirim (Sent)
+                    {t('documents.statusSent')}
                   </span>
                   <span className="font-bold text-slate-200">
                     {statusCounts.sent} ({getPercentage(statusCounts.sent)}%)
@@ -421,7 +422,7 @@ export default function DashboardOverviewPage() {
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-slate-300 flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-rose-400" />
-                    Jatuh Tempo (Overdue)
+                    {t('documents.statusOverdue')}
                   </span>
                   <span className="font-bold text-rose-300">
                     {statusCounts.overdue} ({getPercentage(statusCounts.overdue)}%)
@@ -437,7 +438,7 @@ export default function DashboardOverviewPage() {
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-slate-300 flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-slate-500" />
-                    Konsep (Draft)
+                    {t('documents.statusDraft')}
                   </span>
                   <span className="font-bold text-slate-400">
                     {statusCounts.draft} ({getPercentage(statusCounts.draft)}%)
@@ -452,8 +453,8 @@ export default function DashboardOverviewPage() {
 
           <div className="pt-4 border-t border-slate-800">
             <Link href="/dashboard/documents">
-              <Button variant="secondary" className="w-full text-xs py-2 rounded-xl border-slate-700 text-slate-300 hover:text-white flex items-center justify-center gap-1.5">
-                Kelola Semua Tagihan
+              <Button variant="secondary" className="w-full text-xs py-2 rounded-xl border-slate-700 text-slate-300 hover:text-white flex items-center justify-center gap-1.5 cursor-pointer">
+                {locale === 'id' ? 'Kelola Semua Tagihan' : 'Manage All Documents'}
                 <ArrowRight size={13} />
               </Button>
             </Link>
@@ -461,7 +462,7 @@ export default function DashboardOverviewPage() {
         </LayerCard>
       </div>
 
-      {/* Urgent Overdue Tracker / Perhatian Diperlukan */}
+      {/* Urgent Overdue Tracker */}
       {analytics && analytics.actionNeededInvoices.length > 0 && (
         <LayerCard className="p-6 rounded-2xl bg-rose-950/20 border border-rose-900/40 shadow-xl space-y-4">
           <div className="flex items-center justify-between">
@@ -471,16 +472,16 @@ export default function DashboardOverviewPage() {
               </div>
               <div>
                 <h3 className="text-sm font-bold text-rose-200">
-                  Tindakan Diperlukan: Tagihan Telah Melewati Jatuh Tempo
+                  {locale === 'id' ? 'Tindakan Diperlukan: Tagihan Telah Melewati Jatuh Tempo' : 'Action Required: Invoices Passed Due Date'}
                 </h3>
                 <p className="text-xs text-rose-300/70">
-                  Terdapat {analytics.actionNeededInvoices.length} invoice yang memerlukan tindak lanjut penagihan ke klien.
+                  {locale === 'id' ? `Terdapat ${analytics.actionNeededInvoices.length} invoice yang memerlukan tindak lanjut penagihan.` : `${analytics.actionNeededInvoices.length} invoices require payment follow-up.`}
                 </p>
               </div>
             </div>
             <Link href="/dashboard/documents">
               <Badge variant="primary" className="bg-rose-500/20 text-rose-300 border-rose-500/30 text-xs cursor-pointer">
-                Lihat Semua ({analytics.metrics.overdueCount})
+                {t('common.all')} ({analytics.metrics.overdueCount})
               </Badge>
             </Link>
           </div>
@@ -497,12 +498,12 @@ export default function DashboardOverviewPage() {
                     <p className="text-xs text-slate-400 truncate max-w-[160px]">{inv.clientName}</p>
                   </div>
                   <Badge variant="primary" className="bg-rose-500/10 text-rose-400 border border-rose-500/20 text-[10px]">
-                    Lewat {inv.dueDate}
+                    {inv.dueDate}
                   </Badge>
                 </div>
                 <div className="flex items-center justify-between pt-1 border-t border-slate-800">
                   <div>
-                    <span className="text-[10px] text-slate-400 block">Sisa Belum Dibayar</span>
+                    <span className="text-[10px] text-slate-400 block">{t('paymentModal.remainingDue')}</span>
                     <span className="text-xs font-bold text-rose-400">
                       {inv.currency === 'IDR' ? formatIDR(inv.remainingBalance) : formatUSD(inv.remainingBalance)}
                     </span>
@@ -510,9 +511,9 @@ export default function DashboardOverviewPage() {
                   <Link href="/dashboard/documents">
                     <Button
                       variant="secondary"
-                      className="text-[11px] px-2.5 py-1 rounded-lg border-rose-800/40 text-rose-300 hover:bg-rose-950/40 flex items-center gap-1"
+                      className="text-[11px] px-2.5 py-1 rounded-lg border-rose-800/40 text-rose-300 hover:bg-rose-950/40 flex items-center gap-1 cursor-pointer"
                     >
-                      Bayar / DP
+                      {t('documents.btnPayDp')}
                       <ArrowRight size={11} />
                     </Button>
                   </Link>
@@ -532,9 +533,9 @@ export default function DashboardOverviewPage() {
             </div>
             <div className="min-w-0">
               <h4 className="text-xs font-bold text-slate-200 group-hover:text-cyan-400 transition-colors">
-                Buat Surat Penawaran
+                {t('dashboard.newQuotation')}
               </h4>
-              <p className="text-[11px] text-slate-400 truncate">Kirim proposal harga formal ke prospek</p>
+              <p className="text-[11px] text-slate-400 truncate">{t('home.cardQuotationDesc')}</p>
             </div>
           </LayerCard>
         </Link>
@@ -546,9 +547,9 @@ export default function DashboardOverviewPage() {
             </div>
             <div className="min-w-0">
               <h4 className="text-xs font-bold text-slate-200 group-hover:text-cyan-400 transition-colors">
-                Buat Kontrak Kerja (SPK)
+                {t('dashboard.newContract')}
               </h4>
-              <p className="text-[11px] text-slate-400 truncate">Perjanjian legal dengan klausul profesional</p>
+              <p className="text-[11px] text-slate-400 truncate">{t('home.cardContractDesc')}</p>
             </div>
           </LayerCard>
         </Link>
@@ -560,9 +561,9 @@ export default function DashboardOverviewPage() {
             </div>
             <div className="min-w-0">
               <h4 className="text-xs font-bold text-slate-200 group-hover:text-cyan-400 transition-colors">
-                Buku Kontak Klien
+                {t('clients.title')}
               </h4>
-              <p className="text-[11px] text-slate-400 truncate">Simpan profil & alamat penagihan klien</p>
+              <p className="text-[11px] text-slate-400 truncate">{t('clients.subtitle')}</p>
             </div>
           </LayerCard>
         </Link>
@@ -570,4 +571,3 @@ export default function DashboardOverviewPage() {
     </div>
   );
 }
-

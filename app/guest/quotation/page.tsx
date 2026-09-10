@@ -10,6 +10,7 @@ import DocumentItemsForm from "@/components/forms/DocumentItemsForm";
 import DocumentMetaForm from "@/components/forms/DocumentMetaForm";
 import DocumentSaveToolbar from "@/components/DocumentSaveToolbar";
 import { useDocumentItems } from "@/lib/hooks/useDocumentItems";
+import { useTranslation } from "@/lib/i18n";
 
 const QuotationPDFWrapper = dynamic(
   () => import("../../../components/documents/QuotationPDFWrapper"),
@@ -17,6 +18,7 @@ const QuotationPDFWrapper = dynamic(
 );
 
 export default function GuestQuotationPage() {
+  const { t } = useTranslation();
   const { items, addItem, updateItem, removeItem } = useDocumentItems<QuotationItem>([]);
 
   const [quotationData, setQuotationData] = useState<Omit<QuotationData, "items">>({
@@ -38,8 +40,8 @@ export default function GuestQuotationPage() {
 
   return (
     <GuestDocumentLayout
-      title="Buat Surat Penawaran"
-      subtitle="Estimasi biaya elegan untuk calon klien Anda."
+      title={t("generators.quotationTitle")}
+      subtitle={t("home.cardQuotationDesc")}
       formContent={
         <>
           <DocumentSaveToolbar
@@ -84,22 +86,27 @@ export default function GuestQuotationPage() {
           />
 
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-semibold text-slate-900">Nomor Penawaran & Tanggal</label>
+            <label className="text-sm font-semibold text-slate-900">
+              {t("generators.docNumber")} &amp; {t("generators.docDate")}
+            </label>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
               <input
                 type="text"
+                placeholder={t("generators.docNumber")}
                 className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 font-medium"
                 value={quotationData.quotationNumber}
                 onChange={(e) => { setQuotationData({ ...quotationData, quotationNumber: e.target.value }); }}
               />
               <input
                 type="date"
+                title={t("generators.docDate")}
                 className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 font-medium"
                 value={quotationData.date}
                 onChange={(e) => { setQuotationData({ ...quotationData, date: e.target.value }); }}
               />
               <input
                 type="date"
+                title={t("generators.validUntil")}
                 className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 font-medium"
                 value={quotationData.validUntil}
                 onChange={(e) => { setQuotationData({ ...quotationData, validUntil: e.target.value }); }}
@@ -137,9 +144,9 @@ export default function GuestQuotationPage() {
           <hr className="border-zinc-100" />
 
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-zinc-700">Syarat & Ketentuan Tambahan (Catatan)</label>
+            <label className="text-sm font-medium text-zinc-700">{t("generators.paymentNotes")}</label>
             <textarea 
-              placeholder="Tuliskan catatan tambahan (misalnya metode pembayaran, jangka waktu pengerjaan, dll)..."
+              placeholder={t("generators.paymentNotesPlaceholder")}
               rows={4}
               className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl text-sm text-zinc-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black transition-all resize-y"
               value={quotationData.notes}

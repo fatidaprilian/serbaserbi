@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@cloudflare/kumo';
 import { PencilSimpleLine, ArrowSquareOut, X, WarningCircle } from '@phosphor-icons/react';
+import { useTranslation } from '@/lib/i18n';
 
 export interface ItemRow {
   id: string;
@@ -27,6 +28,7 @@ export default function DocumentItemsForm({
   onItemChange,
   onRemoveItem,
 }: DocumentItemsFormProps) {
+  const { t } = useTranslation();
   const [activeItemForAi, setActiveItemForAi] = useState<string | null>(null);
   const [aiPrompt, setAiPrompt] = useState('');
   const [loadingAi, setLoadingAi] = useState(false);
@@ -61,10 +63,10 @@ export default function DocumentItemsForm({
         setActiveItemForAi(null);
         setAiPrompt('');
       } else {
-        setAiError(data.error || 'Gagal menyempurnakan deskripsi.');
+        setAiError(data.error || t('common.error'));
       }
     } catch {
-      setAiError('Terjadi gangguan jaringan saat menghubungi layanan AI.');
+      setAiError(t('common.error'));
     } finally {
       setLoadingAi(false);
     }
@@ -73,19 +75,19 @@ export default function DocumentItemsForm({
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <label className="text-sm font-semibold text-slate-900">Detail Layanan / Produk</label>
+        <label className="text-sm font-semibold text-slate-900">{t('generators.itemsTitle')}</label>
         <button
           type="button"
           onClick={onAddItem}
           className="text-xs font-semibold text-cyan-800 hover:text-cyan-900 bg-cyan-50 hover:bg-cyan-100/80 border border-cyan-300 px-3.5 py-1.5 rounded-lg transition-colors cursor-pointer shadow-2xs"
         >
-          + Tambah Item
+          {t('generators.addItem')}
         </button>
       </div>
 
       {items.length === 0 ? (
         <div className="text-center py-8 border-2 border-dashed border-slate-200 rounded-xl text-slate-500 text-sm bg-slate-50/50">
-          Belum ada item ditambahkan. Klik tombol &quot;+ Tambah Item&quot; di atas.
+          Belum ada item ditambahkan. Klik tombol &quot;{t('generators.addItem')}&quot; di atas.
         </div>
       ) : (
         <div className="flex flex-col gap-3">
@@ -94,15 +96,15 @@ export default function DocumentItemsForm({
               <div className="grid grid-cols-12 gap-2.5 items-start">
                 <div className="col-span-12 sm:col-span-6 flex flex-col gap-1.5">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs text-slate-700 font-semibold">Deskripsi Layanan</span>
+                    <span className="text-xs text-slate-700 font-semibold">{t('generators.colDescription')}</span>
                     <button
                       type="button"
                       onClick={() => { handleOpenAiModal(item); }}
                       className="text-[11px] font-semibold text-cyan-700 hover:text-cyan-800 bg-cyan-50 px-2 py-0.5 rounded border border-cyan-200 flex items-center gap-1 cursor-pointer transition-colors"
-                      title="Sempurnakan deskripsi item secara otomatis menggunakan AI"
+                      title={t('generators.aiPolishDesc')}
                     >
                       <PencilSimpleLine size={13} />
-                      <span>Sempurnakan Deskripsi</span>
+                      <span>{t('generators.aiPolishDesc')}</span>
                     </button>
                   </div>
 
@@ -118,7 +120,7 @@ export default function DocumentItemsForm({
                 </div>
 
                 <div className="col-span-4 sm:col-span-2 flex flex-col gap-1.5">
-                  <span className="text-xs text-slate-700 font-semibold">Qty</span>
+                  <span className="text-xs text-slate-700 font-semibold">{t('generators.colQuantity')}</span>
                   <input
                     type="number"
                     min="1"
@@ -131,7 +133,7 @@ export default function DocumentItemsForm({
                 </div>
 
                 <div className="col-span-6 sm:col-span-3 flex flex-col gap-1.5">
-                  <span className="text-xs text-slate-700 font-semibold">Harga ({currency})</span>
+                  <span className="text-xs text-slate-700 font-semibold">{t('generators.colPrice')} ({currency})</span>
                   <input
                     type="number"
                     min="0"
@@ -150,7 +152,7 @@ export default function DocumentItemsForm({
                       onRemoveItem(item.id);
                     }}
                     className="text-slate-400 hover:text-rose-600 p-2 transition-colors cursor-pointer"
-                    title="Hapus Baris"
+                    title={t('common.delete')}
                   >
                     <X size={16} />
                   </button>
@@ -163,7 +165,7 @@ export default function DocumentItemsForm({
                   <div className="flex items-center justify-between text-xs font-semibold text-cyan-800">
                     <span className="flex items-center gap-1.5">
                       <PencilSimpleLine size={14} />
-                      Asisten Format Deskripsi (OpenRouter BYOK)
+                      OpenRouter BYOK AI
                     </span>
                     <button
                       type="button"
@@ -177,7 +179,7 @@ export default function DocumentItemsForm({
                   <div className="flex flex-col sm:flex-row gap-2">
                     <input
                       type="text"
-                      placeholder="Ketik kata kunci ringkas, misal: pembuatan logo 2 opsi revisi format svg..."
+                      placeholder="e.g., logo design with 2 revisions in vector svg format..."
                       value={aiPrompt}
                       onChange={(e) => { setAiPrompt(e.target.value); }}
                       className="flex-1 px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-cyan-500"
@@ -190,7 +192,7 @@ export default function DocumentItemsForm({
                       disabled={loadingAi}
                       className="text-xs px-3 py-1.5 bg-gradient-to-r from-cyan-600 to-indigo-600 text-white font-medium rounded-lg cursor-pointer whitespace-nowrap"
                     >
-                      {loadingAi ? 'Memproses...' : 'Format Deskripsi'}
+                      {loadingAi ? t('generators.aiGenerating') : t('generators.aiPolishDesc')}
                     </Button>
                   </div>
 
@@ -205,7 +207,7 @@ export default function DocumentItemsForm({
                           href="/dashboard/settings"
                           className="font-semibold text-cyan-600 hover:underline flex items-center gap-0.5"
                         >
-                          Buka Pengaturan
+                          {t('nav.settings')}
                           <ArrowSquareOut size={11} />
                         </Link>
                       )}

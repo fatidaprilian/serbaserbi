@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { Button, Badge } from '@cloudflare/kumo';
 import { FloppyDisk, User, Buildings, CheckCircle, WarningCircle, ArrowSquareOut } from '@phosphor-icons/react';
+import { useTranslation } from '@/lib/i18n';
 
 interface SavedClient {
   id: string;
@@ -66,6 +67,7 @@ export default function DocumentSaveToolbar({
   onSelectClient,
 }: DocumentSaveToolbarProps) {
   const { data: session, status } = useSession();
+  const { t } = useTranslation();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [clients, setClients] = useState<SavedClient[]>([]);
   const [isSaving, setIsSaving] = useState(false);
@@ -135,7 +137,7 @@ export default function DocumentSaveToolbar({
     if (!clientName || clientName.trim() === '') {
       setSaveStatus({
         type: 'error',
-        message: 'Mohon isi nama klien terlebih dahulu sebelum menyimpan.',
+        message: t('generators.clientNameRequired'),
       });
       return;
     }
@@ -172,18 +174,18 @@ export default function DocumentSaveToolbar({
       if (res.ok) {
         setSaveStatus({
           type: 'success',
-          message: `Dokumen ${documentNumber} berhasil disimpan ke riwayat akun Anda.`,
+          message: t('generators.savedHistorySuccess', { number: documentNumber }),
         });
       } else {
         setSaveStatus({
           type: 'error',
-          message: data.error || 'Gagal menyimpan dokumen.',
+          message: data.error || t('common.error'),
         });
       }
     } catch {
       setSaveStatus({
         type: 'error',
-        message: 'Terjadi gangguan jaringan saat menyimpan dokumen.',
+        message: t('common.error'),
       });
     } finally {
       setIsSaving(false);
@@ -199,14 +201,14 @@ export default function DocumentSaveToolbar({
       <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs shadow-2xs">
         <div className="flex items-center gap-2">
           <Badge variant="secondary" className="bg-slate-200 text-slate-700 font-semibold border border-slate-300">
-            Mode Tamu
+            {t('nav.guestMode')}
           </Badge>
           <span className="text-slate-600 font-medium">
-            PDF diproses langsung di browser Anda. Masuk untuk menyimpan riwayat dan data klien.
+            {t('generators.guestNotice')}
           </span>
         </div>
         <Link href="/login" className="font-semibold text-cyan-700 hover:text-cyan-800 hover:underline flex items-center gap-1 shrink-0">
-          Masuk ke Akun
+          {t('nav.signIn')}
           <ArrowSquareOut size={14} />
         </Link>
       </div>
@@ -218,7 +220,7 @@ export default function DocumentSaveToolbar({
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
           <Badge variant="primary" className="bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
-            Akun Terhubung
+            {t('generators.connectedAccount')}
           </Badge>
           <span className="text-xs font-medium text-slate-300">
             {profile?.businessName || profile?.name || session?.user?.name || session?.user?.email}
@@ -231,10 +233,10 @@ export default function DocumentSaveToolbar({
               variant="secondary"
               onClick={handleApplyProfile}
               className="text-xs h-8 px-3 flex items-center gap-1.5 cursor-pointer"
-              title="Isi otomatis identitas freelancer/usaha dari profil Anda"
+              title={t('generators.useMyProfile')}
             >
               <User size={14} />
-              Gunakan Profil Saya
+              {t('generators.useMyProfile')}
             </Button>
           )}
 
@@ -245,10 +247,10 @@ export default function DocumentSaveToolbar({
                 onChange={handleClientChange}
                 defaultValue=""
                 className="bg-transparent text-slate-200 text-xs focus:outline-none cursor-pointer"
-                title="Pilih klien tersimpan untuk mengisi form"
+                title={t('generators.selectClient')}
               >
                 <option value="" disabled className="bg-slate-900 text-slate-400">
-                  Pilih Klien Tersimpan...
+                  {t('generators.selectClient')}
                 </option>
                 {clients.map((c) => (
                   <option key={c.id} value={c.id} className="bg-slate-900 text-slate-100">
@@ -266,7 +268,7 @@ export default function DocumentSaveToolbar({
             className="text-xs h-8 px-3.5 bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-medium flex items-center gap-1.5 cursor-pointer shadow-sm"
           >
             <FloppyDisk size={14} />
-            {isSaving ? 'Menyimpan...' : 'Simpan ke Akun'}
+            {isSaving ? t('generators.saving') : t('generators.saveToDashboard')}
           </Button>
         </div>
       </div>
@@ -289,7 +291,7 @@ export default function DocumentSaveToolbar({
               href="/dashboard/documents"
               className="text-cyan-400 hover:underline flex items-center gap-1 font-semibold"
             >
-              Lihat di Riwayat
+              {t('generators.viewInHistory')}
               <ArrowSquareOut size={13} />
             </Link>
           )}

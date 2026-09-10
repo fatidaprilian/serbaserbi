@@ -117,7 +117,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Environment Variables Reference
 
-See [`.env.example`](file:///.env.example) for the full configuration template.
+See [`.env.example`](.env.example) for the full configuration template.
 
 | Variable | Required In | Description |
 | :--- | :---: | :--- |

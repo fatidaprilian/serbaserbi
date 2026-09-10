@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, FormEvent } from 'react';
 import { Button, Badge } from '@cloudflare/kumo';
 import { CreditCard, Trash, X, CheckCircle, WarningCircle, Plus } from '@phosphor-icons/react';
+import { useTranslation } from '@/lib/i18n';
 
 interface PaymentItem {
   id: string;
@@ -40,6 +41,7 @@ export default function InvoicePaymentModal({
   onClose,
   onPaymentUpdated,
 }: InvoicePaymentModalProps) {
+  const { t, locale } = useTranslation();
   const [data, setData] = useState<PaymentData | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -77,11 +79,11 @@ export default function InvoicePaymentModal({
             const json = await res.json();
             setData(json);
           } else if (isMounted) {
-            setErrorMessage('Gagal memuat histori pembayaran invoice.');
+            setErrorMessage(t('common.error'));
           }
         } catch {
           if (isMounted) {
-            setErrorMessage('Terjadi gangguan jaringan saat memuat pembayaran.');
+            setErrorMessage(t('common.error'));
           }
         } finally {
           if (isMounted) {
@@ -95,7 +97,7 @@ export default function InvoicePaymentModal({
     return () => {
       isMounted = false;
     };
-  }, [isOpen, invoiceId]);
+  }, [isOpen, invoiceId, t]);
 
   if (!isOpen) return null;
 
@@ -103,7 +105,7 @@ export default function InvoicePaymentModal({
     e.preventDefault();
     const numAmount = Number(formData.amount);
     if (isNaN(numAmount) || numAmount <= 0) {
-      setErrorMessage('Nominal pembayaran harus lebih besar dari 0.');
+      setErrorMessage(locale === 'id' ? 'Nominal pembayaran harus lebih besar dari 0.' : 'Payment amount must be greater than 0.');
       return;
     }
 
@@ -126,7 +128,7 @@ export default function InvoicePaymentModal({
       const resData = await res.json();
 
       if (res.ok) {
-        setSuccessMessage('Pembayaran berhasil dicatat.');
+        setSuccessMessage(locale === 'id' ? 'Pembayaran berhasil dicatat.' : 'Payment recorded successfully.');
         setFormData({
           amount: '',
           paymentDate: new Date().toISOString().split('T')[0],
@@ -136,17 +138,17 @@ export default function InvoicePaymentModal({
         void refreshPayments();
         onPaymentUpdated();
       } else {
-        setErrorMessage(resData.error || 'Gagal menyimpan pembayaran.');
+        setErrorMessage(resData.error || t('common.error'));
       }
     } catch {
-      setErrorMessage('Terjadi gangguan koneksi saat menyimpan pembayaran.');
+      setErrorMessage(t('common.error'));
     } finally {
       setSaving(false);
     }
   };
 
   const handleDeletePayment = async (paymentId: string) => {
-    if (!confirm('Hapus catatan pembayaran ini? Status invoice akan disesuaikan kembali.')) return;
+    if (!confirm(t('paymentModal.deletePaymentConfirm'))) return;
 
     try {
       const res = await fetch(
@@ -155,14 +157,14 @@ export default function InvoicePaymentModal({
       );
 
       if (res.ok) {
-        setSuccessMessage('Catatan pembayaran berhasil dihapus.');
+        setSuccessMessage(locale === 'id' ? 'Catatan pembayaran berhasil dihapus.' : 'Payment record deleted.');
         void refreshPayments();
         onPaymentUpdated();
       } else {
-        setErrorMessage('Gagal menghapus catatan pembayaran.');
+        setErrorMessage(t('common.error'));
       }
     } catch {
-      setErrorMessage('Terjadi gangguan koneksi saat menghapus pembayaran.');
+      setErrorMessage(t('common.error'));
     }
   };
 
@@ -188,7 +190,7 @@ export default function InvoicePaymentModal({
             </div>
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-100 flex items-center gap-2">
-                <span>Pembayaran: {invoiceNumber}</span>
+                <span>{t('paymentModal.title')}: {invoiceNumber}</span>
                 {data && (
                   <Badge
                     variant="secondary"
@@ -200,12 +202,12 @@ export default function InvoicePaymentModal({
                         : 'bg-slate-800 text-slate-400'
                     }
                   >
-                    {data.status === 'paid' ? 'Lunas' : data.status === 'partial_paid' ? 'DP Terbayar' : data.status}
+                    {data.status === 'paid' ? t('documents.statusPaid') : data.status === 'partial_paid' ? t('documents.statusPartial') : data.status}
                   </Badge>
                 )}
               </h2>
               <p className="text-xs text-slate-400 mt-0.5">
-                Kelola termin, uang muka (DP), dan histori pelunasan invoice.
+                {locale === 'id' ? 'Kelola termin, uang muka (DP), dan histori pelunasan invoice.' : 'Audit milestones, down payments, and invoice settlements.'}
               </p>
             </div>
           </div>
@@ -221,27 +223,27 @@ export default function InvoicePaymentModal({
         {/* Modal Content (Scrollable) */}
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {loading ? (
-            <div className="py-12 text-center text-xs text-slate-400">Memuat rincian pembayaran...</div>
+            <div className="py-12 text-center text-xs text-slate-400">{t('common.loading')}</div>
           ) : data ? (
             <>
               {/* Financial Metrics Cards */}
               <div className="grid grid-cols-3 gap-3">
                 <div className="bg-slate-950/70 border border-slate-800/80 rounded-xl p-3.5">
-                  <span className="text-[11px] text-slate-400 font-medium">Total Tagihan</span>
+                  <span className="text-[11px] text-slate-400 font-medium">{t('paymentModal.totalInvoice')}</span>
                   <p className="text-sm sm:text-base font-bold text-slate-100 mt-1">
                     {formatCurrency(data.totalInvoice, activeCurrency)}
                   </p>
                 </div>
 
                 <div className="bg-slate-950/70 border border-slate-800/80 rounded-xl p-3.5">
-                  <span className="text-[11px] text-slate-400 font-medium">Sudah Terbayar</span>
+                  <span className="text-[11px] text-slate-400 font-medium">{t('paymentModal.totalPaid')}</span>
                   <p className="text-sm sm:text-base font-bold text-emerald-400 mt-1">
                     {formatCurrency(data.totalPaid, activeCurrency)}
                   </p>
                 </div>
 
                 <div className="bg-slate-950/70 border border-slate-800/80 rounded-xl p-3.5">
-                  <span className="text-[11px] text-slate-400 font-medium">Sisa Piutang</span>
+                  <span className="text-[11px] text-slate-400 font-medium">{t('paymentModal.remainingDue')}</span>
                   <p className="text-sm sm:text-base font-bold text-amber-400 mt-1">
                     {formatCurrency(data.balanceRemaining, activeCurrency)}
                   </p>
@@ -251,7 +253,7 @@ export default function InvoicePaymentModal({
               {/* Progress Bar */}
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between text-xs font-semibold">
-                  <span className="text-slate-400">Progres Pelunasan</span>
+                  <span className="text-slate-400">{locale === 'id' ? 'Progres Pelunasan' : 'Settlement Progress'}</span>
                   <span className="text-cyan-400">{percentPaid}%</span>
                 </div>
                 <div className="w-full h-2.5 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
@@ -281,13 +283,13 @@ export default function InvoicePaymentModal({
               <form onSubmit={(e) => { void handleAddPayment(e); }} className="bg-slate-950/50 border border-slate-800 rounded-2xl p-4 space-y-4">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
                   <Plus size={14} weight="bold" />
-                  Catat Uang Muka (DP) / Pembayaran Baru
+                  {t('paymentModal.recordTitle')}
                 </h3>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-[11px] font-semibold text-slate-400 mb-1">
-                      Nominal Pembayaran ({activeCurrency}) *
+                      {t('paymentModal.amountLabel', { currency: activeCurrency })} *
                     </label>
                     <input
                       type="number"
@@ -303,7 +305,7 @@ export default function InvoicePaymentModal({
 
                   <div>
                     <label className="block text-[11px] font-semibold text-slate-400 mb-1">
-                      Tanggal Pembayaran *
+                      {t('paymentModal.paymentDateLabel')} *
                     </label>
                     <input
                       type="date"
@@ -318,27 +320,27 @@ export default function InvoicePaymentModal({
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-[11px] font-semibold text-slate-400 mb-1">
-                      Metode Pembayaran
+                      {t('paymentModal.methodLabel')}
                     </label>
                     <select
                       value={formData.paymentMethod}
                       onChange={(e) => { setFormData({ ...formData, paymentMethod: e.target.value }); }}
                       className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-cyan-500 cursor-pointer"
                     >
-                      <option value="bank_transfer">Transfer Bank</option>
-                      <option value="qris">QRIS</option>
-                      <option value="cash">Tunai / Cash</option>
-                      <option value="other">Lainnya</option>
+                      <option value="bank_transfer">{t('paymentModal.methodBank')}</option>
+                      <option value="qris">{t('paymentModal.methodEwallet')}</option>
+                      <option value="cash">{t('paymentModal.methodCash')}</option>
+                      <option value="other">{t('paymentModal.methodOther')}</option>
                     </select>
                   </div>
 
                   <div>
                     <label className="block text-[11px] font-semibold text-slate-400 mb-1">
-                      Catatan / Keterangan Termin
+                      {t('paymentModal.notesLabel')}
                     </label>
                     <input
                       type="text"
-                      placeholder="e.g. DP 50% di awal kontrak"
+                      placeholder={t('paymentModal.notesPlaceholder')}
                       value={formData.notes}
                       onChange={(e) => { setFormData({ ...formData, notes: e.target.value }); }}
                       className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-cyan-500"
@@ -354,7 +356,7 @@ export default function InvoicePaymentModal({
                     className="text-xs px-4 py-2 bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-medium flex items-center gap-1.5 cursor-pointer rounded-xl"
                   >
                     <CreditCard size={14} />
-                    {saving ? 'Menyimpan...' : 'Simpan Pembayaran'}
+                    {saving ? t('paymentModal.btnSubmitting') : t('paymentModal.btnSubmit')}
                   </Button>
                 </div>
               </form>
@@ -362,30 +364,30 @@ export default function InvoicePaymentModal({
               {/* Payment History List */}
               <div className="space-y-3">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300">
-                  Histori Pembayaran ({data.payments.length})
+                  {t('paymentModal.historyTitle')} ({data.payments.length})
                 </h3>
 
                 {data.payments.length === 0 ? (
                   <div className="py-6 text-center text-xs text-slate-500 bg-slate-950/40 rounded-xl border border-slate-800/60">
-                    Belum ada pembayaran yang dicatat untuk invoice ini.
+                    {t('paymentModal.noPayments')}
                   </div>
                 ) : (
                   <div className="border border-slate-800 rounded-xl overflow-hidden">
                     <table className="w-full text-left text-xs">
                       <thead className="bg-slate-950 text-slate-400 font-semibold border-b border-slate-800">
                         <tr>
-                          <th className="px-3 py-2.5">Tanggal</th>
-                          <th className="px-3 py-2.5">Nominal</th>
-                          <th className="px-3 py-2.5">Metode</th>
-                          <th className="px-3 py-2.5">Catatan</th>
-                          <th className="px-3 py-2.5 text-right">Aksi</th>
+                          <th className="px-3 py-2.5">{t('documents.colDate')}</th>
+                          <th className="px-3 py-2.5">{t('documents.colAmount')}</th>
+                          <th className="px-3 py-2.5">{t('paymentModal.methodLabel')}</th>
+                          <th className="px-3 py-2.5">{t('common.actions')}</th>
+                          <th className="px-3 py-2.5 text-right">{t('documents.colActions')}</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-800/60 text-slate-200">
                         {data.payments.map((p) => (
                           <tr key={p.id} className="hover:bg-slate-800/30 transition-colors">
                             <td className="px-3 py-2.5 font-mono text-slate-400">
-                              {new Date(p.paymentDate).toLocaleDateString('id-ID')}
+                              {new Date(p.paymentDate).toLocaleDateString(locale === 'id' ? 'id-ID' : 'en-US')}
                             </td>
                             <td className="px-3 py-2.5 font-bold text-emerald-400 font-mono">
                               {formatCurrency(Number(p.amount), activeCurrency)}
@@ -400,7 +402,7 @@ export default function InvoicePaymentModal({
                               <button
                                 onClick={() => { void handleDeletePayment(p.id); }}
                                 className="text-rose-400 hover:text-rose-300 p-1 hover:bg-rose-500/10 rounded transition-colors cursor-pointer"
-                                title="Hapus catatan pembayaran"
+                                title={t('common.delete')}
                               >
                                 <Trash size={14} />
                               </button>
@@ -423,7 +425,7 @@ export default function InvoicePaymentModal({
             onClick={onClose}
             className="text-xs px-4 py-2 border border-slate-700 text-slate-300 hover:bg-slate-800 rounded-xl cursor-pointer"
           >
-            Tutup
+            {t('common.close')}
           </Button>
         </div>
       </div>

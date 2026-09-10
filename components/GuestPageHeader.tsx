@@ -1,28 +1,36 @@
+"use client";
+
 import Link from "next/link";
+import { LanguageSwitcher } from "./LanguageSwitcher";
+import { useTranslation } from "@/lib/i18n";
+import { ArrowLeft } from "@phosphor-icons/react";
 
 interface GuestPageHeaderProps {
   title: string;
   subtitle: string;
 }
 
-// minimal: shared header with back button for guest generator pages
 export default function GuestPageHeader({ title, subtitle }: GuestPageHeaderProps) {
+  const { t } = useTranslation();
+
   return (
-    <header className="flex items-center justify-between">
+    <header className="flex items-center justify-between pb-6 border-b border-zinc-200">
       <div className="flex items-center gap-4">
         <Link
           href="/"
-          className="w-10 h-10 flex items-center justify-center bg-white border border-zinc-200 rounded-full hover:bg-zinc-50 hover:border-zinc-300 transition-all shadow-sm"
-          aria-label="Kembali ke beranda"
+          className="w-10 h-10 flex items-center justify-center bg-white border border-zinc-200 rounded-xl hover:bg-zinc-50 hover:border-zinc-300 transition-all shadow-xs text-zinc-700 hover:text-zinc-900"
+          aria-label={t("nav.backToHome")}
+          title={t("nav.backToHome")}
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M19 12H5M12 19l-7-7 7-7" />
-          </svg>
+          <ArrowLeft size={18} weight="bold" />
         </Link>
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">{title}</h1>
-          <p className="text-sm text-zinc-500 mt-1">{subtitle}</p>
+          <h1 className="text-2xl font-bold tracking-tight text-zinc-900">{title}</h1>
+          <p className="text-sm text-zinc-500 mt-0.5">{subtitle}</p>
         </div>
+      </div>
+      <div className="flex items-center gap-3">
+        <LanguageSwitcher />
       </div>
     </header>
   );

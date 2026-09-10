@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Badge } from "@cloudflare/kumo";
 import { CurrencyDollar, Clock } from "@phosphor-icons/react";
+import { useTranslation } from "@/lib/i18n";
 
 interface DocumentMetaFormProps {
   currency: string;
@@ -17,6 +18,7 @@ export default function DocumentMetaForm({
   onCurrencyChange,
   onLanguageChange,
 }: DocumentMetaFormProps) {
+  const { t } = useTranslation();
   const [exchangeInfo, setExchangeInfo] = useState<{
     rate: number;
     source: string;
@@ -47,7 +49,9 @@ export default function DocumentMetaForm({
 
   return (
     <div className="flex flex-col gap-2">
-      <label className="text-sm font-semibold text-slate-900">Mata Uang & Bahasa</label>
+      <label className="text-sm font-semibold text-slate-900">
+        {t('common.currency')} &amp; PDF
+      </label>
       <div className="grid grid-cols-2 gap-2">
         <select
           className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all cursor-pointer shadow-xs font-medium"
@@ -66,8 +70,8 @@ export default function DocumentMetaForm({
             onLanguageChange(e.target.value as "id" | "en");
           }}
         >
-          <option value="id">Indonesia</option>
-          <option value="en">English</option>
+          <option value="id">Bahasa Indonesia</option>
+          <option value="en">English (PDF)</option>
         </select>
       </div>
 
@@ -76,7 +80,7 @@ export default function DocumentMetaForm({
           <div className="flex items-center gap-2">
             <Badge variant="secondary" className="bg-cyan-500/15 text-cyan-800 border border-cyan-500/30 flex items-center gap-1 font-semibold">
               <CurrencyDollar size={13} weight="bold" />
-              Kurs Ter-cache (12 Jam)
+              {t('generators.currencyCachedBadge')}
             </Badge>
             <span className="font-mono font-bold text-slate-900">
               1 USD = Rp {exchangeInfo.rate.toLocaleString('id-ID')}
@@ -84,11 +88,10 @@ export default function DocumentMetaForm({
           </div>
           <div className="flex items-center gap-1 text-[11px] text-slate-600 font-medium">
             <Clock size={13} />
-            <span>Pukul {exchangeInfo.cachedAt} • {exchangeInfo.source}</span>
+            <span>{exchangeInfo.cachedAt} • {exchangeInfo.source}</span>
           </div>
         </div>
       )}
     </div>
   );
 }
-

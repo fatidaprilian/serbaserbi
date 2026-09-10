@@ -10,6 +10,8 @@ import DocumentItemsForm from "@/components/forms/DocumentItemsForm";
 import DocumentMetaForm from "@/components/forms/DocumentMetaForm";
 import DocumentSaveToolbar from "@/components/DocumentSaveToolbar";
 import { useDocumentItems } from "@/lib/hooks/useDocumentItems";
+import { useTranslation } from "@/lib/i18n";
+import { WarningCircle } from "@phosphor-icons/react";
 
 // Dynamic import for PDF Viewer to avoid SSR issues
 const PDFViewerWrapper = dynamic(
@@ -18,6 +20,7 @@ const PDFViewerWrapper = dynamic(
 );
 
 export default function GuestInvoicePage() {
+  const { t } = useTranslation();
   const { items, addItem, updateItem, removeItem } = useDocumentItems<InvoiceItem>([]);
 
   const [invoiceData, setInvoiceData] = useState<Omit<InvoiceData, "items">>({
@@ -41,8 +44,8 @@ export default function GuestInvoicePage() {
 
   return (
     <GuestDocumentLayout
-      title="Buat Invoice"
-      subtitle="Isi detail di bawah untuk menghasilkan PDF secara instan."
+      title={t("generators.invoiceTitle")}
+      subtitle={invoiceData.currency === "USD" ? "Dual-currency USD/IDR with edge-cached FX rates." : "Lengkap dengan kalkulasi pajak & kepatuhan Bea Meterai."}
       formContent={
         <>
           <DocumentSaveToolbar
@@ -80,6 +83,16 @@ export default function GuestInvoicePage() {
             }}
           />
 
+          {isMeteraiRequired && (
+            <div className="p-4 bg-amber-50 border border-amber-300 rounded-2xl flex items-start gap-3 shadow-2xs animate-in fade-in">
+              <WarningCircle size={20} className="text-amber-700 shrink-0 mt-0.5" weight="fill" />
+              <div className="text-xs text-amber-900 space-y-1">
+                <p className="font-bold">{t("generators.stampDutyWarningTitle")}</p>
+                <p className="text-amber-800 leading-relaxed">{t("generators.stampDutyWarningDesc")}</p>
+              </div>
+            </div>
+          )}
+
           <DocumentMetaForm
             currency={invoiceData.currency}
             language={invoiceData.language}
@@ -88,22 +101,27 @@ export default function GuestInvoicePage() {
           />
 
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-semibold text-slate-900">Nomor Invoice & Tanggal</label>
+            <label className="text-sm font-semibold text-slate-900">
+              {t("generators.docNumber")} &amp; {t("generators.docDate")}
+            </label>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
               <input
                 type="text"
+                placeholder={t("generators.docNumber")}
                 className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 font-medium"
                 value={invoiceData.invoiceNumber}
                 onChange={(e) => { setInvoiceData({ ...invoiceData, invoiceNumber: e.target.value }); }}
               />
               <input
                 type="date"
+                title={t("generators.docDate")}
                 className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 font-medium"
                 value={invoiceData.date}
                 onChange={(e) => { setInvoiceData({ ...invoiceData, date: e.target.value }); }}
               />
               <input
                 type="date"
+                title={t("generators.dueDate")}
                 className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 font-medium"
                 value={invoiceData.dueDate}
                 onChange={(e) => { setInvoiceData({ ...invoiceData, dueDate: e.target.value }); }}
@@ -141,9 +159,9 @@ export default function GuestInvoicePage() {
           <hr className="border-zinc-100" />
 
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-zinc-700">Catatan Tambahan</label>
+            <label className="text-sm font-medium text-zinc-700">{t("generators.paymentNotes")}</label>
             <textarea 
-              placeholder="Tuliskan catatan tambahan (misalnya metode pembayaran, ucapan terima kasih, dll)..."
+              placeholder={t("generators.paymentNotesPlaceholder")}
               rows={4}
               className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl text-sm text-zinc-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black transition-all resize-y"
               value={invoiceData.notes}

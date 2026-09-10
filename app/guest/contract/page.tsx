@@ -8,6 +8,7 @@ import LogoUpload from "@/components/LogoUpload";
 import ContractPartyForm from "@/components/forms/ContractPartyForm";
 import DocumentSaveToolbar from "@/components/DocumentSaveToolbar";
 import { ShieldCheck, WarningCircle, ArrowSquareOut } from "@phosphor-icons/react";
+import { useTranslation } from "@/lib/i18n";
 
 // Dynamic import for PDF Viewer to avoid SSR issues
 const ContractPDFWrapper = dynamic(
@@ -16,6 +17,7 @@ const ContractPDFWrapper = dynamic(
 );
 
 export default function GuestContractPage() {
+  const { t } = useTranslation();
   const [loadingClauses, setLoadingClauses] = useState(false);
   const [clausesError, setClausesError] = useState<string | null>(null);
 
@@ -94,7 +96,7 @@ export default function GuestContractPage() {
         setClausesError(data.error || 'Gagal menyarankan klausul.');
       }
     } catch {
-      setClausesError('Terjadi gangguan jaringan saat menghubungi layanan AI.');
+      setClausesError(t('common.error'));
     } finally {
       setLoadingClauses(false);
     }
@@ -128,8 +130,8 @@ export default function GuestContractPage() {
 
   return (
     <GuestDocumentLayout
-      title="Buat Kontrak Kerja (SPK)"
-      subtitle="Dokumen perjanjian kerja sama profesional berformat legal."
+      title={t("generators.contractTitle")}
+      subtitle={t("home.cardContractDesc")}
       formContent={
         <>
           <DocumentSaveToolbar
@@ -166,7 +168,9 @@ export default function GuestContractPage() {
 
           {/* Meta Info */}
           <div className="flex flex-col gap-4">
-            <h2 className="text-lg font-semibold text-slate-800 border-b border-slate-100 pb-2">Informasi Dokumen</h2>
+            <h2 className="text-lg font-semibold text-slate-800 border-b border-slate-100 pb-2">
+              {t("generators.metaTitle")}
+            </h2>
             
             <LogoUpload 
               logo={contractData.logo}
@@ -176,7 +180,7 @@ export default function GuestContractPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex flex-col gap-2">
-                <label className="text-sm font-semibold text-slate-900">Nomor Kontrak</label>
+                <label className="text-sm font-semibold text-slate-900">{t("generators.docNumber")}</label>
                 <input 
                   type="text" 
                   className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all font-medium"
@@ -185,7 +189,7 @@ export default function GuestContractPage() {
                 />
               </div>
               <div className="flex flex-col gap-2">
-                <label className="text-sm font-semibold text-slate-900">Tanggal Penandatanganan</label>
+                <label className="text-sm font-semibold text-slate-900">{t("generators.docDate")}</label>
                 <input 
                   type="date" 
                   className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all font-medium"
@@ -196,7 +200,7 @@ export default function GuestContractPage() {
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-semibold text-slate-900">Tanggal Mulai & Selesai</label>
+              <label className="text-sm font-semibold text-slate-900">{t("generators.projectDuration")}</label>
               <div className="grid grid-cols-2 gap-2">
                 <input 
                   type="date" 
@@ -215,7 +219,7 @@ export default function GuestContractPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
               <div className="flex flex-col gap-2">
-                <label className="text-sm font-semibold text-slate-900">Mata Uang</label>
+                <label className="text-sm font-semibold text-slate-900">{t("common.currency")}</label>
                 <select 
                   className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all font-medium cursor-pointer"
                   value={contractData.currency}
@@ -226,14 +230,14 @@ export default function GuestContractPage() {
                 </select>
               </div>
               <div className="flex flex-col gap-2">
-                <label className="text-sm font-semibold text-slate-900">Bahasa Dokumen</label>
+                <label className="text-sm font-semibold text-slate-900">PDF</label>
                 <select 
                   className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all font-medium cursor-pointer"
                   value={contractData.language}
                   onChange={(e) => { setContractData({ ...contractData, language: e.target.value as "id" | "en" }); }}
                 >
-                  <option value="id">Indonesia</option>
-                  <option value="en">English</option>
+                  <option value="id">Bahasa Indonesia</option>
+                  <option value="en">English (PDF)</option>
                 </select>
               </div>
             </div>
@@ -254,24 +258,24 @@ export default function GuestContractPage() {
           {/* Pasal / Klausul */}
           <div className="flex flex-col gap-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 pb-2 gap-2">
-              <h2 className="text-lg font-bold text-slate-900">Pasal-Pasal Kontrak</h2>
+              <h2 className="text-lg font-bold text-slate-900">{t("generators.legalClausesTitle")}</h2>
               <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={() => { void handleSuggestClauses(); }}
                   disabled={loadingClauses}
                   className="px-3 py-1.5 text-xs font-semibold text-cyan-800 bg-cyan-50 hover:bg-cyan-100 border border-cyan-300 rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-60 shadow-2xs"
-                  title="Dapatkan rekomendasi klausul protektif otomatis sesuai judul dan nilai proyek"
+                  title={t("generators.aiSuggestClauses")}
                 >
                   <ShieldCheck size={14} />
-                  <span>{loadingClauses ? 'Menganalisis...' : 'Sarankan Klausul'}</span>
+                  <span>{loadingClauses ? t("generators.aiGenerating") : t("generators.aiSuggestClauses")}</span>
                 </button>
                 <button
                   type="button"
                   onClick={handleAddClause}
                   className="px-3 py-1.5 text-xs font-semibold text-indigo-800 bg-indigo-50 hover:bg-indigo-100 border border-indigo-300 rounded-lg transition-colors cursor-pointer shadow-2xs"
                 >
-                  + Tambah Pasal
+                  {t("generators.addClause")}
                 </button>
               </div>
             </div>
@@ -284,7 +288,7 @@ export default function GuestContractPage() {
                 </span>
                 {clausesError.includes('Pengaturan') && (
                   <a href="/dashboard/settings" className="font-semibold text-cyan-600 hover:underline flex items-center gap-0.5">
-                    Buka Pengaturan
+                    {t("nav.settings")}
                     <ArrowSquareOut size={12} />
                   </a>
                 )}
@@ -294,15 +298,15 @@ export default function GuestContractPage() {
             <div className="flex flex-col gap-4">
               {contractData.clauses.map((clause, index) => (
                 <div key={clause.id} className="flex flex-col gap-3 p-4 bg-white border border-slate-200 rounded-xl shadow-sm relative group">
-                  <button onClick={() => { handleRemoveClause(clause.id); }} className="absolute top-3 right-3 text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity text-xl leading-none">
+                  <button onClick={() => { handleRemoveClause(clause.id); }} className="absolute top-3 right-3 text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity text-xl leading-none" title={t("common.delete")}>
                     &times;
                   </button>
                   <div className="flex flex-col gap-1 pr-6">
-                    <label className="text-xs font-semibold text-slate-500">Pasal {index + 1} (Judul)</label>
+                    <label className="text-xs font-semibold text-slate-500">{t("generators.clauseTitle")} {index + 1}</label>
                     <input type="text" className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-sm font-medium focus:outline-none focus:border-indigo-500 transition-all" value={clause.title} onChange={(e) => { handleClauseChange(clause.id, "title", e.target.value); }} />
                   </div>
                   <div className="flex flex-col gap-1">
-                    <label className="text-xs font-semibold text-slate-500">Isi Pasal</label>
+                    <label className="text-xs font-semibold text-slate-500">{t("generators.clauseContent")}</label>
                     <textarea rows={4} className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-md text-sm focus:outline-none focus:border-indigo-500 transition-all resize-y leading-relaxed" value={clause.content} onChange={(e) => { handleClauseChange(clause.id, "content", e.target.value); }} />
                   </div>
                 </div>
@@ -315,4 +319,3 @@ export default function GuestContractPage() {
     />
   );
 }
-

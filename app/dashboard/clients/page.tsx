@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, FormEvent } from 'react';
+import { useTranslation } from '@/lib/i18n';
 
 interface Client {
   id: string;
@@ -14,6 +15,7 @@ interface Client {
 }
 
 export default function ClientsPage() {
+  const { t, locale } = useTranslation();
   const [clients, setClients] = useState<Client[]>([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
@@ -116,17 +118,17 @@ export default function ClientsPage() {
         setIsModalOpen(false);
         void fetchClients();
       } else {
-        setError(data.error || 'Gagal menyimpan data klien.');
+        setError(data.error || t('common.error'));
       }
     } catch {
-      setError('Terjadi kesalahan sistem.');
+      setError(t('common.error'));
     } finally {
       setSaving(false);
     }
   };
 
   const handleDelete = async (id: string, name: string) => {
-    if (!confirm(`Apakah Anda yakin ingin menghapus data klien "${name}"?`)) return;
+    if (!confirm(`${t('common.delete')} "${name}"?`)) return;
 
     try {
       const res = await fetch(`/api/clients/${encodeURIComponent(id)}`, { method: 'DELETE' });
@@ -134,10 +136,10 @@ export default function ClientsPage() {
         void fetchClients();
       } else {
         const data = await res.json();
-        alert(data.error || 'Gagal menghapus klien.');
+        alert(data.error || t('common.error'));
       }
     } catch {
-      alert('Terjadi kesalahan koneksi.');
+      alert(t('common.error'));
     }
   };
 
@@ -152,9 +154,9 @@ export default function ClientsPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-100">Profil & Manajemen Klien</h1>
+          <h1 className="text-2xl font-bold text-slate-100">{t('clients.title')}</h1>
           <p className="text-sm text-slate-400 mt-1">
-            Simpan data profil klien untuk mempercepat pembuatan Invoice & Kontrak.
+            {t('clients.subtitle')}
           </p>
         </div>
 
@@ -162,7 +164,7 @@ export default function ClientsPage() {
           onClick={() => { openAddModal(); }}
           className="px-4 py-2.5 rounded-xl font-semibold text-sm bg-cyan-600 hover:bg-cyan-500 text-white shadow-md shadow-cyan-600/20 transition-all flex items-center justify-center gap-2 cursor-pointer self-start sm:self-auto"
         >
-          <span>+</span> Tambah Klien Baru
+          <span>+</span> {t('clients.addClient')}
         </button>
       </div>
 
@@ -172,25 +174,25 @@ export default function ClientsPage() {
           type="text"
           value={search}
           onChange={(e) => { setSearch(e.target.value); }}
-          placeholder="Cari berdasarkan nama, email, atau negara..."
+          placeholder={t('clients.searchPlaceholder')}
           className="w-full px-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
         />
       </div>
 
       {/* Client List */}
       {loading ? (
-        <div className="text-center py-16 text-slate-400 font-medium">Memuat data klien...</div>
+        <div className="text-center py-16 text-slate-400 font-medium">{t('common.loading')}</div>
       ) : filteredClients.length === 0 ? (
         <div className="text-center py-16 bg-slate-900/40 border border-slate-800 rounded-2xl p-8">
           <p className="text-slate-400 font-medium">
-            {search ? 'Tidak ada klien yang cocok dengan pencarian.' : 'Belum ada data klien terdaftar.'}
+            {search ? (locale === 'id' ? 'Tidak ada klien yang cocok.' : 'No clients match your search.') : t('clients.emptyTitle')}
           </p>
           {!search && (
             <button
               onClick={() => { openAddModal(); }}
-              className="mt-4 text-xs font-semibold text-cyan-400 hover:underline"
+              className="mt-4 text-xs font-semibold text-cyan-400 hover:underline cursor-pointer"
             >
-              + Tambah Klien Pertama Anda
+              + {t('clients.addClient')}
             </button>
           )}
         </div>
@@ -206,7 +208,7 @@ export default function ClientsPage() {
                   <h3 className="font-bold text-slate-100 text-base">{client.name}</h3>
                   {client.isForeignHint && (
                     <span className="px-2 py-0.5 text-[10px] uppercase tracking-wider font-bold rounded bg-amber-500/10 border border-amber-500/30 text-amber-300">
-                      {"Asing / Int'l"}
+                      {"Int'l / Foreign"}
                     </span>
                   )}
                 </div>
@@ -214,21 +216,21 @@ export default function ClientsPage() {
                 <div className="space-y-1.5 text-xs text-slate-400">
                   {client.email && (
                     <p className="flex items-center gap-1.5">
-                      <span className="font-semibold text-slate-500">Email:</span> {client.email}
+                      <span className="font-semibold text-slate-500">{t('clients.emailLabel')}:</span> {client.email}
                     </p>
                   )}
                   {client.phone && (
                     <p className="flex items-center gap-1.5">
-                      <span className="font-semibold text-slate-500">Telp:</span> {client.phone}
+                      <span className="font-semibold text-slate-500">{t('clients.phoneLabel')}:</span> {client.phone}
                     </p>
                   )}
                   {client.address && (
                     <p className="flex items-start gap-1.5">
-                      <span className="font-semibold text-slate-500">Alamat:</span> <span className="line-clamp-2">{client.address}</span>
+                      <span className="font-semibold text-slate-500">{t('clients.addressLabel')}:</span> <span className="line-clamp-2">{client.address}</span>
                     </p>
                   )}
                   <p className="flex items-center gap-1.5 text-slate-500">
-                    <span className="font-semibold text-slate-500">Negara:</span> {client.country || 'Indonesia'}
+                    <span className="font-semibold text-slate-500">{locale === 'id' ? 'Negara:' : 'Country:'}</span> {client.country || 'Indonesia'}
                   </p>
                 </div>
               </div>
@@ -238,13 +240,13 @@ export default function ClientsPage() {
                   onClick={() => { openEditModal(client); }}
                   className="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition-all cursor-pointer"
                 >
-                  Edit
+                  {t('common.edit')}
                 </button>
                 <button
                   onClick={() => { void handleDelete(client.id, client.name); }}
                   className="px-3 py-1.5 rounded-lg text-xs font-medium text-rose-400 hover:bg-rose-500/10 transition-all cursor-pointer"
                 >
-                  Hapus
+                  {t('common.delete')}
                 </button>
               </div>
             </div>
@@ -258,11 +260,11 @@ export default function ClientsPage() {
           <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <h2 className="text-lg font-bold text-slate-100">
-                {editingClient ? 'Edit Data Klien' : 'Tambah Klien Baru'}
+                {editingClient ? (locale === 'id' ? 'Edit Data Klien' : 'Edit Client Profile') : t('clients.modalTitle')}
               </h2>
               <button
                 onClick={() => { setIsModalOpen(false); }}
-                className="text-slate-400 hover:text-white font-bold"
+                className="text-slate-400 hover:text-white font-bold cursor-pointer"
               >
                 ✕
               </button>
@@ -277,53 +279,53 @@ export default function ClientsPage() {
             <form onSubmit={(e) => { void handleSubmit(e); }} className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
-                  Nama Klien / Perusahaan *
+                  {t('clients.nameLabel')} *
                 </label>
                 <input
                   type="text"
                   required
                   value={formData.name}
                   onChange={(e) => { setFormData({ ...formData, name: e.target.value }); }}
-                  placeholder="e.g. PT Maju Bersama"
+                  placeholder={t('clients.namePlaceholder')}
                   className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
                 />
               </div>
 
               <div>
                 <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
-                  Email Klien
+                  {t('clients.emailLabel')}
                 </label>
                 <input
                   type="email"
                   value={formData.email}
                   onChange={(e) => { setFormData({ ...formData, email: e.target.value }); }}
-                  placeholder="finance@majubersama.com"
+                  placeholder={t('clients.emailPlaceholder')}
                   className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
                 />
               </div>
 
               <div>
                 <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
-                  Telepon / Contact Person
+                  {t('clients.phoneLabel')}
                 </label>
                 <input
                   type="text"
                   value={formData.phone}
                   onChange={(e) => { setFormData({ ...formData, phone: e.target.value }); }}
-                  placeholder="+62 811 2233 4455"
+                  placeholder={t('clients.phonePlaceholder')}
                   className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
                 />
               </div>
 
               <div>
                 <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
-                  Alamat Lengkap
+                  {t('clients.addressLabel')}
                 </label>
                 <textarea
                   rows={2}
                   value={formData.address}
                   onChange={(e) => { setFormData({ ...formData, address: e.target.value }); }}
-                  placeholder="Alamat kantor klien..."
+                  placeholder={t('clients.addressPlaceholder')}
                   className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50 resize-y"
                 />
               </div>
@@ -331,7 +333,7 @@ export default function ClientsPage() {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
-                    Negara
+                    {locale === 'id' ? 'Negara' : 'Country'}
                   </label>
                   <input
                     type="text"
@@ -350,7 +352,7 @@ export default function ClientsPage() {
                       onChange={(e) => { setFormData({ ...formData, isForeignHint: e.target.checked }); }}
                       className="rounded border-slate-800 text-cyan-500 focus:ring-cyan-500"
                     />
-                    Klien Luar Negeri
+                    {locale === 'id' ? 'Klien Luar Negeri' : 'Foreign / Offshore Client'}
                   </label>
                 </div>
               </div>
@@ -359,16 +361,16 @@ export default function ClientsPage() {
                 <button
                   type="button"
                   onClick={() => { setIsModalOpen(false); }}
-                  className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800"
+                  className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer"
                 >
-                  Batal
+                  {t('common.cancel')}
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-4 py-2 rounded-xl text-xs font-semibold bg-cyan-600 hover:bg-cyan-500 text-white disabled:opacity-50"
+                  className="px-4 py-2 rounded-xl text-xs font-semibold bg-cyan-600 hover:bg-cyan-500 text-white disabled:opacity-50 cursor-pointer"
                 >
-                  {saving ? 'Menyimpan...' : editingClient ? 'Update Klien' : 'Simpan Klien'}
+                  {saving ? t('clients.btnSaving') : t('clients.btnSave')}
                 </button>
               </div>
             </form>

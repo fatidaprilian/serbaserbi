@@ -1,21 +1,26 @@
+"use client";
+
 import Link from "next/link";
 import { UserNav } from "@/components/UserNav";
-import { Receipt, FileText, Handshake, ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
+import { useTranslation } from "@/lib/i18n";
+import { Receipt, FileText, Handshake, ArrowUpRight } from "@phosphor-icons/react";
 
 export default function Home() {
+  const { t } = useTranslation();
+
   return (
     <div className="min-h-screen bg-[#fafafa] text-[#09090b] font-sans selection:bg-black selection:text-white">
       {/* Top Navbar */}
       <nav className="w-full border-b border-zinc-200/80 bg-white/70 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/" className="font-black text-xl tracking-tight text-zinc-900">
-            SerbaSerbi
+            {t("common.appName")}
           </Link>
           <UserNav />
         </div>
       </nav>
 
-      {/* Premium subtle gradient blob */}
+      {/* Subtle background glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-zinc-200/50 to-transparent blur-3xl -z-10 rounded-full" />
 
       <main className="max-w-5xl mx-auto px-6 pt-24 pb-24 flex flex-col items-center z-10">
@@ -24,17 +29,14 @@ export default function Home() {
         <header className="flex flex-col items-center text-center gap-5 mb-16 max-w-3xl">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-100 border border-zinc-200/80 text-xs font-semibold text-zinc-700 shadow-2xs">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            Generator Dokumen Legal & Finansial Freelancer
+            {t("home.badge")}
           </div>
 
           <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-zinc-900 leading-[1.15]">
-            Dokumen profesional, <br className="hidden sm:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-zinc-900 via-zinc-700 to-zinc-500">
-              tanpa kerumitan.
-            </span>
+            {t("home.heroTitle")}
           </h1>
           <p className="text-base sm:text-lg text-zinc-600 font-normal max-w-2xl leading-relaxed tracking-tight">
-            Buat tagihan invoice, surat penawaran harga, dan kontrak kerja resmi langsung di browser Anda. Siap cetak PDF, bilingual (ID/EN), aman dan terformat rapi.
+            {t("home.heroSubtitle")}
           </p>
         </header>
 
@@ -57,13 +59,13 @@ export default function Home() {
 
             <div className="pt-8">
               <div className="text-xs font-semibold text-cyan-800 uppercase tracking-wider mb-1.5">
-                Tagihan Pembayaran
+                {t("nav.createInvoice")}
               </div>
               <h2 className="text-2xl font-bold tracking-tight text-zinc-900 mb-2 group-hover:text-cyan-800 transition-colors">
-                Buat Invoice
+                {t("home.cardInvoiceTitle")}
               </h2>
               <p className="text-zinc-600 text-sm max-w-md leading-relaxed">
-                Buat tagihan profesional dengan kalkulasi otomatis pajak, dual-currency (IDR & USD), peringatan bea meterai, dan pelacakan pembayaran termin/DP.
+                {t("home.cardInvoiceDesc")}
               </p>
             </div>
           </Link>
@@ -84,13 +86,13 @@ export default function Home() {
 
             <div className="pt-8">
               <div className="text-xs font-semibold text-indigo-800 uppercase tracking-wider mb-1.5">
-                Estimasi Biaya
+                {t("nav.createQuotation")}
               </div>
               <h2 className="text-xl font-bold tracking-tight text-zinc-900 mb-2 group-hover:text-indigo-800 transition-colors">
-                Surat Penawaran
+                {t("home.cardQuotationTitle")}
               </h2>
               <p className="text-zinc-600 text-sm leading-relaxed">
-                Kirim proposal harga formal (*Quotation*) dengan masa berlaku penawaran yang jelas ke calon klien Anda.
+                {t("home.cardQuotationDesc")}
               </p>
             </div>
           </Link>
@@ -106,13 +108,13 @@ export default function Home() {
               </div>
               <div className="max-w-2xl">
                 <div className="text-xs font-semibold text-purple-800 uppercase tracking-wider mb-1">
-                  Perjanjian Kerja Sama
+                  {t("nav.createContract")}
                 </div>
                 <h2 className="text-2xl font-bold tracking-tight text-zinc-900 mb-1.5 group-hover:text-purple-800 transition-colors">
-                  Kontrak Kerja (Surat Perjanjian Kerja / SPK)
+                  {t("home.cardContractTitle")}
                 </h2>
                 <p className="text-zinc-600 text-sm leading-relaxed">
-                  Lindungi proyek dan hak cipta Anda dengan kontrak kerja standar hukum Indonesia. Dilengkapi generator klausul profesional dan blok tanda tangan para pihak.
+                  {t("home.cardContractDesc")}
                 </p>
               </div>
             </div>
