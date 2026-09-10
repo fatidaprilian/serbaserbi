@@ -138,9 +138,17 @@ export interface PDFItemTableProps {
   items: Array<{ description: string; quantity: number; unitPrice: number }>;
   labels: { desc: string; qty: string; price: string; total: string };
   styles: PDFStyles;
+  currency?: string;
+  language?: string;
 }
 
-export const PDFItemTable = ({ items, labels, styles }: PDFItemTableProps) => (
+export const PDFItemTable = ({
+  items,
+  labels,
+  styles,
+  currency = 'IDR',
+  language = 'id',
+}: PDFItemTableProps) => (
   <>
     <View style={styles.tableHeader}>
       <Text style={styles.col1}>{labels.desc}</Text>
@@ -153,8 +161,8 @@ export const PDFItemTable = ({ items, labels, styles }: PDFItemTableProps) => (
       <View style={styles.tableRow} key={i}>
         <Text style={[styles.col1, styles.textBold]}>{item.description}</Text>
         <Text style={styles.col2}>{item.quantity}</Text>
-        <Text style={styles.col3}>{formatCurrency(item.unitPrice)}</Text>
-        <Text style={styles.col4}>{formatCurrency(item.quantity * item.unitPrice)}</Text>
+        <Text style={styles.col3}>{formatCurrency(item.unitPrice, currency, language)}</Text>
+        <Text style={styles.col4}>{formatCurrency(item.quantity * item.unitPrice, currency, language)}</Text>
       </View>
     ))}
   </>
@@ -164,13 +172,21 @@ export interface PDFTotalsBlockProps {
   label: string;
   totalAmount: number;
   styles: PDFStyles;
+  currency?: string;
+  language?: string;
 }
 
-export const PDFTotalsBlock = ({ label, totalAmount, styles }: PDFTotalsBlockProps) => (
+export const PDFTotalsBlock = ({
+  label,
+  totalAmount,
+  styles,
+  currency = 'IDR',
+  language = 'id',
+}: PDFTotalsBlockProps) => (
   <View style={styles.totalSection}>
     <View style={styles.totalRowGrand}>
       <Text style={styles.textBold}>{label}</Text>
-      <Text style={styles.totalAmount}>{formatCurrency(totalAmount)}</Text>
+      <Text style={styles.totalAmount}>{formatCurrency(totalAmount, currency, language)}</Text>
     </View>
   </View>
 );

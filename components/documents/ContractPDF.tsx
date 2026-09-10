@@ -161,7 +161,7 @@ export const ContractPDF = ({ data }: { data: ContractData }) => {
 
         <Text style={styles.paragraph}>
           <Text style={{ fontWeight: 'bold' }}>{t.jobTitle}</Text> {data.projectTitle}{'\n'}
-          <Text style={{ fontWeight: 'bold' }}>{t.projectValue}</Text> {formatCurrency(data.projectValue)}{'\n'}
+          <Text style={{ fontWeight: 'bold' }}>{t.projectValue}</Text> {formatCurrency(data.projectValue, data.currency, data.language)}{'\n'}
           <Text style={{ fontWeight: 'bold' }}>{t.duration}</Text> {data.startDate} {t.until} {data.endDate}
         </Text>
 

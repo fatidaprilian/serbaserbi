@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Button } from '@cloudflare/kumo';
+import { useSession } from 'next-auth/react';
 import { PencilSimpleLine, ArrowSquareOut, X, WarningCircle } from '@phosphor-icons/react';
 import { useTranslation } from '@/lib/i18n';
 
@@ -28,6 +28,8 @@ export default function DocumentItemsForm({
   onItemChange,
   onRemoveItem,
 }: DocumentItemsFormProps) {
+  const { status } = useSession();
+  const isAuthenticated = status === 'authenticated';
   const { t } = useTranslation();
   const [activeItemForAi, setActiveItemForAi] = useState<string | null>(null);
   const [aiPrompt, setAiPrompt] = useState('');
@@ -97,15 +99,17 @@ export default function DocumentItemsForm({
                 <div className="col-span-12 sm:col-span-6 flex flex-col gap-1.5">
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-slate-700 font-semibold">{t('generators.colDescription')}</span>
-                    <button
-                      type="button"
-                      onClick={() => { handleOpenAiModal(item); }}
-                      className="text-[11px] font-semibold text-cyan-700 hover:text-cyan-800 bg-cyan-50 px-2 py-0.5 rounded border border-cyan-200 flex items-center gap-1 cursor-pointer transition-colors"
-                      title={t('generators.aiPolishDesc')}
-                    >
-                      <PencilSimpleLine size={13} />
-                      <span>{t('generators.aiPolishDesc')}</span>
-                    </button>
+                    {isAuthenticated && (
+                      <button
+                        type="button"
+                        onClick={() => { handleOpenAiModal(item); }}
+                        className="text-[11px] font-semibold text-zinc-700 hover:text-black bg-zinc-100 hover:bg-zinc-200/80 px-2 py-0.5 rounded border border-zinc-200 flex items-center gap-1 cursor-pointer transition-colors"
+                        title={t('generators.aiPolishDesc')}
+                      >
+                        <PencilSimpleLine size={13} />
+                        <span>{t('generators.aiPolishDesc')}</span>
+                      </button>
+                    )}
                   </div>
 
                   <textarea
@@ -160,17 +164,17 @@ export default function DocumentItemsForm({
               </div>
 
               {/* Inline AI Optimizer Assistant Box */}
-              {activeItemForAi === item.id && (
-                <div className="p-3 bg-white border border-cyan-300 rounded-xl space-y-2 mt-2 shadow-xs">
-                  <div className="flex items-center justify-between text-xs font-semibold text-cyan-800">
+              {isAuthenticated && activeItemForAi === item.id && (
+                <div className="p-3 bg-white border border-zinc-200 rounded-xl space-y-2 mt-2 shadow-xs">
+                  <div className="flex items-center justify-between text-xs font-semibold text-zinc-900">
                     <span className="flex items-center gap-1.5">
-                      <PencilSimpleLine size={14} />
+                      <PencilSimpleLine size={14} className="text-zinc-600" />
                       OpenRouter BYOK AI
                     </span>
                     <button
                       type="button"
                       onClick={() => { setActiveItemForAi(null); }}
-                      className="text-slate-400 hover:text-slate-600 cursor-pointer"
+                      className="text-zinc-400 hover:text-zinc-700 cursor-pointer"
                     >
                       <X size={14} />
                     </button>
@@ -182,18 +186,17 @@ export default function DocumentItemsForm({
                       placeholder="e.g., logo design with 2 revisions in vector svg format..."
                       value={aiPrompt}
                       onChange={(e) => { setAiPrompt(e.target.value); }}
-                      className="flex-1 px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                      className="flex-1 px-3 py-1.5 bg-white border border-zinc-200 rounded-lg text-xs text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900"
                     />
 
-                    <Button
-                      variant="primary"
+                    <button
                       type="button"
                       onClick={() => { void handleGenerateDescription(item.id); }}
                       disabled={loadingAi}
-                      className="text-xs px-3 py-1.5 bg-gradient-to-r from-cyan-600 to-indigo-600 text-white font-medium rounded-lg cursor-pointer whitespace-nowrap"
+                      className="text-xs px-3.5 py-1.5 bg-zinc-900 hover:bg-black text-white font-medium rounded-lg cursor-pointer whitespace-nowrap transition-colors shadow-xs disabled:opacity-50"
                     >
                       {loadingAi ? t('generators.aiGenerating') : t('generators.aiPolishDesc')}
-                    </Button>
+                    </button>
                   </div>
 
                   {aiError && (
@@ -205,7 +208,7 @@ export default function DocumentItemsForm({
                       {aiError.includes('Pengaturan') && (
                         <Link
                           href="/dashboard/settings"
-                          className="font-semibold text-cyan-600 hover:underline flex items-center gap-0.5"
+                          className="font-semibold text-zinc-800 hover:underline flex items-center gap-0.5"
                         >
                           {t('nav.settings')}
                           <ArrowSquareOut size={11} />

@@ -96,12 +96,16 @@ export const InvoicePDF = ({ data }: { data: InvoiceData }) => {
           items={data.items}
           labels={{ desc: t.desc, qty: t.qty, price: t.price, total: t.total }}
           styles={styles}
+          currency={data.currency}
+          language={data.language}
         />
 
         <PDFTotalsBlock
           label={t.totalAmount}
           totalAmount={calculateItemizedTotal(data.items)}
           styles={styles}
+          currency={data.currency}
+          language={data.language}
         />
         
         {data.notes && (

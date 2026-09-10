@@ -7,6 +7,7 @@ import GuestDocumentLayout from "@/components/GuestDocumentLayout";
 import LogoUpload from "@/components/LogoUpload";
 import ContractPartyForm from "@/components/forms/ContractPartyForm";
 import DocumentSaveToolbar from "@/components/DocumentSaveToolbar";
+import { useSession } from "next-auth/react";
 import { ShieldCheck, WarningCircle, ArrowSquareOut } from "@phosphor-icons/react";
 import { useTranslation } from "@/lib/i18n";
 
@@ -17,6 +18,8 @@ const ContractPDFWrapper = dynamic(
 );
 
 export default function GuestContractPage() {
+  const { status } = useSession();
+  const isAuthenticated = status === 'authenticated';
   const { t } = useTranslation();
   const [loadingClauses, setLoadingClauses] = useState(false);
   const [clausesError, setClausesError] = useState<string | null>(null);
@@ -260,20 +263,22 @@ export default function GuestContractPage() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 pb-2 gap-2">
               <h2 className="text-lg font-bold text-slate-900">{t("generators.legalClausesTitle")}</h2>
               <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => { void handleSuggestClauses(); }}
-                  disabled={loadingClauses}
-                  className="px-3 py-1.5 text-xs font-semibold text-cyan-800 bg-cyan-50 hover:bg-cyan-100 border border-cyan-300 rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-60 shadow-2xs"
-                  title={t("generators.aiSuggestClauses")}
-                >
-                  <ShieldCheck size={14} />
-                  <span>{loadingClauses ? t("generators.aiGenerating") : t("generators.aiSuggestClauses")}</span>
-                </button>
+                {isAuthenticated && (
+                  <button
+                    type="button"
+                    onClick={() => { void handleSuggestClauses(); }}
+                    disabled={loadingClauses}
+                    className="px-3 py-1.5 text-xs font-semibold text-zinc-800 bg-zinc-100 hover:bg-zinc-200 border border-zinc-200 rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-60 shadow-2xs"
+                    title={t("generators.aiSuggestClauses")}
+                  >
+                    <ShieldCheck size={14} />
+                    <span>{loadingClauses ? t("generators.aiGenerating") : t("generators.aiSuggestClauses")}</span>
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={handleAddClause}
-                  className="px-3 py-1.5 text-xs font-semibold text-indigo-800 bg-indigo-50 hover:bg-indigo-100 border border-indigo-300 rounded-lg transition-colors cursor-pointer shadow-2xs"
+                  className="px-3 py-1.5 text-xs font-semibold text-zinc-900 bg-white hover:bg-zinc-100 border border-zinc-200 rounded-lg transition-colors cursor-pointer shadow-2xs"
                 >
                   {t("generators.addClause")}
                 </button>
