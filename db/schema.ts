@@ -62,6 +62,16 @@ export const invoiceItems = pgTable('invoice_items', {
   subtotal: numeric('subtotal').notNull(),
 });
 
+export const invoicePayments = pgTable('invoice_payments', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  invoiceId: uuid('invoice_id').references(() => invoices.id).notNull(),
+  amount: numeric('amount').notNull(),
+  paymentDate: date('payment_date').notNull(),
+  paymentMethod: varchar('payment_method', { length: 50 }).default('bank_transfer').notNull(),
+  notes: text('notes'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
 export const quotations = pgTable('quotations', {
   id: uuid('id').defaultRandom().primaryKey(),
   userId: uuid('user_id').references(() => users.id).notNull(),

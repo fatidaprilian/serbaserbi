@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import { CreditCard } from '@phosphor-icons/react';
+import InvoicePaymentModal from '@/components/InvoicePaymentModal';
 
 interface DocItem {
   id: string;
@@ -21,6 +23,7 @@ export default function DocumentHistoryPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [activeTab, setActiveTab] = useState<'all' | 'invoice' | 'quotation' | 'contract'>('all');
+  const [paymentModalInvoice, setPaymentModalInvoice] = useState<{ id: string; invoiceNumber: string; currency: string } | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -301,9 +304,27 @@ export default function DocumentHistoryPage() {
                           )}
                         </select>
 
+                        {/* Payment & DP Tracking Button */}
+                        {doc.docType === 'invoice' && (
+                          <button
+                            onClick={() => {
+                              setPaymentModalInvoice({
+                                id: doc.id,
+                                invoiceNumber: doc.documentNumber,
+                                currency: doc.currency,
+                              });
+                            }}
+                            className="px-2.5 py-1 rounded text-[11px] font-semibold text-cyan-400 hover:text-cyan-300 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 transition-all flex items-center gap-1 cursor-pointer"
+                            title="Kelola Uang Muka (DP) & Pembayaran"
+                          >
+                            <CreditCard size={13} weight="duotone" />
+                            <span>DP / Bayar</span>
+                          </button>
+                        )}
+
                         <button
                           onClick={() => { void handleDelete(doc.docType, doc.id, doc.documentNumber); }}
-                          className="px-2 py-1 rounded text-[11px] font-medium text-rose-400 hover:bg-rose-500/10 transition-colors"
+                          className="px-2 py-1 rounded text-[11px] font-medium text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer"
                           title="Hapus Dokumen"
                         >
                           Hapus
@@ -316,6 +337,18 @@ export default function DocumentHistoryPage() {
             </table>
           </div>
         </div>
+      )}
+
+      {/* Invoice Payment / DP Tracking Modal */}
+      {paymentModalInvoice && (
+        <InvoicePaymentModal
+          invoiceId={paymentModalInvoice.id}
+          invoiceNumber={paymentModalInvoice.invoiceNumber}
+          currency={paymentModalInvoice.currency}
+          isOpen={Boolean(paymentModalInvoice)}
+          onClose={() => { setPaymentModalInvoice(null); }}
+          onPaymentUpdated={() => { void fetchDocuments(); }}
+        />
       )}
     </div>
   );
