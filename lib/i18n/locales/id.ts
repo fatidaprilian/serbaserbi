@@ -45,7 +45,6 @@ export const id = {
     guestMode: "Mode Tamu",
   },
   home: {
-    badge: "Platform Finansial Freelancer #1 di Indonesia",
     heroTitle: "Faktur Freelance & Kontrak Legal Cepat, Rapi, & Taat Hukum",
     heroSubtitle:
       "Hasilkan Invoice, Penawaran Harga, dan SPK siap cetak dalam 2 menit. Lengkap dengan perhitungan Bea Meterai Rp10.000 otomatis, dual-currency IDR/USD, dan tracking pembayaran termin/DP.",

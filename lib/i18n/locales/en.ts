@@ -47,7 +47,6 @@ export const en: TranslationSchema = {
     guestMode: "Guest Mode",
   },
   home: {
-    badge: "#1 Freelance Financial & Legal Platform in Indonesia",
     heroTitle: "Freelance Invoicing & Legal Contracts Fast, Compliant, & Audit-Ready",
     heroSubtitle:
       "Generate print-ready Invoices, Price Quotations, and Service Agreements in under 2 minutes. Features automatic Rp10,000 Stamp Duty warnings, IDR/USD dual-currency, and installment/down payment tracking.",

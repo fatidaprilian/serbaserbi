@@ -27,11 +27,6 @@ export default function Home() {
         
         {/* Hero */}
         <header className="flex flex-col items-center text-center gap-5 mb-16 max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-100 border border-zinc-200/80 text-xs font-semibold text-zinc-700 shadow-2xs">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            {t("home.badge")}
-          </div>
-
           <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-zinc-900 leading-[1.15]">
             {t("home.heroTitle")}
           </h1>
