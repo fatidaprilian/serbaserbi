@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { CreditCard } from '@phosphor-icons/react';
+import { CreditCard, ClockCountdown, CheckCircle } from '@phosphor-icons/react';
 import InvoicePaymentModal from '@/components/InvoicePaymentModal';
 
 interface DocItem {
@@ -24,6 +24,8 @@ export default function DocumentHistoryPage() {
   const [search, setSearch] = useState('');
   const [activeTab, setActiveTab] = useState<'all' | 'invoice' | 'quotation' | 'contract'>('all');
   const [paymentModalInvoice, setPaymentModalInvoice] = useState<{ id: string; invoiceNumber: string; currency: string } | null>(null);
+  const [checkingOverdue, setCheckingOverdue] = useState(false);
+  const [cronFeedback, setCronFeedback] = useState<string | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -143,6 +145,29 @@ export default function DocumentHistoryPage() {
     }
   };
 
+  const handleCheckOverdueNow = async () => {
+    setCheckingOverdue(true);
+    setCronFeedback(null);
+    try {
+      const res = await fetch('/api/cron/check-overdue', { method: 'POST' });
+      const data = await res.json();
+      if (res.ok) {
+        if (data.processedCount > 0) {
+          setCronFeedback(`Pemeriksaan selesai: ${data.processedCount} invoice jatuh tempo diperbarui dan pengingat dicatat.`);
+        } else {
+          setCronFeedback('Pemeriksaan selesai: Tidak ada invoice yang melewati tanggal jatuh tempo saat ini.');
+        }
+        void fetchDocuments();
+      } else {
+        setCronFeedback(data.error || 'Gagal menjalankan pemeriksaan jatuh tempo.');
+      }
+    } catch {
+      setCronFeedback('Terjadi kesalahan koneksi saat menjalankan pemeriksaan.');
+    } finally {
+      setCheckingOverdue(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -154,6 +179,17 @@ export default function DocumentHistoryPage() {
         </div>
 
         <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => { void handleCheckOverdueNow(); }}
+            disabled={checkingOverdue}
+            className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-60 shadow-sm"
+            title="Jalankan pemeriksaan harian invoice yang melewati jatuh tempo"
+          >
+            <ClockCountdown size={14} />
+            <span>{checkingOverdue ? 'Memeriksa...' : 'Cek Jatuh Tempo'}</span>
+          </button>
+
           <Link
             href="/guest/invoice"
             className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white shadow-md transition-all"
@@ -162,6 +198,22 @@ export default function DocumentHistoryPage() {
           </Link>
         </div>
       </div>
+
+      {/* Cron Feedback Banner */}
+      {cronFeedback && (
+        <div className="p-4 bg-cyan-500/10 border border-cyan-500/30 rounded-2xl text-xs font-medium text-cyan-300 flex items-center justify-between gap-2 shadow-sm">
+          <div className="flex items-center gap-2">
+            <CheckCircle size={16} />
+            <span>{cronFeedback}</span>
+          </div>
+          <button
+            onClick={() => { setCronFeedback(null); }}
+            className="text-slate-400 hover:text-slate-200 text-base leading-none p-1 cursor-pointer"
+          >
+            &times;
+          </button>
+        </div>
+      )}
 
       {/* Metrics Summary */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

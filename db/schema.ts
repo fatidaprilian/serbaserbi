@@ -109,3 +109,12 @@ export const contracts = pgTable('contracts', {
   documentHash: varchar('document_hash', { length: 255 }),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
+
+export const invoiceReminders = pgTable('invoice_reminders', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  invoiceId: uuid('invoice_id').references(() => invoices.id).notNull(),
+  recipientEmail: varchar('recipient_email', { length: 255 }),
+  reminderType: varchar('reminder_type', { length: 50 }).default('overdue_notice').notNull(),
+  status: varchar('status', { length: 50 }).default('sent').notNull(),
+  sentAt: timestamp('sent_at').defaultNow().notNull(),
+});
