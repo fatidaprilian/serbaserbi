@@ -8,6 +8,7 @@ import LogoUpload from "@/components/LogoUpload";
 import DocumentPartyForm from "@/components/forms/DocumentPartyForm";
 import DocumentItemsForm from "@/components/forms/DocumentItemsForm";
 import DocumentMetaForm from "@/components/forms/DocumentMetaForm";
+import DocumentSaveToolbar from "@/components/DocumentSaveToolbar";
 import { useDocumentItems } from "@/lib/hooks/useDocumentItems";
 
 // Dynamic import for PDF Viewer to avoid SSR issues
@@ -35,6 +36,8 @@ export default function GuestInvoicePage() {
   });
 
   const fullInvoiceData: InvoiceData = { ...invoiceData, items };
+  const totalAmount = items.reduce((acc, item) => acc + (item.quantity * item.unitPrice), 0);
+  const isMeteraiRequired = invoiceData.currency === "IDR" && totalAmount >= 5000000;
 
   return (
     <GuestDocumentLayout
@@ -42,6 +45,41 @@ export default function GuestInvoicePage() {
       subtitle="Isi detail di bawah untuk menghasilkan PDF secara instan."
       formContent={
         <>
+          <DocumentSaveToolbar
+            docType="invoice"
+            documentNumber={invoiceData.invoiceNumber}
+            issueDate={invoiceData.date}
+            dueDate={invoiceData.dueDate}
+            currency={invoiceData.currency}
+            notes={invoiceData.notes}
+            items={items.map((it) => ({
+              description: it.description,
+              quantity: it.quantity,
+              rate: it.unitPrice,
+              subtotal: it.quantity * it.unitPrice,
+            }))}
+            clientName={invoiceData.clientName}
+            clientAddress={invoiceData.clientAddress}
+            meteraiRequired={isMeteraiRequired}
+            onApplyUserProfile={(profile) => {
+              setInvoiceData((prev) => ({
+                ...prev,
+                fromName: profile.fromName,
+                fromAddress: profile.fromAddress,
+                currency: (profile.defaultCurrency as 'IDR' | 'USD') || prev.currency,
+                notes: profile.defaultNotes || prev.notes,
+                logo: profile.logoUrl || prev.logo,
+              }));
+            }}
+            onSelectClient={(client) => {
+              setInvoiceData((prev) => ({
+                ...prev,
+                clientName: client.name,
+                clientAddress: client.address,
+              }));
+            }}
+          />
+
           <DocumentMetaForm
             currency={invoiceData.currency}
             language={invoiceData.language}

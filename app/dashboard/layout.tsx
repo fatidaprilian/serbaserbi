@@ -6,13 +6,14 @@ import { UserNav } from '@/components/UserNav';
 import { ReactNode } from 'react';
 
 const NAV_ITEMS = [
+  { label: 'Ringkasan', href: '/dashboard' },
   { label: 'Dokumen & Riwayat', href: '/dashboard/documents' },
   { label: 'Klien Saya', href: '/dashboard/clients' },
   { label: 'Pengaturan Usaha', href: '/dashboard/settings' },
 ];
 
 function NavLink({ href, label, isMobile, pathname }: { href: string; label: string; isMobile?: boolean; pathname: string }) {
-  const isActive = pathname.startsWith(href);
+  const isActive = href === '/dashboard' ? pathname === '/dashboard' : pathname.startsWith(href);
   const baseClasses = isMobile
     ? 'px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all'
     : 'px-3.5 py-2 rounded-xl text-xs font-semibold transition-all';

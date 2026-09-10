@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/db';
 import { invoices, invoiceItems, quotations, quotationItems, contracts, clients } from '@/db/schema';
-import { eq, desc } from 'drizzle-orm';
+import { eq, desc, and } from 'drizzle-orm';
 import { requireAuth } from '@/lib/auth-utils';
 
 interface LineItemInput {
@@ -102,9 +102,39 @@ export async function POST(request: Request) {
     if (errorResponse) return errorResponse;
 
     const body = await request.json();
-    const { docType, clientId, documentNumber, issueDate, dueDate, validUntil, currency, notes, items, value, contractType, meteraiRequired } = body;
+    const { docType, clientId, clientName, clientAddress, clientEmail, documentNumber, issueDate, dueDate, validUntil, currency, notes, items, value, contractType, meteraiRequired } = body;
 
-    if (!docType || !clientId || !documentNumber) {
+    let targetClientId = clientId;
+
+    if (!targetClientId) {
+      if (!clientName || typeof clientName !== 'string' || clientName.trim() === '') {
+        return NextResponse.json({ error: 'Klien wajib dipilih atau diisi namanya.' }, { status: 400 });
+      }
+
+      const existingClients = await db
+        .select()
+        .from(clients)
+        .where(and(eq(clients.userId, userId), eq(clients.name, clientName.trim())))
+        .limit(1);
+
+      if (existingClients.length > 0) {
+        targetClientId = existingClients[0].id;
+      } else {
+        const [createdClient] = await db
+          .insert(clients)
+          .values({
+            userId,
+            name: clientName.trim(),
+            address: clientAddress?.trim() || null,
+            email: clientEmail?.trim() || null,
+            country: 'Indonesia',
+          })
+          .returning();
+        targetClientId = createdClient.id;
+      }
+    }
+
+    if (!docType || !targetClientId || !documentNumber) {
       return NextResponse.json({ error: 'Data dokumen tidak lengkap.' }, { status: 400 });
     }
 
@@ -113,7 +143,7 @@ export async function POST(request: Request) {
         .insert(invoices)
         .values({
           userId,
-          clientId,
+          clientId: targetClientId,
           invoiceNumber: documentNumber,
           status: 'draft',
           issueDate: issueDate || new Date().toISOString().split('T')[0],
@@ -136,7 +166,7 @@ export async function POST(request: Request) {
         .insert(quotations)
         .values({
           userId,
-          clientId,
+          clientId: targetClientId,
           quotationNumber: documentNumber,
           status: 'draft',
           issueDate: issueDate || new Date().toISOString().split('T')[0],
@@ -158,7 +188,7 @@ export async function POST(request: Request) {
         .insert(contracts)
         .values({
           userId,
-          clientId,
+          clientId: targetClientId,
           contractNumber: documentNumber,
           contractType: contractType || 'freelance',
           currency: currency || 'IDR',

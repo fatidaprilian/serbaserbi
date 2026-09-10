@@ -8,6 +8,7 @@ import LogoUpload from "@/components/LogoUpload";
 import DocumentPartyForm from "@/components/forms/DocumentPartyForm";
 import DocumentItemsForm from "@/components/forms/DocumentItemsForm";
 import DocumentMetaForm from "@/components/forms/DocumentMetaForm";
+import DocumentSaveToolbar from "@/components/DocumentSaveToolbar";
 import { useDocumentItems } from "@/lib/hooks/useDocumentItems";
 
 const QuotationPDFWrapper = dynamic(
@@ -41,6 +42,40 @@ export default function GuestQuotationPage() {
       subtitle="Estimasi biaya elegan untuk calon klien Anda."
       formContent={
         <>
+          <DocumentSaveToolbar
+            docType="quotation"
+            documentNumber={quotationData.quotationNumber}
+            issueDate={quotationData.date}
+            validUntil={quotationData.validUntil}
+            currency={quotationData.currency}
+            notes={quotationData.notes}
+            items={items.map((it) => ({
+              description: it.description,
+              quantity: it.quantity,
+              rate: it.unitPrice,
+              subtotal: it.quantity * it.unitPrice,
+            }))}
+            clientName={quotationData.clientName}
+            clientAddress={quotationData.clientAddress}
+            onApplyUserProfile={(profile) => {
+              setQuotationData((prev) => ({
+                ...prev,
+                fromName: profile.fromName,
+                fromAddress: profile.fromAddress,
+                currency: (profile.defaultCurrency as 'IDR' | 'USD') || prev.currency,
+                notes: profile.defaultNotes || prev.notes,
+                logo: profile.logoUrl || prev.logo,
+              }));
+            }}
+            onSelectClient={(client) => {
+              setQuotationData((prev) => ({
+                ...prev,
+                clientName: client.name,
+                clientAddress: client.address,
+              }));
+            }}
+          />
+
           <DocumentMetaForm
             currency={quotationData.currency}
             language={quotationData.language}

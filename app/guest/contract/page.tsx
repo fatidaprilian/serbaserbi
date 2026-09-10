@@ -6,6 +6,7 @@ import { ContractData, ContractClause } from "../../../types/contract";
 import GuestDocumentLayout from "@/components/GuestDocumentLayout";
 import LogoUpload from "@/components/LogoUpload";
 import ContractPartyForm from "@/components/forms/ContractPartyForm";
+import DocumentSaveToolbar from "@/components/DocumentSaveToolbar";
 
 // Dynamic import for PDF Viewer to avoid SSR issues
 const ContractPDFWrapper = dynamic(
@@ -87,6 +88,38 @@ export default function GuestContractPage() {
       subtitle="Dokumen perjanjian kerja sama profesional berformat legal."
       formContent={
         <>
+          <DocumentSaveToolbar
+            docType="contract"
+            documentNumber={contractData.contractNumber}
+            issueDate={contractData.date}
+            currency={contractData.currency}
+            value={contractData.projectValue}
+            clientName={contractData.partyA.name}
+            clientAddress={contractData.partyA.address}
+            onApplyUserProfile={(profile) => {
+              setContractData((prev) => ({
+                ...prev,
+                partyB: {
+                  ...prev.partyB,
+                  name: profile.fromName,
+                  address: profile.fromAddress,
+                },
+                currency: (profile.defaultCurrency as 'IDR' | 'USD') || prev.currency,
+                logo: profile.logoUrl || prev.logo,
+              }));
+            }}
+            onSelectClient={(client) => {
+              setContractData((prev) => ({
+                ...prev,
+                partyA: {
+                  ...prev.partyA,
+                  name: client.name,
+                  address: client.address,
+                },
+              }));
+            }}
+          />
+
           {/* Meta Info */}
           <div className="flex flex-col gap-4">
             <h2 className="text-lg font-semibold text-slate-800 border-b border-slate-100 pb-2">Informasi Dokumen</h2>
