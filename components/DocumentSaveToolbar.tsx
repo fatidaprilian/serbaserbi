@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { Button, Badge } from '@cloudflare/kumo';
+import { Badge } from '@cloudflare/kumo';
 import { FloppyDisk, User, Buildings, CheckCircle, WarningCircle, ArrowSquareOut } from '@phosphor-icons/react';
 import { useTranslation } from '@/lib/i18n';
 
@@ -198,16 +198,16 @@ export default function DocumentSaveToolbar({
 
   if (status !== 'authenticated') {
     return (
-      <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs shadow-2xs">
+      <div className="bg-zinc-50/90 border border-zinc-200/80 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs shadow-2xs">
         <div className="flex items-center gap-2">
-          <Badge variant="secondary" className="bg-slate-200 text-slate-700 font-semibold border border-slate-300">
+          <Badge variant="secondary" className="bg-zinc-200/80 text-zinc-700 font-semibold border border-zinc-300/80">
             {t('nav.guestMode')}
           </Badge>
-          <span className="text-slate-600 font-medium">
+          <span className="text-zinc-600 font-medium">
             {t('generators.guestNotice')}
           </span>
         </div>
-        <Link href="/login" className="font-semibold text-cyan-700 hover:text-cyan-800 hover:underline flex items-center gap-1 shrink-0">
+        <Link href="/login" className="font-semibold text-zinc-900 hover:underline flex items-center gap-1 shrink-0">
           {t('nav.signIn')}
           <ArrowSquareOut size={14} />
         </Link>
@@ -216,44 +216,45 @@ export default function DocumentSaveToolbar({
   }
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 space-y-3 shadow-md">
+    <div className="bg-zinc-50/90 border border-zinc-200/80 rounded-2xl p-4 sm:p-5 space-y-3 shadow-2xs">
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
-          <Badge variant="primary" className="bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-50 border border-emerald-200/80 text-emerald-800 text-xs font-semibold">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
             {t('generators.connectedAccount')}
-          </Badge>
-          <span className="text-xs font-medium text-slate-300">
+          </span>
+          <span className="text-xs font-semibold text-zinc-800">
             {profile?.businessName || profile?.name || session?.user?.name || session?.user?.email}
           </span>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
           {profile && (
-            <Button
-              variant="secondary"
+            <button
+              type="button"
               onClick={handleApplyProfile}
-              className="text-xs h-8 px-3 flex items-center gap-1.5 cursor-pointer"
+              className="text-xs h-8 px-3 rounded-lg border border-zinc-200/90 bg-white hover:bg-zinc-100 text-zinc-700 font-medium flex items-center gap-1.5 cursor-pointer shadow-2xs transition-all active:scale-[0.98]"
               title={t('generators.useMyProfile')}
             >
-              <User size={14} />
+              <User size={14} className="text-zinc-500" />
               {t('generators.useMyProfile')}
-            </Button>
+            </button>
           )}
 
           {clients.length > 0 && (
-            <div className="flex items-center gap-1 bg-slate-950/80 border border-slate-800 rounded-lg px-2.5 py-1">
-              <Buildings size={14} className="text-slate-400" />
+            <div className="flex items-center gap-1.5 bg-white border border-zinc-200/90 rounded-lg px-2.5 py-1 shadow-2xs">
+              <Buildings size={14} className="text-zinc-400" />
               <select
                 onChange={handleClientChange}
                 defaultValue=""
-                className="bg-transparent text-slate-200 text-xs focus:outline-none cursor-pointer"
+                className="bg-transparent text-zinc-800 text-xs focus:outline-none cursor-pointer"
                 title={t('generators.selectClient')}
               >
-                <option value="" disabled className="bg-slate-900 text-slate-400">
+                <option value="" disabled className="text-zinc-400">
                   {t('generators.selectClient')}
                 </option>
                 {clients.map((c) => (
-                  <option key={c.id} value={c.id} className="bg-slate-900 text-slate-100">
+                  <option key={c.id} value={c.id} className="text-zinc-900">
                     {c.name}
                   </option>
                 ))}
@@ -261,15 +262,15 @@ export default function DocumentSaveToolbar({
             </div>
           )}
 
-          <Button
-            variant="primary"
+          <button
+            type="button"
             onClick={() => { void handleSaveToAccount(); }}
             disabled={isSaving}
-            className="text-xs h-8 px-3.5 bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-medium flex items-center gap-1.5 cursor-pointer shadow-sm"
+            className="text-xs h-8 px-3.5 rounded-lg bg-zinc-900 hover:bg-black text-white font-semibold flex items-center gap-1.5 cursor-pointer shadow-xs transition-all active:scale-[0.98] disabled:opacity-50"
           >
             <FloppyDisk size={14} />
             {isSaving ? t('generators.saving') : t('generators.saveToDashboard')}
-          </Button>
+          </button>
         </div>
       </div>
 
@@ -277,19 +278,23 @@ export default function DocumentSaveToolbar({
         <div
           className={`flex items-center justify-between p-3 rounded-xl text-xs font-medium border ${
             saveStatus.type === 'success'
-              ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
-              : 'bg-rose-500/10 border-rose-500/30 text-rose-300'
+              ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+              : 'bg-rose-50 border-rose-200 text-rose-800'
           }`}
         >
           <div className="flex items-center gap-2">
-            {saveStatus.type === 'success' ? <CheckCircle size={16} /> : <WarningCircle size={16} />}
+            {saveStatus.type === 'success' ? (
+              <CheckCircle size={16} className="text-emerald-600" />
+            ) : (
+              <WarningCircle size={16} className="text-rose-600" />
+            )}
             <span>{saveStatus.message}</span>
           </div>
 
           {saveStatus.type === 'success' && (
             <Link
               href="/dashboard/documents"
-              className="text-cyan-400 hover:underline flex items-center gap-1 font-semibold"
+              className="text-emerald-800 hover:text-emerald-950 underline flex items-center gap-1 font-semibold"
             >
               {t('generators.viewInHistory')}
               <ArrowSquareOut size={13} />

@@ -64,7 +64,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             >
               + {t('nav.createInvoice')}
             </Link>
-            <UserNav />
+            <UserNav variant="dark" />
           </div>
         </div>
 
