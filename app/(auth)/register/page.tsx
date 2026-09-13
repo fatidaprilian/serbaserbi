@@ -51,9 +51,11 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-[#fafafa] text-[#09090b] selection:bg-black selection:text-white p-4 relative overflow-hidden py-6">
+    <div className="min-h-screen flex flex-col justify-between bg-[#fafafa] text-[#09090b] selection:bg-black selection:text-white p-4 relative overflow-hidden py-6 w-full max-w-full">
       {/* Background ambient glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-zinc-200/50 to-transparent blur-3xl -z-10 rounded-full pointer-events-none" />
+      <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] max-w-[100vw] h-[400px] bg-gradient-to-b from-zinc-200/50 to-transparent blur-3xl rounded-full" />
+      </div>
 
       {/* Header */}
       <header className="w-full max-w-5xl mx-auto py-4 flex items-center justify-between z-10">

@@ -75,10 +75,9 @@ Open your browser at `http://localhost:3000`.
 
 ## 4. 5-Minute Demo Path (Evaluator Walkthrough)
 
-[![Watch SerbaSerbi Demo Video on YouTube](https://img.youtube.com/vi/Vsu384zUtbg/0.jpg)](https://youtu.be/Vsu384zUtbg)
+<video src="https://github.com/user-attachments/assets/3c5d2726-0944-42c9-8c6d-f87b25e9eb0b" controls="controls" width="100%"></video>
 
-*Click the preview thumbnail above to play the full demonstration on YouTube.*  
-*(Backup mirror: [Google Drive Stream](https://drive.google.com/file/d/1kEXoH9-gqtPzVKdz21BvtEPNN8X_2_HH/view?usp=sharing))*
+*(Alternative streaming mirrors: [YouTube (1080p Full HD)](https://youtu.be/Vsu384zUtbg) | [Google Drive](https://drive.google.com/file/d/1kEXoH9-gqtPzVKdz21BvtEPNN8X_2_HH/view?usp=sharing))*
 
 Follow this path to verify all 7 concepts in under 5 minutes:
 

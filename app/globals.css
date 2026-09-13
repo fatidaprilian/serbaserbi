@@ -21,7 +21,11 @@
   --foreground: #09090b;
 }
 
+html,
 body {
+  max-width: 100%;
+  overflow-x: hidden;
+  position: relative;
   color: var(--foreground);
   background: var(--background);
 }

@@ -1,13 +1,16 @@
 "use client";
 
-import { PDFViewer } from '@react-pdf/renderer';
+import ResponsivePDFViewer from './ResponsivePDFViewer';
 import { QuotationPDF } from './QuotationPDF';
 import type { QuotationData } from '@/types/quotation';
 
 export default function QuotationPDFWrapper({ data }: { data: QuotationData }) {
+  const fileName = `${data.quotationNumber || 'quotation'}.pdf`;
   return (
-    <PDFViewer width="100%" height="100%" showToolbar={true} className="rounded-xl border-0">
-      <QuotationPDF data={data} />
-    </PDFViewer>
+    <ResponsivePDFViewer
+      document={<QuotationPDF data={data} />}
+      fileName={fileName}
+      title={`Quotation #${data.quotationNumber || 'QUO'}`}
+    />
   );
 }

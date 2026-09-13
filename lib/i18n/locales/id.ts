@@ -277,6 +277,12 @@ export const id = {
     previewStatusUpdating: "Menyinkronkan...",
     previewRefresh: "Segarkan",
     currencyConvertedToast: "Harga berhasil dikonversi ke {currency} (Kurs: 1 USD = Rp {rate})",
+    mobileTabForm: "Formulir",
+    mobileTabPreview: "Pratinjau PDF",
+    mobilePdfReady: "Dokumen PDF Siap",
+    mobilePdfNotice: "Browser ponsel membatasi pratinjau PDF di dalam halaman. Ketuk tombol di bawah untuk membuka pratinjau penuh atau mengunduh.",
+    mobileOpenPdf: "Buka Pratinjau PDF",
+    mobileDownloadPdf: "Unduh PDF",
   },
   auth: {
     signInTitle: "Masuk ke SerbaSerbi",

@@ -1,13 +1,16 @@
 "use client";
 
-import { PDFViewer } from '@react-pdf/renderer';
+import ResponsivePDFViewer from './ResponsivePDFViewer';
 import { ContractPDF } from './ContractPDF';
 import type { ContractData } from '@/types/contract';
 
 export default function ContractPDFWrapper({ data }: { data: ContractData }) {
+  const fileName = `${data.contractNumber || 'contract'}.pdf`;
   return (
-    <PDFViewer width="100%" height="100%" showToolbar={true} className="rounded-xl border-0">
-      <ContractPDF data={data} />
-    </PDFViewer>
+    <ResponsivePDFViewer
+      document={<ContractPDF data={data} />}
+      fileName={fileName}
+      title={`Contract #${data.contractNumber || 'SPK'}`}
+    />
   );
 }

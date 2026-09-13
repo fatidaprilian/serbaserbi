@@ -48,10 +48,9 @@ This project implements **all 7 out of 7 primary engineering concepts** specifie
 > **Video Walkthrough:**  
 > Evaluators can immediately watch the full end-to-end demonstration covering all 7 concepts in action without local setup:
 
-[![Watch SerbaSerbi Demo Video on YouTube](https://img.youtube.com/vi/Vsu384zUtbg/0.jpg)](https://youtu.be/Vsu384zUtbg)
+<video src="https://github.com/user-attachments/assets/3c5d2726-0944-42c9-8c6d-f87b25e9eb0b" controls="controls" width="100%"></video>
 
-*Click the preview thumbnail above to play the full demonstration on YouTube.*  
-*(Backup mirror: [Google Drive Stream](https://drive.google.com/file/d/1kEXoH9-gqtPzVKdz21BvtEPNN8X_2_HH/view?usp=sharing))*
+*(Alternative streaming mirrors: [YouTube (1080p Full HD)](https://youtu.be/Vsu384zUtbg) | [Google Drive](https://drive.google.com/file/d/1kEXoH9-gqtPzVKdz21BvtEPNN8X_2_HH/view?usp=sharing))*
 
 To evaluate the complete end-to-end system in 5 minutes locally:
 

@@ -1,13 +1,16 @@
 "use client";
 
-import { PDFViewer } from '@react-pdf/renderer';
+import ResponsivePDFViewer from './ResponsivePDFViewer';
 import { InvoicePDF } from './InvoicePDF';
 import type { InvoiceData } from '@/types/invoice';
 
 export default function PDFViewerWrapper({ data }: { data: InvoiceData }) {
+  const fileName = `${data.invoiceNumber || 'invoice'}.pdf`;
   return (
-    <PDFViewer width="100%" height="100%" showToolbar={true}>
-      <InvoicePDF data={data} />
-    </PDFViewer>
+    <ResponsivePDFViewer
+      document={<InvoicePDF data={data} />}
+      fileName={fileName}
+      title={`Invoice #${data.invoiceNumber || 'INV'}`}
+    />
   );
 }

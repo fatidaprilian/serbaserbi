@@ -279,6 +279,12 @@ export const en: TranslationSchema = {
     previewStatusUpdating: "Syncing...",
     previewRefresh: "Refresh",
     currencyConvertedToast: "Prices successfully converted to {currency} (Rate: 1 USD = Rp {rate})",
+    mobileTabForm: "Form Editor",
+    mobileTabPreview: "PDF Preview",
+    mobilePdfReady: "PDF Document Ready",
+    mobilePdfNotice: "Mobile browsers restrict iframe PDF embedding. Tap below to view full vector PDF in your mobile viewer or download.",
+    mobileOpenPdf: "Open PDF Preview",
+    mobileDownloadPdf: "Download PDF",
   },
   auth: {
     signInTitle: "Sign In to SerbaSerbi",
