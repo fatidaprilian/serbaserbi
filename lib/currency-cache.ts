@@ -60,7 +60,7 @@ export async function getExchangeRate(
         const entry: CachedExchangeRate = {
           from: from.toUpperCase(),
           to: to.toUpperCase(),
-          rate: Math.round(targetRate),
+          rate: targetRate >= 1 ? Math.round(targetRate) : Number(targetRate.toFixed(6)),
           source: 'Open Exchange Rates (JISDOR / Interbank)',
           cachedAt: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
           expiresAt: now + CACHE_TTL_MS,

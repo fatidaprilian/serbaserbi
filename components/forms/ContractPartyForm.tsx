@@ -12,15 +12,18 @@ interface ContractPartyData {
 
 interface ContractPartyFormProps {
   party: ContractPartyData;
+  roleTitle?: string;
   onChange: (fields: Partial<ContractPartyData>) => void;
 }
 
-export default function ContractPartyForm({ party, onChange }: ContractPartyFormProps) {
+export default function ContractPartyForm({ party, roleTitle, onChange }: ContractPartyFormProps) {
   const { t } = useTranslation();
 
   return (
     <div className="flex flex-col gap-4 bg-slate-50/90 p-4 rounded-xl border border-slate-200 shadow-2xs">
-      <h3 className="font-bold text-sm text-purple-800 uppercase tracking-wider">{party.role}</h3>
+      <h3 className="font-bold text-sm text-purple-800 uppercase tracking-wider">
+        {roleTitle || party.role}
+      </h3>
       <div className="flex flex-col gap-1.5">
         <label className="text-xs font-semibold text-slate-700">{t('clients.nameLabel')}</label>
         <input

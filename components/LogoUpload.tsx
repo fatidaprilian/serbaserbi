@@ -1,4 +1,7 @@
+'use client';
+
 import React, { useRef } from "react";
+import { useTranslation } from "@/lib/i18n";
 
 interface LogoUploadProps {
   logo?: string;
@@ -7,6 +10,7 @@ interface LogoUploadProps {
 }
 
 export default function LogoUpload({ logo, onLogoChange, onLogoRemove }: LogoUploadProps) {
+  const { t } = useTranslation();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -14,7 +18,7 @@ export default function LogoUpload({ logo, onLogoChange, onLogoRemove }: LogoUpl
     if (!file) return;
 
     if (file.size > 2 * 1024 * 1024) {
-      alert("Ukuran logo maksimal 2MB");
+      alert(t('generators.logoMaxSize'));
       return;
     }
 
@@ -29,7 +33,7 @@ export default function LogoUpload({ logo, onLogoChange, onLogoRemove }: LogoUpl
 
   return (
     <div className="flex flex-col gap-2">
-      <label className="text-sm font-semibold text-slate-900">Logo Bisnis (Opsional)</label>
+      <label className="text-sm font-semibold text-slate-900">{t('generators.logoTitle')}</label>
       <div className="flex items-center gap-4">
         {logo ? (
           <div className="relative">
@@ -39,16 +43,18 @@ export default function LogoUpload({ logo, onLogoChange, onLogoRemove }: LogoUpl
             </div>
             <button
               onClick={onLogoRemove}
-              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-600 shadow-sm z-10"
-              title="Hapus Logo"
+              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-600 shadow-sm z-10 cursor-pointer"
+              title={t('generators.logoRemove')}
             >
               ×
             </button>
           </div>
         ) : (
           <button
+            type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="w-16 h-16 border-2 border-dashed border-zinc-300 rounded-lg flex flex-col items-center justify-center text-zinc-500 hover:border-black hover:text-black transition-colors"
+            className="w-16 h-16 border-2 border-dashed border-zinc-300 rounded-lg flex flex-col items-center justify-center text-zinc-500 hover:border-black hover:text-black transition-colors cursor-pointer"
+            title={t('generators.logoTitle')}
           >
             <span className="text-2xl leading-none">+</span>
           </button>
@@ -56,7 +62,7 @@ export default function LogoUpload({ logo, onLogoChange, onLogoRemove }: LogoUpl
         
         {!logo && (
           <div className="text-xs text-zinc-500 max-w-[200px]">
-            Format PNG/JPG transparan direkomendasikan. Maks 2MB.
+            {t('generators.logoHint')}
           </div>
         )}
       </div>

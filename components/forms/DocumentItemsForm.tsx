@@ -89,7 +89,7 @@ export default function DocumentItemsForm({
 
       {items.length === 0 ? (
         <div className="text-center py-8 border-2 border-dashed border-slate-200 rounded-xl text-slate-500 text-sm bg-slate-50/50">
-          Belum ada item ditambahkan. Klik tombol &quot;{t('generators.addItem')}&quot; di atas.
+          {t('generators.emptyItems')}
         </div>
       ) : (
         <div className="flex flex-col gap-3">
@@ -114,7 +114,7 @@ export default function DocumentItemsForm({
 
                   <textarea
                     rows={2}
-                    placeholder="Nama barang / jasa (contoh: Jasa Desain UI/UX)..."
+                    placeholder={t('generators.itemDescPlaceholder')}
                     className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 resize-y"
                     value={item.description}
                     onChange={(e) => {
@@ -128,10 +128,15 @@ export default function DocumentItemsForm({
                   <input
                     type="number"
                     min="1"
-                    className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                    value={item.quantity}
+                    step="any"
+                    placeholder="1"
+                    className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 font-medium"
+                    value={item.quantity === 0 ? '' : item.quantity}
+                    onFocus={(e) => e.currentTarget.select()}
                     onChange={(e) => {
-                      onItemChange(item.id, 'quantity', Number(e.target.value));
+                      const val = e.target.value;
+                      const parsed = val === '' ? 0 : Math.max(0, Number(val));
+                      onItemChange(item.id, 'quantity', parsed);
                     }}
                   />
                 </div>
@@ -141,10 +146,15 @@ export default function DocumentItemsForm({
                   <input
                     type="number"
                     min="0"
-                    className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                    value={item.unitPrice}
+                    step="any"
+                    placeholder="0"
+                    className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 font-medium"
+                    value={item.unitPrice === 0 ? '' : item.unitPrice}
+                    onFocus={(e) => e.currentTarget.select()}
                     onChange={(e) => {
-                      onItemChange(item.id, 'unitPrice', Number(e.target.value));
+                      const val = e.target.value;
+                      const parsed = val === '' ? 0 : Math.max(0, Number(val));
+                      onItemChange(item.id, 'unitPrice', parsed);
                     }}
                   />
                 </div>

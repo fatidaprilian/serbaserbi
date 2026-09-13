@@ -9,9 +9,15 @@ import DocumentPartyForm from "@/components/forms/DocumentPartyForm";
 import DocumentItemsForm from "@/components/forms/DocumentItemsForm";
 import DocumentMetaForm from "@/components/forms/DocumentMetaForm";
 import DocumentSaveToolbar from "@/components/DocumentSaveToolbar";
+import DebouncedPDFPreview from "@/components/documents/DebouncedPDFPreview";
 import { useDocumentItems } from "@/lib/hooks/useDocumentItems";
 import { useTranslation } from "@/lib/i18n";
-import { WarningCircle } from "@phosphor-icons/react";
+import { WarningCircle, CheckCircle } from "@phosphor-icons/react";
+import {
+  DEFAULT_INVOICE_NOTES,
+  isDefaultInvoiceNotes,
+  convertCurrency,
+} from "@/lib/document-presets";
 
 // Dynamic import for PDF Viewer to avoid SSR issues
 const PDFViewerWrapper = dynamic(
@@ -20,12 +26,13 @@ const PDFViewerWrapper = dynamic(
 );
 
 export default function GuestInvoicePage() {
-  const { t } = useTranslation();
-  const { items, addItem, updateItem, removeItem } = useDocumentItems<InvoiceItem>([]);
+  const { t, locale } = useTranslation();
+  const { items, setItems, addItem, updateItem, removeItem } = useDocumentItems<InvoiceItem>([]);
+  const [conversionToast, setConversionToast] = useState<string | null>(null);
 
   const [invoiceData, setInvoiceData] = useState<Omit<InvoiceData, "items">>({
     currency: "IDR",
-    language: "id",
+    language: locale || "id",
     logo: undefined,
     invoiceNumber: "INV-2026-001",
     date: new Date().toISOString().split("T")[0],
@@ -35,8 +42,65 @@ export default function GuestInvoicePage() {
     clientName: "",
     clientAddress: "",
     taxRate: 0,
-    notes: "",
+    notes: DEFAULT_INVOICE_NOTES[locale || "id"],
   });
+
+  const [prevLocale, setPrevLocale] = useState(locale);
+  if (prevLocale !== locale) {
+    setPrevLocale(locale);
+    setInvoiceData((prev) => {
+      const nextNotes = isDefaultInvoiceNotes(prev.notes)
+        ? DEFAULT_INVOICE_NOTES[locale]
+        : prev.notes;
+      return { ...prev, language: locale, notes: nextNotes };
+    });
+  }
+
+  // Handle automatic currency conversion
+  const handleCurrencyChange = async (newCurrency: "IDR" | "USD") => {
+    if (newCurrency === invoiceData.currency) return;
+
+    let rate = 16250;
+    try {
+      const res = await fetch("/api/currency/rate?from=USD&to=IDR");
+      if (res.ok) {
+        const json = await res.json();
+        if (typeof json.rate === "number" && json.rate > 0) {
+          rate = json.rate;
+        }
+      }
+    } catch {
+      // Graceful fallback rate
+    }
+
+    setItems((prev) =>
+      prev.map((it) => ({
+        ...it,
+        unitPrice: convertCurrency(it.unitPrice, invoiceData.currency, newCurrency, rate),
+      }))
+    );
+
+    setInvoiceData((prev) => ({ ...prev, currency: newCurrency }));
+    setConversionToast(
+      t("generators.currencyConvertedToast", {
+        currency: newCurrency,
+        rate: rate.toLocaleString("id-ID"),
+      })
+    );
+
+    setTimeout(() => {
+      setConversionToast(null);
+    }, 4500);
+  };
+
+  const handleLanguageChange = (newLang: "id" | "en") => {
+    setInvoiceData((prev) => {
+      const nextNotes = isDefaultInvoiceNotes(prev.notes)
+        ? DEFAULT_INVOICE_NOTES[newLang]
+        : prev.notes;
+      return { ...prev, language: newLang, notes: nextNotes };
+    });
+  };
 
   const fullInvoiceData: InvoiceData = { ...invoiceData, items };
   const totalAmount = items.reduce((acc, item) => acc + (item.quantity * item.unitPrice), 0);
@@ -45,7 +109,11 @@ export default function GuestInvoicePage() {
   return (
     <GuestDocumentLayout
       title={t("generators.invoiceTitle")}
-      subtitle={invoiceData.currency === "USD" ? "Dual-currency USD/IDR with edge-cached FX rates." : "Lengkap dengan kalkulasi pajak & kepatuhan Bea Meterai."}
+      subtitle={
+        invoiceData.currency === "USD"
+          ? (locale === "id" ? "Dual-currency USD/IDR dengan kurs ter-cache." : "Dual-currency USD/IDR with edge-cached FX rates.")
+          : (locale === "id" ? "Lengkap dengan kalkulasi pajak & kepatuhan Bea Meterai." : "Complete with automated tax calculations & Rp10,000 Stamp Duty compliance.")
+      }
       formContent={
         <>
           <DocumentSaveToolbar
@@ -83,6 +151,13 @@ export default function GuestInvoicePage() {
             }}
           />
 
+          {conversionToast && (
+            <div className="p-3.5 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center gap-2.5 text-xs text-emerald-800 font-medium shadow-2xs animate-in fade-in">
+              <CheckCircle size={17} className="text-emerald-600 shrink-0" weight="fill" />
+              <span>{conversionToast}</span>
+            </div>
+          )}
+
           {isMeteraiRequired && (
             <div className="p-4 bg-amber-50 border border-amber-300 rounded-2xl flex items-start gap-3 shadow-2xs animate-in fade-in">
               <WarningCircle size={20} className="text-amber-700 shrink-0 mt-0.5" weight="fill" />
@@ -96,8 +171,8 @@ export default function GuestInvoicePage() {
           <DocumentMetaForm
             currency={invoiceData.currency}
             language={invoiceData.language}
-            onCurrencyChange={(currency) => { setInvoiceData({ ...invoiceData, currency }); }}
-            onLanguageChange={(language) => { setInvoiceData({ ...invoiceData, language }); }}
+            onCurrencyChange={handleCurrencyChange}
+            onLanguageChange={handleLanguageChange}
           />
 
           <div className="flex flex-col gap-2">
@@ -170,7 +245,12 @@ export default function GuestInvoicePage() {
           </div>
         </>
       }
-      previewContent={<PDFViewerWrapper data={fullInvoiceData} />}
+      previewContent={
+        <DebouncedPDFPreview
+          data={fullInvoiceData}
+          renderPreview={(debouncedData) => <PDFViewerWrapper data={debouncedData} />}
+        />
+      }
     />
   );
 }

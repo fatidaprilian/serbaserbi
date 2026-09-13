@@ -9,8 +9,15 @@ import DocumentPartyForm from "@/components/forms/DocumentPartyForm";
 import DocumentItemsForm from "@/components/forms/DocumentItemsForm";
 import DocumentMetaForm from "@/components/forms/DocumentMetaForm";
 import DocumentSaveToolbar from "@/components/DocumentSaveToolbar";
+import DebouncedPDFPreview from "@/components/documents/DebouncedPDFPreview";
 import { useDocumentItems } from "@/lib/hooks/useDocumentItems";
 import { useTranslation } from "@/lib/i18n";
+import { CheckCircle } from "@phosphor-icons/react";
+import {
+  DEFAULT_QUOTATION_NOTES,
+  isDefaultQuotationNotes,
+  convertCurrency,
+} from "@/lib/document-presets";
 
 const QuotationPDFWrapper = dynamic(
   () => import("../../../components/documents/QuotationPDFWrapper"),
@@ -18,12 +25,13 @@ const QuotationPDFWrapper = dynamic(
 );
 
 export default function GuestQuotationPage() {
-  const { t } = useTranslation();
-  const { items, addItem, updateItem, removeItem } = useDocumentItems<QuotationItem>([]);
+  const { t, locale } = useTranslation();
+  const { items, setItems, addItem, updateItem, removeItem } = useDocumentItems<QuotationItem>([]);
+  const [conversionToast, setConversionToast] = useState<string | null>(null);
 
   const [quotationData, setQuotationData] = useState<Omit<QuotationData, "items">>({
     currency: "IDR",
-    language: "id",
+    language: locale || "id",
     logo: undefined,
     quotationNumber: "QT-2026-001",
     date: new Date().toISOString().split("T")[0],
@@ -33,8 +41,65 @@ export default function GuestQuotationPage() {
     clientName: "",
     clientAddress: "",
     taxRate: 0,
-    notes: "Harga dapat berubah jika terdapat penambahan ruang lingkup pekerjaan di luar yang telah disepakati di atas.",
+    notes: DEFAULT_QUOTATION_NOTES[locale || "id"],
   });
+
+  const [prevLocale, setPrevLocale] = useState(locale);
+  if (prevLocale !== locale) {
+    setPrevLocale(locale);
+    setQuotationData((prev) => {
+      const nextNotes = isDefaultQuotationNotes(prev.notes)
+        ? DEFAULT_QUOTATION_NOTES[locale]
+        : prev.notes;
+      return { ...prev, language: locale, notes: nextNotes };
+    });
+  }
+
+  // Handle automatic currency conversion
+  const handleCurrencyChange = async (newCurrency: "IDR" | "USD") => {
+    if (newCurrency === quotationData.currency) return;
+
+    let rate = 16250;
+    try {
+      const res = await fetch("/api/currency/rate?from=USD&to=IDR");
+      if (res.ok) {
+        const json = await res.json();
+        if (typeof json.rate === "number" && json.rate > 0) {
+          rate = json.rate;
+        }
+      }
+    } catch {
+      // Graceful fallback rate
+    }
+
+    setItems((prev) =>
+      prev.map((it) => ({
+        ...it,
+        unitPrice: convertCurrency(it.unitPrice, quotationData.currency, newCurrency, rate),
+      }))
+    );
+
+    setQuotationData((prev) => ({ ...prev, currency: newCurrency }));
+    setConversionToast(
+      t("generators.currencyConvertedToast", {
+        currency: newCurrency,
+        rate: rate.toLocaleString("id-ID"),
+      })
+    );
+
+    setTimeout(() => {
+      setConversionToast(null);
+    }, 4500);
+  };
+
+  const handleLanguageChange = (newLang: "id" | "en") => {
+    setQuotationData((prev) => {
+      const nextNotes = isDefaultQuotationNotes(prev.notes)
+        ? DEFAULT_QUOTATION_NOTES[newLang]
+        : prev.notes;
+      return { ...prev, language: newLang, notes: nextNotes };
+    });
+  };
 
   const fullQuotationData: QuotationData = { ...quotationData, items };
 
@@ -78,11 +143,18 @@ export default function GuestQuotationPage() {
             }}
           />
 
+          {conversionToast && (
+            <div className="p-3.5 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center gap-2.5 text-xs text-emerald-800 font-medium shadow-2xs animate-in fade-in">
+              <CheckCircle size={17} className="text-emerald-600 shrink-0" weight="fill" />
+              <span>{conversionToast}</span>
+            </div>
+          )}
+
           <DocumentMetaForm
             currency={quotationData.currency}
             language={quotationData.language}
-            onCurrencyChange={(currency) => { setQuotationData({ ...quotationData, currency }); }}
-            onLanguageChange={(language) => { setQuotationData({ ...quotationData, language }); }}
+            onCurrencyChange={handleCurrencyChange}
+            onLanguageChange={handleLanguageChange}
           />
 
           <div className="flex flex-col gap-2">
@@ -155,7 +227,12 @@ export default function GuestQuotationPage() {
           </div>
         </>
       }
-      previewContent={<QuotationPDFWrapper data={fullQuotationData} />}
+      previewContent={
+        <DebouncedPDFPreview
+          data={fullQuotationData}
+          renderPreview={(debouncedData) => <QuotationPDFWrapper data={debouncedData} />}
+        />
+      }
     />
   );
 }
