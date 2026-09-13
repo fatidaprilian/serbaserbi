@@ -3,6 +3,7 @@
 > **Compliant Legal Document Generator, Bilingual Invoicing, & Cash Flow Management Platform for Indonesian Freelancers**
 
 [![Live Demo](https://img.shields.io/badge/Demo-serbaserbi.faridekaaprilian.dev-00e599?style=flat-square&logo=vercel)](https://serbaserbi.faridekaaprilian.dev/)
+[![Demo Video](https://img.shields.io/badge/Demo_Video-Google_Drive-4285F4?style=flat-square&logo=googledrive)](https://drive.google.com/file/d/1kEXoH9-gqtPzVKdz21BvtEPNN8X_2_HH/view?usp=sharing)
 [![Next.js](https://img.shields.io/badge/Next.js-16.2-black?style=flat-square&logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.2-blue?style=flat-square&logo=react)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
@@ -21,7 +22,8 @@ SerbaSerbi delivers a **10x workflow acceleration**:
 * **Guest Mode (Zero Signup, Maximum Privacy):** Generate print-ready Invoices, Quotations, and Contracts (SPK) directly in your browser. All PDF rendering is executed client-side via `@react-pdf/renderer`—meaning confidential financial details never leave the user's browser.
 * **Authenticated Multi-Tenant Workspace:** Log in to maintain a persistent client address book, record partial payments and down payments (DP), track aging receivables, and audit cash flow through an executive analytics dashboard.
 
-**Live Application:** [https://serbaserbi.faridekaaprilian.dev/](https://serbaserbi.faridekaaprilian.dev/)
+**Live Application:** [https://serbaserbi.faridekaaprilian.dev/](https://serbaserbi.faridekaaprilian.dev/)  
+**Demo Video Walkthrough:** [Watch Demo Video Walkthrough on Google Drive (Full HD)](https://drive.google.com/file/d/1kEXoH9-gqtPzVKdz21BvtEPNN8X_2_HH/view?usp=sharing)
 
 ---
 
@@ -43,32 +45,36 @@ This project implements **all 7 out of 7 primary engineering concepts** specifie
 
 ## 5-Minute Demo Path (Evaluator Guide)
 
-To evaluate the complete end-to-end system in 5 minutes:
+> **Video Walkthrough:**  
+> Evaluators can immediately watch the full end-to-end demonstration covering all 7 concepts in action without local setup:  
+> [Watch SerbaSerbi Demo Video on Google Drive (Full HD)](https://drive.google.com/file/d/1kEXoH9-gqtPzVKdz21BvtEPNN8X_2_HH/view?usp=sharing)
+
+To evaluate the complete end-to-end system in 5 minutes locally:
 
 1. **Seed the Demonstration Data:**
    ```bash
    npm run db:seed
    ```
 2. **Explore Guest Mode (No Authentication Required):**
-   * Open `http://localhost:3000` and click **"Buat Invoice"**.
-   * Toggle the currency to **USD** ➔ observe the live **"Kurs Ter-cache (12 Jam)"** badge appear (*Caching Logic*).
-   * Enter a total sum above Rp5,000,000 (or $350) ➔ observe the Indonesian Stamp Duty (*Bea Meterai*) warning activate (*Reporting*).
-   * Click **"Cetak / Unduh PDF"** ➔ the PDF is rendered client-side directly in the browser viewport.
+   * Open `http://localhost:3000` and click **"Create Invoice"**.
+   * Toggle the currency to **USD** -> observe the live **"Cached Rate (12h TTL)"** badge and automatic conversion (*Caching Logic*).
+   * Enter a total sum above Rp5,000,000 (or $350) -> observe the Indonesian Stamp Duty (*Bea Meterai*) regulatory notice activate (*Reporting*).
+   * Click **"Print / Download PDF"** -> the PDF is rendered client-side directly in the browser viewport.
 3. **Sign In with the Demo Account:**
-   * Click **"Masuk"** in the top navigation bar.
+   * Click **"Sign In"** in the top navigation bar.
    * Provide the pre-seeded credentials:
      * **Email:** `demo@serbaserbi.id`
      * **Password:** `demo12345`
 4. **Audit Payment Tracking & Record a Down Payment:**
    * On the Dashboard overview, inspect the 4 financial KPI cards and the 6-month revenue trend chart (*Reporting & Analytics*).
-   * Navigate to the **"Dokumen"** page via the sidebar.
-   * Locate invoice `INV-2026-002` (Status: *Cicilan / DP*).
-   * Click **"Bayar / DP"** ➔ record a settlement of Rp4,000,000 ➔ watch the invoice status dynamically transition to **Lunas (Paid)** in real time (*Database & API Endpoints*).
+   * Navigate to the **"Documents"** page via the sidebar.
+   * Locate invoice `INV-2026-002` (Status: *Installment / DP*).
+   * Click **"Record Payment"** -> record a settlement of Rp4,000,000 -> watch the invoice status dynamically transition to **Paid** in real time (*Database & API Endpoints*).
 5. **Trigger the Automated Overdue Background Job:**
-   * On the Documents page, click the **"Cek Jatuh Tempo"** button.
+   * On the Documents page, click the **"Check Overdue"** button.
    * The background engine will scan active invoices, detect `INV-2026-003` which has crossed its due date, transition its state to `overdue`, and generate an audit log entry (*Background / Cron Jobs*).
 6. **Inspect the BYOK AI Assistant:**
-   * Navigate to **"Pengaturan"** (Settings).
+   * Navigate to **"Settings"**.
    * Inspect the **"AI Assistant (BYOK - OpenRouter)"** card. The system connects directly to OpenRouter's live catalog, dynamically discovering free and premium models without hardcoded lists (*LLM Integration*).
 
 ---

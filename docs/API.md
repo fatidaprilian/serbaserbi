@@ -77,8 +77,8 @@ Content-Type: application/json
 
 ### 2. Record Payment & Down Payment (`POST /api/documents/invoice/:id/payments`)
 Records a down payment (DP) or partial payment against an invoice. The invoice status is automatically transitioned based on the accumulated payments:
-* `sent` ➔ `partial_paid` (when remaining balance > 0)
-* `partial_paid` / `sent` ➔ `paid` (when accumulated payments satisfy or exceed the total invoice amount).
+* `sent` -> `partial_paid` (when remaining balance > 0)
+* `partial_paid` / `sent` -> `paid` (when accumulated payments satisfy or exceed the total invoice amount).
 
 **Payload:**
 ```json
