@@ -3,7 +3,7 @@
 > **Compliant Legal Document Generator, Bilingual Invoicing, & Cash Flow Management Platform for Indonesian Freelancers**
 
 [![Live Demo](https://img.shields.io/badge/Demo-serbaserbi.faridekaaprilian.dev-00e599?style=flat-square&logo=vercel)](https://serbaserbi.faridekaaprilian.dev/)
-[![Demo Video](https://img.shields.io/badge/Demo_Video-Google_Drive-4285F4?style=flat-square&logo=googledrive)](https://drive.google.com/file/d/1kEXoH9-gqtPzVKdz21BvtEPNN8X_2_HH/view?usp=sharing)
+[![Demo Video](https://img.shields.io/badge/Demo_Video-YouTube-FF0000?style=flat-square&logo=youtube)](https://youtu.be/Vsu384zUtbg)
 [![Next.js](https://img.shields.io/badge/Next.js-16.2-black?style=flat-square&logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.2-blue?style=flat-square&logo=react)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
@@ -23,7 +23,7 @@ SerbaSerbi delivers a **10x workflow acceleration**:
 * **Authenticated Multi-Tenant Workspace:** Log in to maintain a persistent client address book, record partial payments and down payments (DP), track aging receivables, and audit cash flow through an executive analytics dashboard.
 
 **Live Application:** [https://serbaserbi.faridekaaprilian.dev/](https://serbaserbi.faridekaaprilian.dev/)  
-**Demo Video Walkthrough:** [Watch Demo Video Walkthrough on Google Drive (Full HD)](https://drive.google.com/file/d/1kEXoH9-gqtPzVKdz21BvtEPNN8X_2_HH/view?usp=sharing)
+**Demo Video Walkthrough:** [Watch Demo Video Walkthrough on YouTube (Full HD)](https://youtu.be/Vsu384zUtbg) *(Backup mirror: [Google Drive](https://drive.google.com/file/d/1kEXoH9-gqtPzVKdz21BvtEPNN8X_2_HH/view?usp=sharing))*
 
 ---
 
@@ -46,8 +46,12 @@ This project implements **all 7 out of 7 primary engineering concepts** specifie
 ## 5-Minute Demo Path (Evaluator Guide)
 
 > **Video Walkthrough:**  
-> Evaluators can immediately watch the full end-to-end demonstration covering all 7 concepts in action without local setup:  
-> [Watch SerbaSerbi Demo Video on Google Drive (Full HD)](https://drive.google.com/file/d/1kEXoH9-gqtPzVKdz21BvtEPNN8X_2_HH/view?usp=sharing)
+> Evaluators can immediately watch the full end-to-end demonstration covering all 7 concepts in action without local setup:
+
+[![Watch SerbaSerbi Demo Video on YouTube](https://img.youtube.com/vi/Vsu384zUtbg/0.jpg)](https://youtu.be/Vsu384zUtbg)
+
+*Click the preview thumbnail above to play the full demonstration on YouTube.*  
+*(Backup mirror: [Google Drive Stream](https://drive.google.com/file/d/1kEXoH9-gqtPzVKdz21BvtEPNN8X_2_HH/view?usp=sharing))*
 
 To evaluate the complete end-to-end system in 5 minutes locally:
 

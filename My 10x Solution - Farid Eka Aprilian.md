@@ -5,7 +5,7 @@
 **Project Name:** SerbaSerbi — Freelance Invoicer, Contract Generator & Cash Flow Tracking System  
 **Repository:** Public GitHub Repository  
 **Live Production URL:** [https://serbaserbi.faridekaaprilian.dev/](https://serbaserbi.faridekaaprilian.dev/)  
-**Demo Video Walkthrough:** [Watch Demo Video Walkthrough on Google Drive (Full HD)](https://drive.google.com/file/d/1kEXoH9-gqtPzVKdz21BvtEPNN8X_2_HH/view?usp=sharing)  
+**Demo Video Walkthrough:** [Watch Demo Video Walkthrough on YouTube (Full HD)](https://youtu.be/Vsu384zUtbg) *(Backup mirror: [Google Drive](https://drive.google.com/file/d/1kEXoH9-gqtPzVKdz21BvtEPNN8X_2_HH/view?usp=sharing))*  
 
 ---
 
@@ -74,6 +74,11 @@ Open your browser at `http://localhost:3000`.
 ---
 
 ## 4. 5-Minute Demo Path (Evaluator Walkthrough)
+
+[![Watch SerbaSerbi Demo Video on YouTube](https://img.youtube.com/vi/Vsu384zUtbg/0.jpg)](https://youtu.be/Vsu384zUtbg)
+
+*Click the preview thumbnail above to play the full demonstration on YouTube.*  
+*(Backup mirror: [Google Drive Stream](https://drive.google.com/file/d/1kEXoH9-gqtPzVKdz21BvtEPNN8X_2_HH/view?usp=sharing))*
 
 Follow this path to verify all 7 concepts in under 5 minutes:
 
