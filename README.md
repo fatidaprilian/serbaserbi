@@ -35,11 +35,35 @@ This project implements **all 7 out of 7 primary engineering concepts** specifie
 | :-: | :--- | :--- | :--- |
 | **1** | **API Endpoints** | Standardized REST API endpoints featuring strict schema validation, structured error contracts (RFC 9457), and honest HTTP status codes (200, 201, 400, 401, 404, 500). Handles documents, payment installments, client records, and analytics. | [`app/api/documents/route.ts`](https://github.com/fatidaprilian/serbaserbi/blob/main/app/api/documents/route.ts)<br>[`app/api/documents/invoice/[id]/payments/route.ts`](https://github.com/fatidaprilian/serbaserbi/blob/main/app/api/documents/invoice/%5Bid%5D/payments/route.ts)<br>[`app/api/analytics/route.ts`](https://github.com/fatidaprilian/serbaserbi/blob/main/app/api/analytics/route.ts) |
 | **2** | **Database** | Persistent serverless PostgreSQL on Neon managed via Drizzle ORM. Comprises 9 relational tables: `users`, `clients`, `invoices`, `invoice_items`, `invoice_payments`, `quotations`, `quotation_items`, `contracts`, and `invoice_reminders`. | [`db/schema.ts`](https://github.com/fatidaprilian/serbaserbi/blob/main/db/schema.ts)<br>[`db/index.ts`](https://github.com/fatidaprilian/serbaserbi/blob/main/db/index.ts)<br>[`drizzle.config.ts`](https://github.com/fatidaprilian/serbaserbi/blob/main/drizzle.config.ts) |
-| **3** | **Authentication** | Secure JWT-based session management powered by Auth.js (NextAuth v5). Includes native `scrypt` password hashing, protected middleware and layout route boundaries, and strict tenant data isolation per `userId`. | [`auth.ts`](https://github.com/fatidaprilian/serbaserbi/blob/main/auth.ts)<br>[`lib/auth-utils.ts`](https://github.com/fatidaprilian/serbaserbi/blob/main/lib/auth-utils.ts)<br>[`app/dashboard/layout.tsx`](https://github.com/fatidaprilian/serbaserbi/blob/main/app/dashboard/layout.tsx) |
+| **3** | **Authentication** | Secure JWT-based session management powered by Auth.js (NextAuth v5). Includes native `scrypt` password hashing, registration with business profile metadata, protected middleware and layout route boundaries, and strict tenant data isolation per `userId`. | [`auth.ts`](https://github.com/fatidaprilian/serbaserbi/blob/main/auth.ts)<br>[`app/(auth)/login/page.tsx`](https://github.com/fatidaprilian/serbaserbi/blob/main/app/%28auth%29/login/page.tsx)<br>[`app/(auth)/register/page.tsx`](https://github.com/fatidaprilian/serbaserbi/blob/main/app/%28auth%29/register/page.tsx)<br>[`lib/auth-utils.ts`](https://github.com/fatidaprilian/serbaserbi/blob/main/lib/auth-utils.ts) |
 | **4** | **Background / Cron Jobs** | Automated daily task orchestrated via Vercel Cron (`0 1 * * *`). Scans for invoices past their due dates, updates their status to `overdue`, and logs persistent reminder audits. | [`app/api/cron/check-overdue/route.ts`](https://github.com/fatidaprilian/serbaserbi/blob/main/app/api/cron/check-overdue/route.ts)<br>[`lib/reminder-service.ts`](https://github.com/fatidaprilian/serbaserbi/blob/main/lib/reminder-service.ts)<br>[`vercel.json`](https://github.com/fatidaprilian/serbaserbi/blob/main/vercel.json) |
 | **5** | **Reporting — PDF** | In-browser dynamic vector PDF generation using `@react-pdf/renderer`. Produces A4 print-ready documents with live language toggling (ID/EN), dual-currency calculations, and automatic Stamp Duty warning banners. | [`components/documents/InvoicePDFWrapper.tsx`](https://github.com/fatidaprilian/serbaserbi/blob/main/components/documents/InvoicePDFWrapper.tsx)<br>[`components/documents/QuotationPDFWrapper.tsx`](https://github.com/fatidaprilian/serbaserbi/blob/main/components/documents/QuotationPDFWrapper.tsx)<br>[`components/documents/ContractPDFWrapper.tsx`](https://github.com/fatidaprilian/serbaserbi/blob/main/components/documents/ContractPDFWrapper.tsx) |
 | **6** | **Caching Logic** | Resilient in-memory cache layer with a 12-hour TTL (43,200 seconds) for foreign exchange rates (USD/IDR), backed by HTTP `Cache-Control: s-maxage=43200, stale-while-revalidate=3600` headers and reliable offline fallbacks. | [`lib/currency-cache.ts`](https://github.com/fatidaprilian/serbaserbi/blob/main/lib/currency-cache.ts)<br>[`app/api/currency/rate/route.ts`](https://github.com/fatidaprilian/serbaserbi/blob/main/app/api/currency/rate/route.ts) |
-| **7** | **LLM Integration** | Bring-Your-Own-Key (BYOK) OpenRouter AI integration with `AES-256-GCM` encryption at rest. Dynamically discovers available live models (tagging `:free` tiers), auto-expands brief line-item descriptions, and suggests protective contractual clauses. | [`app/api/ai/expand-description/route.ts`](https://github.com/fatidaprilian/serbaserbi/blob/main/app/api/ai/expand-description/route.ts)<br>[`app/api/ai/suggest-clauses/route.ts`](https://github.com/fatidaprilian/serbaserbi/blob/main/app/api/ai/suggest-clauses/route.ts)<br>[`lib/crypto-utils.ts`](https://github.com/fatidaprilian/serbaserbi/blob/main/lib/crypto-utils.ts) |
+| **7** | **LLM Integration** | Bring-Your-Own-Key (BYOK) OpenRouter AI integration with `AES-256-GCM` encryption at rest. Dynamically discovers available live models (tagging `:free` tiers), auto-expands brief line-item descriptions into structured deliverables, and suggests protective contractual clauses. | [`app/api/ai/expand-description/route.ts`](https://github.com/fatidaprilian/serbaserbi/blob/main/app/api/ai/expand-description/route.ts)<br>[`app/api/ai/suggest-clauses/route.ts`](https://github.com/fatidaprilian/serbaserbi/blob/main/app/api/ai/suggest-clauses/route.ts)<br>[`app/api/ai/models/route.ts`](https://github.com/fatidaprilian/serbaserbi/blob/main/app/api/ai/models/route.ts)<br>[`lib/crypto-utils.ts`](https://github.com/fatidaprilian/serbaserbi/blob/main/lib/crypto-utils.ts) |
+
+---
+
+## Core Modules & Implementation Highlights
+
+### 1. Authentication & Multi-Tenant Isolation
+* **User Registration (`/register`):** Allows freelancers to onboard their independent business identity, including Business Name, optional NPWP (tax identification), and default billing currency (IDR / USD).
+* **Cryptographic Security:** Passwords are hashed with native Node.js `crypto.scrypt` combining cryptographically secure salt vectors, avoiding plain-text exposure or insecure MD5/SHA algorithms.
+* **Session Management:** Powered by **Auth.js (NextAuth v5)** with tamper-proof JSON Web Tokens (JWT) stored in HTTP-only cookies.
+* **Route Protection:** Server middleware and layout wrappers guard all `/dashboard/*` endpoints. Unauthenticated attempts are redirected cleanly to `/login`.
+* **Multi-Tenant Data Scoping:** Every relational query on documents, payments, clients, and settings enforces `where(eq(table.userId, sessionUserId))` at the database boundary to guarantee complete data isolation between freelancers.
+
+### 2. AI Document Assistant (BYOK via OpenRouter)
+The platform integrates Large Language Models through a privacy-first **Bring-Your-Own-Key (BYOK)** pattern:
+* **Feature A — Line-Item Description Expansion (`POST /api/ai/expand-description`):**
+  * Solves vague scope descriptions in invoices and quotation items.
+  * Freelancers provide a brief prompt or rough keyword (e.g., *"Redesign brand identity"*).
+  * System prompt instructs the LLM to act as a seasoned freelance business consultant in Indonesia, generating 2–3 structured sentences defining scope deliverables, reasonable revision boundaries, and output file formats without chat filler or emojis.
+* **Feature B — Protective Contract Clause Recommender (`POST /api/ai/suggest-clauses`):**
+  * Solves unprotected agreements in Freelance Work Agreements (SPK).
+  * Freelancers provide project title, valuation, currency, and custom scope notes.
+  * System prompt instructs the LLM to formulate 2–3 legally sound civil clauses tailored to Indonesian freelance law (such as IP transfer upon final payment, late payment penalties, and scope creep restrictions), returned as structured JSON array `[{ "title": "...", "content": "..." }]`.
+* **Dynamic Model Discovery (`GET /api/ai/models`):** Fetches the live OpenRouter model catalog with a 15-minute in-memory cache, automatically prioritizing and badging zero-cost models (`:free`, e.g., Meta Llama 3.3 70B Free, Google Gemini 2.0 Flash Free).
+* **Military-Grade Key Encryption:** User API keys are never stored in plain text. They are encrypted using `AES-256-GCM` with a 32-byte secret key (`APP_ENCRYPTION_KEY`). Decryption occurs ephemerally in server memory only during outbound LLM dispatch, zeroing memory references immediately after.
 
 ---
 
@@ -63,11 +87,10 @@ To evaluate the complete end-to-end system in 5 minutes locally:
    * Toggle the currency to **USD** -> observe the live **"Cached Rate (12h TTL)"** badge and automatic conversion (*Caching Logic*).
    * Enter a total sum above Rp5,000,000 (or $350) -> observe the Indonesian Stamp Duty (*Bea Meterai*) regulatory notice activate (*Reporting*).
    * Click **"Print / Download PDF"** -> the PDF is rendered client-side directly in the browser viewport.
-3. **Sign In with the Demo Account:**
+3. **Sign In or Register a Business Account:**
    * Click **"Sign In"** in the top navigation bar.
-   * Provide the pre-seeded credentials:
-     * **Email:** `demo@serbaserbi.id`
-     * **Password:** `demo12345`
+   * Option A (Pre-seeded Demo): Email `demo@serbaserbi.id`, Password `demo12345`.
+   * Option B (Self Registration): Visit `/register`, fill in your business name and email, then log in immediately (*Authentication*).
 4. **Audit Payment Tracking & Record a Down Payment:**
    * On the Dashboard overview, inspect the 4 financial KPI cards and the 6-month revenue trend chart (*Reporting & Analytics*).
    * Navigate to the **"Documents"** page via the sidebar.
@@ -76,9 +99,10 @@ To evaluate the complete end-to-end system in 5 minutes locally:
 5. **Trigger the Automated Overdue Background Job:**
    * On the Documents page, click the **"Check Overdue"** button.
    * The background engine will scan active invoices, detect `INV-2026-003` which has crossed its due date, transition its state to `overdue`, and generate an audit log entry (*Background / Cron Jobs*).
-6. **Inspect the BYOK AI Assistant:**
-   * Navigate to **"Settings"**.
-   * Inspect the **"AI Assistant (BYOK - OpenRouter)"** card. The system connects directly to OpenRouter's live catalog, dynamically discovering free and premium models without hardcoded lists (*LLM Integration*).
+6. **Test the BYOK AI Assistant (Line-Item Polish & Contract Clauses):**
+   * Navigate to **"Settings"** -> inspect the **"AI Assistant (BYOK - OpenRouter)"** card. Enter an OpenRouter API key or select any free tier model (`:free`) (*LLM Integration*).
+   * In any Invoice/Quotation line item form, click **"Sempurnakan Deskripsi (AI Polish)"** -> input a short prompt like *"Landing page design"* -> see it expanded into a professional deliverable specification.
+   * In the Contract (SPK) generator, click **"Saran Klausul AI"** -> watch 2–3 structured legal clauses auto-populate into the agreement.
 
 ---
 
